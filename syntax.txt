@@ -1,0 +1,37 @@
+
+program
+    = {expr}
+expr
+    = LET ID '=' expr
+    | FN param '->' expr
+    | IF expr THEN expr ELSE expr
+    | '{' {expr} '}'
+    | or_expr
+param
+    = '()' | ID
+or_expr
+    = and_expr {'||' and_expr}
+and_expr
+    = comp_expr {'&&' comp_expr}
+comp_expr
+    = cons_expr [comp_op cons_expr]
+cons_expr
+    = add_expr {':' add_expr}
+add_expr
+    = mul_expr {add_op mul_expr}
+mul_expr
+    = apply_expr {mul_op apply_expr}
+apply_expr
+    = unary_expr {simple_expr}
+unary_expr
+    = [unary_op] simple_expr
+simple_expr
+    = ID
+    | BOOL_LIT | INT_LIT | CHAR_LIT | STRING_LIT 
+    | '()' | '(' expr ')'
+    | '[' [expr {',' expr}] ']'
+comp_op = '==' | '!=' | '<' | '<=' | '>' | '>='
+add_op = '+' | '-'
+mul_op = '*' | '/' | '%'
+unary_op = '!' | '-'
+
