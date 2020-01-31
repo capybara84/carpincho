@@ -6,15 +6,13 @@ expr
     | FN param '->' expr
     | IF expr THEN expr ELSE expr
     | '{' {expr} '}'
-    | or_expr
+    | logical_expr
 param
     = '()' | ID
-or_expr
-    = and_expr {'||' and_expr}
-and_expr
-    = comp_expr {'&&' comp_expr}
-comp_expr
-    = cons_expr [comp_op cons_expr]
+logical_expr
+    = equal_expr {logical_op equal_expr}
+equal_expr
+    = cons_expr [equal_op cons_expr]
 cons_expr
     = add_expr {':' add_expr}
 add_expr
@@ -30,7 +28,8 @@ simple_expr
     | BOOL_LIT | INT_LIT | CHAR_LIT | STRING_LIT 
     | '()' | '(' expr ')'
     | '[' [expr {',' expr}] ']'
-comp_op = '==' | '!=' | '<' | '<=' | '>' | '>='
+logical_op = '||' | '&&'
+equal_op = '==' | '!=' | '<' | '<=' | '>' | '>='
 add_op = '+' | '-'
 mul_op = '*' | '/' | '%'
 unary_op = '!' | '-'

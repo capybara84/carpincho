@@ -1,7 +1,11 @@
 PROGRAM = cpc
 OCB = ocamlbuild
+ORUN = ocamlrun
 
 all : byte
+
+run:
+	$(ORUN) $(PROGRAM).byte
 
 clean:
 	$(OCB) -clean

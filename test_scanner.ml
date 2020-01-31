@@ -26,8 +26,7 @@ let test_tokens = [
 
 let scanner_test verbose =
     try
-        let scan = Scanner.from_string test_text in
-        let tokens = Scanner.get_tokens scan in
+        let tokens = Scanner.from_string test_text in
         let len_tt = List.length test_tokens in
         let len_t = List.length tokens in
         Test.equal len_tt len_t ("length " ^ string_of_int len_tt

@@ -4,7 +4,7 @@ let welcome () =
 
 let main () =
     welcome ();
-    Test_scanner.init true;
+    Test_scanner.init false;
     Test.run()
 
 let () = main ()

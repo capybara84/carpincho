@@ -8,12 +8,6 @@ type t = {
     mutable line : int;
 }
 
-let from_string s = {
-    source = s;
-    len = String.length s;
-    pos = 0;
-    line = 1;
-}
 
 let is_end scan =
     scan.pos = scan.len
@@ -185,4 +179,10 @@ let get_tokens scan =
     in 
     List.rev (loop [])
 
-
+let from_string s =
+    get_tokens {
+        source = s;
+        len = String.length s;
+        pos = 0;
+        line = 1;
+    }
