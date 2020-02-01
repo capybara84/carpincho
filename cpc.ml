@@ -5,6 +5,7 @@ let welcome () =
 let main () =
     welcome ();
     Test_scanner.init false;
+    Test_parser.init true;
     Test.run()
 
 let () = main ()

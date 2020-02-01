@@ -27,7 +27,7 @@ type unop = UNot | UMinus
 type expr =
     | Eof | Unit | Null | WildCard
     | BoolLit of bool | IntLit of int | CharLit of char | StrLit of string
-    | Id of ident | Binary of binop * expr * expr
+    | Ident of ident | Binary of binop * expr * expr
     | Unary of unop * expr
     | Apply of expr * expr
     | Let of ident * expr
@@ -79,7 +79,7 @@ let rec expr_to_string = function
     | IntLit n -> string_of_int n
     | CharLit c -> "'" ^ String.make 1 c ^ "'"
     | StrLit s -> "\"" ^ s ^ "\""
-    | Id id -> id
+    | Ident id -> id
     | Binary (op, lhs, rhs) ->
         "(" ^ expr_to_string lhs ^ " " ^ string_of_binop op ^ " "
             ^ expr_to_string rhs ^ ")"
@@ -100,4 +100,8 @@ and
     comp_to_string = function
     | [] -> ""
     | x::xs -> expr_to_string x ^ "; " ^ comp_to_string xs
+
+let rec exprs_to_string = function
+    | [] -> ""
+    | x::xs -> expr_to_string x ^ "; " ^ exprs_to_string xs
 
