@@ -4,7 +4,7 @@ ORUN = ocamlrun
 
 all : byte
 
-run:
+run: byte
 	$(ORUN) $(PROGRAM).byte
 
 clean:

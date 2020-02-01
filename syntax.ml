@@ -31,6 +31,7 @@ type expr =
     | Unary of unop * expr
     | Apply of expr * expr
     | Let of ident * expr
+    | LetRec of ident * expr
     | Fn of expr * expr
     | If of expr * expr * expr
     | Comp of expr list
@@ -41,6 +42,16 @@ type typ =
     | TFun of typ * typ
     | TVar of int * typ option ref
 
+type value =
+    | VUnit
+    | VNull
+    | VBool of bool
+    | VInt of int
+    | VChar of char
+    | VString of string
+    | VCons of value * value
+    | VClosure of expr * expr * (value ref) Env.t
+    | VBuiltin of (value -> value)
 
 let token_type_to_string = function
     | EOF -> "<EOF>" | NEWLINE -> "<NEWLINE>"
@@ -101,7 +112,31 @@ and
     | [] -> ""
     | x::xs -> expr_to_string x ^ "; " ^ comp_to_string xs
 
+(*
 let rec exprs_to_string = function
     | [] -> ""
     | x::xs -> expr_to_string x ^ "; " ^ exprs_to_string xs
+*)
+
+let rec value_to_string = function
+    | VUnit -> "()"
+    | VNull -> "[]"
+    | VBool true -> "true"
+    | VBool false -> "false"
+    | VInt n -> string_of_int n
+    | VChar c -> String.make 1 c
+    | VString s -> s
+    | VCons (_, VCons _) as e -> "[" ^ value_list_to_string e ^ "]"
+    | VCons (car, VNull) -> "[" ^ value_to_string car ^ "]"
+    | VCons (car, cdr) -> value_to_string car ^ ":" ^ value_to_string cdr
+    | VClosure _ -> "<closure>"
+    | VBuiltin _ -> "<builtin>"
+and value_list_to_string = function
+    | VCons (lhs, rhs) ->
+        begin match rhs with
+        | VNull -> value_to_string lhs
+        | VCons (_,_) -> value_to_string lhs ^ ", " ^ value_list_to_string rhs
+        | _ -> failwith "list rhs bug"
+        end
+    | _ -> failwith "list bug"
 

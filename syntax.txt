@@ -1,11 +1,14 @@
 
 program
-    = {expr}
-expr
+    = {decl}
+decl
     = LET ID '=' expr
-    | FN param '->' expr
+    | FUN ID param '=' expr
+    | expr
+expr
+    = FN param '->' {decl}
     | IF expr THEN expr ELSE expr
-    | '{' {expr} '}'
+    | '{' {decl} '}'
     | logical_expr
 param
     = '()' | ID
