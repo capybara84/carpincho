@@ -54,6 +54,7 @@ let scan_ident scan =
     | "_" -> WILDCARD
     | "let" -> LET
     | "fn" -> FN
+    | "fun" -> FUN
     | "if" -> IF
     | "then" -> THEN
     | "else" -> ELSE

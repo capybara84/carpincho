@@ -320,27 +320,27 @@ and parse_logical pars =
     debug_parse_out "parse_logical";
     e
 
-and parse_expr_list pars =
-    debug_parse_in "parse_expr_list";
+and parse_decl_list pars =
+    debug_parse_in "parse_decl_list";
     let rec loop () =
         match peek_token_type pars with
             | EOF | END -> []
             | _ ->
                 begin
-                    let e = parse_expr pars in
+                    let e = parse_decl pars in
                     skip_newline pars;
                     e::(loop ())
                 end
     in
     let e = loop () in
-    debug_parse_in "parse_expr_list";
+    debug_parse_in "parse_decl_list";
     e
 
 and parse_compound pars =
     debug_parse_in "parse_compound";
     next_token pars;
     skip_newline pars;
-    let e = parse_expr_list pars in
+    let e = parse_decl_list pars in
     expect pars END;
     skip_newline pars;
     debug_parse_out "parse_compound";
@@ -371,14 +371,14 @@ and parse_fn pars =
                 next_token pars;
                 skip_newline pars;
                 expect pars ARROW;
-                Fn (Unit, parse_expr pars)
+                Fn (Unit, parse_decl pars)
             end
         | WILDCARD ->
             begin
                 next_token pars;
                 skip_newline pars;
                 expect pars ARROW;
-                Fn (WildCard, parse_expr pars)
+                Fn (WildCard, parse_decl pars)
             end
         | _ ->
             begin
@@ -386,10 +386,27 @@ and parse_fn pars =
                 let arg = Ident id in
                 expect pars ARROW;
                 skip_newline pars;
-                Fn (arg, parse_expr pars)
+                Fn (arg, parse_decl pars)
             end
     in
     debug_parse_out "parse_fn";
+    e
+
+and parse_expr pars =
+    debug_parse_in "parse_expr";
+    let e = match peek_token_type pars with
+        | EOF -> Eof
+        | NEWLINE | SEMI -> next_token pars; parse_expr pars
+        | FN -> parse_fn pars
+        | IF -> parse_if pars
+        | BEGIN -> parse_compound pars
+        | _ -> parse_logical pars
+    in
+    if peek_token_type pars = SEMI then
+        next_token pars
+    else
+        ();
+    debug_parse_out "parse_expr";
     e
 
 and parse_let pars =
@@ -404,34 +421,76 @@ and parse_let pars =
     debug_parse_out "parse_let";
     Let (id, e)
 
-and parse_expr pars =
-    debug_parse_in "parse_expr";
+and parse_param pars =
+    debug_parse_in "parse_param";
+    let e =
+        match peek_token_type pars with
+        | UNIT ->
+            begin
+                next_token pars;
+                skip_newline pars;
+                Unit
+            end
+        | WILDCARD ->
+            begin
+                next_token pars;
+                skip_newline pars;
+                expect pars ARROW;
+                WildCard
+            end
+        | _ ->
+            begin
+                let id = expect_id pars in
+                let arg = Ident id in
+                expect pars ARROW;
+                arg
+            end
+    in
+    debug_parse_out "parse_param";
+    e
+
+(*
+and parse_fun pars =
+    debug_parse_in "parse_fun";
+    next_token pars;
+    skip_newline pars;
+    let id = expect_id pars in
+    let param = parse_param pars in
+    expect pars EQ;
+    skip_newline pars;
+    let body = parse_expr pars in
+    debug_parse_out "parse_fun";
+    LetRec (id, param, body)
+*)
+
+and parse_decl pars =
+    debug_parse_in "parse_decl";
     let e = match peek_token_type pars with
         | EOF -> Eof
-        | NEWLINE | SEMI -> next_token pars; parse_expr pars
+        | NEWLINE | SEMI -> next_token pars; parse_decl pars
         | LET -> parse_let pars
-        | FN -> parse_fn pars
-        | IF -> parse_if pars
-        | BEGIN -> parse_compound pars
-        | _ -> parse_logical pars
+        (*
+        | FUN -> parse_fun pars
+        *)
+        | _ -> parse_expr pars
     in
     if peek_token_type pars = SEMI then
         next_token pars
     else
         ();
-    debug_parse_out "parse_expr";
+    debug_parse_out "parse_decl";
     e
 
 let parse_one tokens =
     let pars = { tokens = tokens } in
     debug_token ("token = " ^ (token_to_string @@ peek_token pars));
-    parse_expr pars
+    parse_decl pars
 
 let parse tokens =
     let pars = { tokens = tokens } in
     debug_token ("token = " ^ (token_to_string @@ peek_token pars));
     let rec loop res =
-        let e = parse_expr pars in
+        let e = parse_decl pars in
         if e = Eof then
             List.rev res
         else

@@ -4,7 +4,7 @@ exception Error of string
 type token_type
     = EOF | NEWLINE | ID of string | BOOL_LIT of bool | INT_LIT of int
     | CHAR_LIT of char | STRING_LIT of string
-    | LET | FN | IF | THEN | ELSE
+    | LET | FN | FUN | IF | THEN | ELSE
     | EQ | EQL | NEQ | LT | LE | GT | GE
     | MINUS | PLUS | SLASH | STAR | PERCENT
     | NOT | UNIT | LOR | LAND
@@ -31,7 +31,9 @@ type expr =
     | Unary of unop * expr
     | Apply of expr * expr
     | Let of ident * expr
-    | LetRec of ident * expr
+(*
+    | LetRec of ident * expr * expr
+*)
     | Fn of expr * expr
     | If of expr * expr * expr
     | Comp of expr list
@@ -58,9 +60,9 @@ let token_type_to_string = function
     | ID id -> id | BOOL_LIT true -> "true" | BOOL_LIT false -> "false"
     | INT_LIT n -> string_of_int n | CHAR_LIT c -> "'" ^ String.make 1 c ^ "'"
     | STRING_LIT s -> "\"" ^ s ^ "\""
-    | LET -> "let" | FN -> "fn" | IF -> "if" | THEN -> "then" | ELSE -> "else"
-    | EQ -> "=" | EQL -> "==" | NEQ -> "!=" | LT -> "<" | LE -> "<="
-    | GT -> ">" | GE -> ">=" | MINUS -> "-" | PLUS -> "+"
+    | LET -> "let" | FN -> "fn" | FUN -> "fun" | IF -> "if" | THEN -> "then"
+    | ELSE -> "else" | EQ -> "=" | EQL -> "==" | NEQ -> "!=" | LT -> "<"
+    | LE -> "<=" | GT -> ">" | GE -> ">=" | MINUS -> "-" | PLUS -> "+"
     | SLASH -> "/" | STAR -> "*" | PERCENT -> "%"
     | NOT -> "!" | UNIT -> "()" | LOR -> "||" | LAND -> "&&"
     | ARROW -> "->" | LPAR -> "(" | RPAR -> ")" | LBRA -> "[" | RBRA -> "]"
@@ -100,6 +102,11 @@ let rec expr_to_string = function
         "(" ^ expr_to_string e1 ^ " " ^ expr_to_string e2 ^ ")"
     | Let (id, e) ->
         "(let " ^ id ^ " = " ^ expr_to_string e ^ ")"
+    (*
+    | LetRec (id, arg, body) ->
+        "(letrec " ^ id ^ " " ^ expr_to_string arg ^ " = "
+                ^ expr_to_string body ^ ")"
+    *)
     | Fn (e1, e2) ->
         "(fn " ^ expr_to_string e1 ^ " -> " ^ expr_to_string e2 ^ ")"
     | If (e1, e2, e3) ->
