@@ -137,3 +137,11 @@ and eval_decl env = function
     | e ->
         (env, eval_expr env e)
 
+let eval_top el = 
+    let rec loop env = function
+        | [] -> ()
+        | x::xs ->
+            let (new_env, v) = eval_decl env x in
+            loop new_env xs
+    in
+    loop [] el

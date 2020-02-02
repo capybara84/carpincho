@@ -4,8 +4,8 @@ ORUN = ocamlrun
 
 all : byte
 
-run: byte
-	$(ORUN) $(PROGRAM).byte
+test: byte
+	$(ORUN) $(PROGRAM).byte -t
 
 clean:
 	$(OCB) -clean
