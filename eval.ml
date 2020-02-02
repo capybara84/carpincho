@@ -24,6 +24,8 @@ let rec eval_equal = function
     | _ -> error "type error (equal)"
 and list_equal = function
     | (VNull, VNull) -> true
+    | (VCons _, VNull) -> false
+    | (VNull, VCons _) -> false
     | (VCons (lh, lt), VCons (rh, rt)) ->
         if not (eval_equal (lh, rh)) then false
         else list_equal (lt, rt)
@@ -94,6 +96,8 @@ let rec eval_expr env = function
                 let new_env = Env.extend x (ref arg_part) old_env in
                 eval_expr new_env body
             | VClosure (WildCard, body, old_env) ->
+                eval_expr env body
+            | VClosure (Unit, body, old_env) ->
                 eval_expr env body
             | VBuiltin fn ->
                 fn arg_part
