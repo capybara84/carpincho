@@ -1,10 +1,11 @@
 
 let filenames = ref []
+let top_env = ref []
 
 let welcome () =
     print_endline "cpc - carpincho v0.0"
 
-let top_level () =
+let top_level env =
     let rec loop env =
         try
             print_string "> ";
@@ -19,7 +20,7 @@ let top_level () =
             | Syntax.Error s -> (print_endline s; loop env)
             | Sys_error s -> print_endline s
             | End_of_file -> ()
-    in loop []
+    in loop env
 
 let load_file filename =
     let ic = open_in filename in
@@ -31,7 +32,8 @@ let load_file filename =
 let load_source filename =
     try
         let text = load_file filename in
-        Eval.eval_top @@ Parser.parse @@ Scanner.from_string text
+        top_env := Eval.eval_top !top_env
+                    @@ Parser.parse @@ Scanner.from_string text
     with
         | Syntax.Error s -> print_endline s
         | Sys_error s -> print_endline s
@@ -44,10 +46,17 @@ let do_test () =
     Test.run()
 
 let main () =
+    let interactive = ref false in
+    top_env := Builtins.init ();
     Arg.parse [("-t", Arg.Unit do_test, "test mode");
-               ("-i", Arg.Unit top_level, "interactive mode"); ]
+               ("-i", Arg.Unit (fun () -> interactive := true),
+                                "interactive mode"); ]
         (fun n -> filenames := n :: !filenames)
         "usage: cpc [-ti] filename...";
-    List.iter load_source (List.rev !filenames)
+    List.iter load_source (List.rev !filenames);
+    if !interactive then
+        top_level !top_env
+    else ()
 
 let () = main ()
+
