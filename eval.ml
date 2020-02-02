@@ -127,13 +127,11 @@ and eval_decl env = function
         let v = eval_expr env e in
         let new_env = Env.extend id (ref v) env in
         (new_env, VUnit)
-    (*
-    | LetRec (id, e1, e2) ->
+    | LetRec (id, e) ->
         let r = ref VUnit in
-        let new_env = Env.extend id r (Env.extend id2 VUnit env) in
-        r := eval_expr new_env e2;
+        let new_env = Env.extend id r env in
+        r := eval_expr new_env e;
         (new_env, VUnit)
-    *)
     | Comp el ->
         eval_list env el
     | e ->

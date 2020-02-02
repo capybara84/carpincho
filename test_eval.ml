@@ -59,6 +59,10 @@ let all_exprs = [
     ("add 1 2", VInt 3);
     ("let add5 = add 5", VUnit);
     ("add5 3", VInt 8);
+    ("fun foo x = x + 2", VUnit);
+    ("foo 4", VInt 6);
+    ("fun fact n = if n < 1 then 1 else n * fact (n-1)", VUnit);
+    ("fact 5", VInt 120);
 ]
 
 let eval_test verbose =

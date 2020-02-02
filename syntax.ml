@@ -31,9 +31,7 @@ type expr =
     | Unary of unop * expr
     | Apply of expr * expr
     | Let of ident * expr
-(*
-    | LetRec of ident * expr * expr
-*)
+    | LetRec of ident * expr
     | Fn of expr * expr
     | If of expr * expr * expr
     | Comp of expr list
@@ -102,11 +100,8 @@ let rec expr_to_string = function
         "(" ^ expr_to_string e1 ^ " " ^ expr_to_string e2 ^ ")"
     | Let (id, e) ->
         "(let " ^ id ^ " = " ^ expr_to_string e ^ ")"
-    (*
-    | LetRec (id, arg, body) ->
-        "(letrec " ^ id ^ " " ^ expr_to_string arg ^ " = "
-                ^ expr_to_string body ^ ")"
-    *)
+    | LetRec (id, e) ->
+        "(letrec " ^ id ^ " " ^ expr_to_string e ^ ")"
     | Fn (e1, e2) ->
         "(fn " ^ expr_to_string e1 ^ " -> " ^ expr_to_string e2 ^ ")"
     | If (e1, e2, e3) ->

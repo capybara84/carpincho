@@ -95,6 +95,16 @@ let all_exprs = [
     ("(1)", IntLit 1);
     ("true", BoolLit true);
     ("false", BoolLit false);
+    ("fun one () = 1", LetRec ("one", (Fn (Unit, IntLit 1))));
+    ("fun fact n = if n < 1 then 1 else n * fact (n-1)",
+        LetRec ("fact",
+                Fn (Ident "n",
+                    (If (Binary (BinLT, Ident "n", IntLit 1),
+                          IntLit 1,
+                          Binary (BinMul, Ident "n",
+                                        Apply (Ident "fact",
+                                            Binary (BinSub, Ident "n",
+                                                IntLit 1))))))));
 ]
 
 let parser_test verbose =

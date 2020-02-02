@@ -364,31 +364,10 @@ and parse_fn pars =
     debug_parse_in "parse_fn";
     next_token pars;
     skip_newline pars;
-    let e =
-        match peek_token_type pars with
-        | UNIT ->
-            begin
-                next_token pars;
-                skip_newline pars;
-                expect pars ARROW;
-                Fn (Unit, parse_decl pars)
-            end
-        | WILDCARD ->
-            begin
-                next_token pars;
-                skip_newline pars;
-                expect pars ARROW;
-                Fn (WildCard, parse_decl pars)
-            end
-        | _ ->
-            begin
-                let id = expect_id pars in
-                let arg = Ident id in
-                expect pars ARROW;
-                skip_newline pars;
-                Fn (arg, parse_decl pars)
-            end
-    in
+    let param = parse_param pars in
+    expect pars ARROW;
+    skip_newline pars;
+    let e = Fn (param, parse_decl pars) in
     debug_parse_out "parse_fn";
     e
 
@@ -425,31 +404,13 @@ and parse_param pars =
     debug_parse_in "parse_param";
     let e =
         match peek_token_type pars with
-        | UNIT ->
-            begin
-                next_token pars;
-                skip_newline pars;
-                Unit
-            end
-        | WILDCARD ->
-            begin
-                next_token pars;
-                skip_newline pars;
-                expect pars ARROW;
-                WildCard
-            end
-        | _ ->
-            begin
-                let id = expect_id pars in
-                let arg = Ident id in
-                expect pars ARROW;
-                arg
-            end
+        | UNIT -> (next_token pars; Unit)
+        | WILDCARD -> (next_token pars; WildCard)
+        | _ -> ( let id = expect_id pars in Ident id )
     in
     debug_parse_out "parse_param";
     e
 
-(*
 and parse_fun pars =
     debug_parse_in "parse_fun";
     next_token pars;
@@ -460,8 +421,7 @@ and parse_fun pars =
     skip_newline pars;
     let body = parse_expr pars in
     debug_parse_out "parse_fun";
-    LetRec (id, param, body)
-*)
+    LetRec (id, Fn (param, body))
 
 and parse_decl pars =
     debug_parse_in "parse_decl";
@@ -469,9 +429,7 @@ and parse_decl pars =
         | EOF -> Eof
         | NEWLINE | SEMI -> next_token pars; parse_decl pars
         | LET -> parse_let pars
-        (*
         | FUN -> parse_fun pars
-        *)
         | _ -> parse_expr pars
     in
     if peek_token_type pars = SEMI then
