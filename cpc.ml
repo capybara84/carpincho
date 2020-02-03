@@ -12,9 +12,13 @@ let top_level env =
             flush stdout;
             let line = input_line stdin in
             let (new_env, v) =
-                Eval.eval_decl env @@ Parser.parse_one @@ Scanner.from_string line
+                Eval.eval_decl env @@ Parser.parse_one
+                        @@ Scanner.from_string line
             in
-            print_endline @@ Syntax.value_to_string v;
+            if v <> Syntax.VUnit then
+                print_endline @@ Syntax.value_to_string v
+            else
+                ();
             loop new_env
         with
             | Syntax.Error s -> (print_endline s; loop env)
@@ -41,7 +45,7 @@ let load_source filename =
 
 let do_test () =
     Test_scanner.init false;
-    Test_parser.init true;
+    Test_parser.init false;
     Test_eval.init false;
     Test.run()
 
