@@ -428,27 +428,19 @@ and parse_let pars =
     debug_parse_out "parse_let";
     Let (id, e)
 
-and parse_param pars =
-    debug_parse_in "parse_param";
-    let e =
-        match peek_token_type pars with
-        | WILDCARD -> (next_token pars; WildCard)
-        | _ -> ( let id = expect_id pars in Ident id )
-    in
-    debug_parse_out "parse_param";
-    e
-
 and parse_fun pars =
     debug_parse_in "parse_fun";
     next_token pars;
     skip_newline pars;
     let id = expect_id pars in
-    let param = parse_param pars in
+    let args = parse_params pars in
     expect pars EQ;
     skip_newline pars;
-    let body = parse_expr pars in
+    let e = List.fold_right (fun arg body -> Fn (arg, body))
+                            args (parse_expr pars)
+    in
     debug_parse_out "parse_fun";
-    LetRec (id, Fn (param, body))
+    LetRec (id, e)
 
 and parse_decl pars =
     debug_parse_in "parse_decl";
