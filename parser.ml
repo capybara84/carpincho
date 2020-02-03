@@ -360,14 +360,42 @@ and parse_if pars =
     debug_parse_out "parse_if";
     If (e1, e2, e3)
 
+and parse_param_list pars args =
+    debug_parse_in "parse_param_list";
+    let e =
+        match peek_token_type pars with
+        | WILDCARD ->
+            next_token pars;
+            parse_param_list pars (WildCard::args)
+        | ID id ->
+            let id = expect_id pars in
+            parse_param_list pars (Ident id::args)
+        | _ ->
+            List.rev args
+    in
+    debug_parse_out "parse_param_list";
+    e
+
+and parse_params pars =
+    debug_parse_in "parse_params pars";
+    let e =
+        if peek_token_type pars = UNIT then
+            (next_token pars; [Unit])
+        else
+            parse_param_list pars []
+    in
+    debug_parse_out "parse_params pars";
+    e
+
 and parse_fn pars =
     debug_parse_in "parse_fn";
     next_token pars;
     skip_newline pars;
-    let param = parse_param pars in
+    let args = parse_params pars in
     expect pars ARROW;
     skip_newline pars;
-    let e = Fn (param, parse_decl pars) in
+    let e = List.fold_right (fun arg body -> Fn (arg, body))
+                        args (parse_decl pars) in
     debug_parse_out "parse_fn";
     e
 
@@ -404,7 +432,6 @@ and parse_param pars =
     debug_parse_in "parse_param";
     let e =
         match peek_token_type pars with
-        | UNIT -> (next_token pars; Unit)
         | WILDCARD -> (next_token pars; WildCard)
         | _ -> ( let id = expect_id pars in Ident id )
     in

@@ -6,12 +6,14 @@ decl
     | FUN ID param '=' expr
     | expr
 expr
-    = FN param '->' expr
+    = FN param_list '->' expr
     | IF expr THEN expr ELSE expr
     | '{' {decl} '}'
     | logical_expr
+param_list
+    = '()' | param {param}
 param
-    = '()' | '_' | ID
+    = '_' | ID
 logical_expr
     = equal_expr {logical_op equal_expr}
 equal_expr

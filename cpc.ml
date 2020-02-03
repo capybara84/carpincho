@@ -41,7 +41,7 @@ let load_source filename =
 
 let do_test () =
     Test_scanner.init false;
-    Test_parser.init false;
+    Test_parser.init true;
     Test_eval.init false;
     Test.run()
 

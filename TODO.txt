@@ -1,0 +1,11 @@
+TODO
+- tuple
+- float
+- typedef
+- type inference
+- struct
+- pattern
+- mutable
+- variant
+- module
+- compile
