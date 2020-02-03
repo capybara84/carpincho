@@ -110,9 +110,8 @@ let rec eval_expr env = function
         let v = eval_expr env (if is_true vc then e2 else e3)
         in v
     | Comp el ->
-        List.iter (fun x -> if eval_expr env x == VUnit then ()
-                            else error("not UNIT")) el;
-        VUnit
+        let (_, v) = eval_list env el in
+        v
     | _ -> failwith ("eval bug")
 
 and eval_list env = function
@@ -136,8 +135,6 @@ and eval_decl env = function
         let new_env = Env.extend id r env in
         r := eval_expr new_env e;
         (new_env, VUnit)
-    | Comp el ->
-        eval_list env el
     | e ->
         (env, eval_expr env e)
 
