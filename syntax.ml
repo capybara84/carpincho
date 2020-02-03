@@ -114,12 +114,6 @@ and
     | [] -> ""
     | x::xs -> expr_to_string x ^ "; " ^ comp_to_string xs
 
-(*
-let rec exprs_to_string = function
-    | [] -> ""
-    | x::xs -> expr_to_string x ^ "; " ^ exprs_to_string xs
-*)
-
 let rec value_to_string = function
     | VUnit -> "()"
     | VNull -> "[]"
@@ -137,8 +131,19 @@ and value_list_to_string = function
     | VCons (lhs, rhs) ->
         begin match rhs with
         | VNull -> value_to_string lhs
-        | VCons (_,_) -> value_to_string lhs ^ ", " ^ value_list_to_string rhs
+        | VCons (_,_) -> value_to_string lhs ^ ", "
+                            ^ value_list_to_string rhs
         | _ -> failwith "list rhs bug"
         end
     | _ -> failwith "list bug"
+
+let describe_value = function
+    | VClosure (Ident x, body, _) ->
+        print_endline ("<closure " ^ x ^ " -> " ^ expr_to_string body ^ ">")
+    | VClosure (WildCard, body, _) ->
+        print_endline ("<closure _ -> " ^ expr_to_string body ^ ">")
+    | VClosure (Unit, body, _) ->
+        print_endline ("<closure () -> " ^ expr_to_string body ^ ">")
+    | v ->
+        print_endline @@ value_to_string v
 
