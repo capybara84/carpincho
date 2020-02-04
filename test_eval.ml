@@ -74,6 +74,8 @@ let all_exprs = [
     ("List.length [1,2,3]", VInt 3);
     ("import List as L", VUnit);
     ("L.length [1,2,3,4]", VInt 4);
+    ("fst (1,2)", VInt 1);
+    ("snd (1,2)", VInt 2);
 ]
 
 let eval_test verbose =
