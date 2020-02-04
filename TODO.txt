@@ -1,12 +1,12 @@
 TODO
 * module
-- tuple
+* tuple
 
+- pattern
+- variant
+- struct
+- mutable
 - float
 - typedef
 - type inference
-- struct
-- pattern
-- mutable
-- variant
 - compile

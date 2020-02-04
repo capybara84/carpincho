@@ -70,6 +70,10 @@ let all_exprs = [
     ("module Main", VUnit);
     ("A.x", VInt 1);
     ("B.x", VInt 2);
+    ("import List", VUnit);
+    ("List.length [1,2,3]", VInt 3);
+    ("import List as L", VUnit);
+    ("L.length [1,2,3,4]", VInt 4);
 ]
 
 let eval_test verbose =

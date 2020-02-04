@@ -12,12 +12,34 @@ decl
 expr
     = FN param_list '->' expr
     | IF expr THEN expr ELSE expr
+    | MATCH expr '{' match_list '}'
     | '{' {decl} '}'
     | logical_expr
 param_list
     = '()' | param {param}
 param
     = '_' | ID
+match_list
+    = pattern '->' expr {'|' pattern '->' expr}
+pattern
+    = or_pattern [AS ID]
+or_pattern
+    = or_pattern '|' cons_pattern
+    | cons_pattern
+cons_pattern
+    = a_pattern [':' cons_pattern]
+a_pattern
+    | '_'
+    | Literal
+    | '(' list_pattern ')'
+    | '[' list_pattern ']'
+    | '[]'
+    | ID
+list_pattern
+    = pattern
+    | pattern ',' list_pattern
+
+
 logical_expr
     = equal_expr {logical_op equal_expr}
 equal_expr

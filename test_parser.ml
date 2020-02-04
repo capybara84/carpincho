@@ -109,6 +109,8 @@ let all_exprs = [
     ("import Array", Import ("Array", None));
     ("import Array as A", Import ("Array", Some "A"));
     ("Array.length", IdentMod ("Array", "length"));
+    ("(1,2)", Tuple [IntLit 1; IntLit 2]);
+    ("(1,2,3)", Tuple [IntLit 1; IntLit 2; IntLit 3]);
 ]
 
 let parser_test verbose =
