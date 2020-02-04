@@ -17,8 +17,18 @@ let insert_module id =
 let default_module = insert_module default_module_name
 let current_module = ref default_module
 
+
+let get_default_env () = default_module.env
+let set_default_env env = default_module.env <- env
+
+let get_current_module () = !current_module
+
 let set_default_module () =
     current_module := default_module
+
+let get_current_env () = !current_module.env
+let set_current_env env = !current_module.env <- env
+
 
 let set_module id =
     (try
@@ -34,3 +44,12 @@ let import_module id =
 let import_module_as id ren =
     (*TODO*)
     ()
+
+
+let lookup_default id =
+    Env.lookup id (default_module.env)
+
+let lookup mod_name id =
+    let symtab = lookup_module mod_name in
+    Env.lookup id symtab.env
+

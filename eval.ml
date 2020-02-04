@@ -66,7 +66,16 @@ let rec eval_expr env = function
         begin
             try
                 !(Env.lookup id env)
-            with Not_found -> error("'" ^ id ^ "' not found")
+            with Not_found ->
+                try
+                    !(Symbol.lookup_default id)
+                with Not_found -> error("'" ^ id ^ "' not found")
+        end
+    | IdentMod (mod_name, id) ->
+        begin
+            try
+                !(Symbol.lookup mod_name id)
+            with Not_found -> error("'" ^ mod_name ^ "." ^ id ^ "' not found")
         end
     | Binary (BinLor, lhs, rhs) ->
         let vl = eval_expr env lhs in
@@ -147,12 +156,21 @@ and eval_decl env = function
     | e ->
         (env, eval_expr env e)
 
-let eval_top top_env el = 
-    Symbol.set_default_module ();
+let eval_one e =
+    let env = Symbol.get_current_env () in
+    let (env, v) = eval_decl env e in
+    Symbol.set_current_env env;
+    v
+
+let eval_all el = 
     let rec loop env = function
         | [] -> env 
         | x::xs ->
             let (new_env, v) = eval_decl env x in
             loop new_env xs
     in
-    loop top_env el
+    Symbol.set_default_module ();
+    let env = Symbol.get_current_env () in
+    let env = loop env el in
+    Symbol.set_current_env env
+

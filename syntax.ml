@@ -10,7 +10,7 @@ type token_type
     | MINUS | PLUS | SLASH | STAR | PERCENT
     | NOT | UNIT | LOR | LAND
     | ARROW | LPAR | RPAR | LBRA | RBRA | BEGIN | END
-    | WILDCARD | COMMA | NULL | COLON | SEMI
+    | WILDCARD | COMMA | DOT | NULL | COLON | SEMI
 
 type token = {
     token_type : token_type;
@@ -28,7 +28,8 @@ type unop = UNot | UMinus
 type expr =
     | Eof | Unit | Null | WildCard
     | BoolLit of bool | IntLit of int | CharLit of char | StrLit of string
-    | Ident of ident | Binary of binop * expr * expr
+    | Ident of ident | IdentMod of ident * ident
+    | Binary of binop * expr * expr
     | Unary of unop * expr
     | Apply of expr * expr
     | Let of ident * expr
@@ -73,7 +74,7 @@ let token_type_to_string = function
     | SLASH -> "/" | STAR -> "*" | PERCENT -> "%"
     | NOT -> "!" | UNIT -> "()" | LOR -> "||" | LAND -> "&&"
     | ARROW -> "->" | LPAR -> "(" | RPAR -> ")" | LBRA -> "[" | RBRA -> "]"
-    | BEGIN -> "{" | END -> "}" | WILDCARD -> "_" | COMMA -> ","
+    | BEGIN -> "{" | END -> "}" | WILDCARD -> "_" | COMMA -> "," | DOT -> "."
     | NULL -> "[]" | COLON -> ":" | SEMI -> ";"
 
 let token_to_string t = token_type_to_string t.token_type
@@ -100,6 +101,7 @@ let rec expr_to_string = function
     | CharLit c -> "'" ^ String.make 1 c ^ "'"
     | StrLit s -> "\"" ^ s ^ "\""
     | Ident id -> id
+    | IdentMod (mid, id) -> mid ^ "." ^ id
     | Binary (op, lhs, rhs) ->
         "(" ^ expr_to_string lhs ^ " " ^ string_of_binop op ^ " "
             ^ expr_to_string rhs ^ ")"

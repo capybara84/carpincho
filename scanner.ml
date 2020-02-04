@@ -146,6 +146,7 @@ let rec scan_token scan =
     | Some '{' -> next_char scan; BEGIN
     | Some '}' -> next_char scan; END
     | Some ',' -> next_char scan; COMMA
+    | Some '.' -> next_char scan; DOT
     | Some '+' -> next_char scan; PLUS
     | Some '/' -> next_char scan; SLASH
     | Some '*' -> next_char scan; STAR

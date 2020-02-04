@@ -33,7 +33,7 @@ apply_expr
 unary_expr
     = [unary_op] simple_expr
 simple_expr
-    = ID
+    = ID ['.' ID]
     | BOOL_LIT | INT_LIT | CHAR_LIT | STRING_LIT 
     | '()' | '(' expr ')'
     | '[' [expr {',' expr}] ']'

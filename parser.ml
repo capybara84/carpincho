@@ -162,7 +162,12 @@ and parse_simple pars =
         Null
     | ID id ->
         next_token pars;
-        Ident id
+        if peek_token_type pars = DOT then begin
+            next_token pars;
+            let id2 = expect_id pars in
+            IdentMod (id, id2)
+        end else
+            Ident id
     | BOOL_LIT b ->
         next_token pars;
         BoolLit b
