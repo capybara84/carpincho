@@ -48,10 +48,7 @@ let do_test () =
 
 let main () =
     let interactive = ref false in
-
-    let env = Symbol.get_default_env () in
-    let env = Builtins.init env in
-    Symbol.set_default_env env;
+    Builtins.init ();
 
     Arg.parse [("-d", Arg.Int (fun n -> Parser.debug := n),
                         "N  set debug level N");

@@ -1,4 +1,6 @@
 TODO
+- module
+
 - tuple
 - float
 - typedef
@@ -7,5 +9,4 @@ TODO
 - pattern
 - mutable
 - variant
-- module
 - compile

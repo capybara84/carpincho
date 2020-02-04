@@ -108,6 +108,7 @@ let all_exprs = [
     ("module List", Module "List");
     ("import Array", Import ("Array", None));
     ("import Array as A", Import ("Array", Some "A"));
+    ("Array.length", IdentMod ("Array", "length"));
 ]
 
 let parser_test verbose =

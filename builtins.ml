@@ -42,7 +42,7 @@ let fn_env _ =
     List.iter show_sym tab.env;
     VUnit
 
-let init env =
+let setup env =
     let add_fn name func env =
         Env.extend name (ref (VBuiltin func)) env
     in
@@ -56,3 +56,7 @@ let init env =
     let env = add_fn "_env" fn_env env in
     env
 
+let init () =
+    let env = Symbol.get_default_env () in
+    let env = setup env in
+    Symbol.set_default_env env
