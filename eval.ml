@@ -5,7 +5,7 @@ let error msg = raise (Error ("Runtime error: " ^ msg))
 
 let default_directory = "./"
 let make_module_filename name =
-    default_directory ^ String.uncapitalize_ascii name ^ ".cp"
+    default_directory ^ String.uncapitalize name ^ ".cp"
 
 let load_file filename =
     let ic = open_in filename in

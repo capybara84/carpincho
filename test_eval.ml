@@ -63,19 +63,22 @@ let all_exprs = [
     ("foo 4", VInt 6);
     ("fun fact n = if n < 1 then 1 else n * fact (n-1)", VUnit);
     ("fact 5", VInt 120);
+    ("module A", VUnit);
+    ("let x = 1", VUnit);
+    ("module B", VUnit);
+    ("let x = 2", VUnit);
+    ("module Main", VUnit);
+    ("A.x", VInt 1);
+    ("B.x", VInt 2);
 ]
 
 let eval_test verbose =
-    let env = ref [] in
     let do_eval_test (text, expected) =
         try
             if verbose then
                 print_endline ("text> " ^ text)
             else ();
-            let (new_env, v) =
-                Eval.eval_decl !env @@ Parser.parse_one @@ Scanner.from_string text
-            in
-            env := new_env;
+            let v = Eval.eval_line text in
             if verbose then begin
                 print_endline ("evaluated> " ^ value_to_string v);
                 print_endline ("expected > " ^ value_to_string expected)
