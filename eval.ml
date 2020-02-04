@@ -135,10 +135,20 @@ and eval_decl env = function
         let new_env = Env.extend id r env in
         r := eval_expr new_env e;
         (new_env, VUnit)
+    | Module id ->
+        let new_env = Symbol.set_module id in 
+        (new_env, VUnit)
+    | Import (id, None) ->
+        Symbol.import_module id;
+        (env, VUnit)
+    | Import (id, Some ren) ->
+        Symbol.import_module_as id ren;
+        (env, VUnit)
     | e ->
         (env, eval_expr env e)
 
 let eval_top top_env el = 
+    Symbol.set_default_module ();
     let rec loop env = function
         | [] -> env 
         | x::xs ->

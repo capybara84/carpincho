@@ -56,6 +56,11 @@ type value =
     | VClosure of expr * expr * (value ref) Env.t
     | VBuiltin of (value -> value)
 
+type symtab = {
+    name : ident;
+    mutable env : value ref Env.t;
+}
+
 let token_type_to_string = function
     | EOF -> "<EOF>" | NEWLINE -> "<NEWLINE>"
     | ID id -> id | BOOL_LIT true -> "true" | BOOL_LIT false -> "false"
