@@ -86,7 +86,7 @@ let is_logical_op = function
 
 let is_apply e t =
     match e with
-    | Fn _ | Apply _ | Ident _ ->
+    | Fn _ | Apply _ | Ident _ | IdentMod _ ->
         begin
             match t with
             | UNIT | NULL | ID _ | BOOL_LIT _ | INT_LIT _ | CHAR_LIT _

@@ -7,6 +7,14 @@ let default_directory = "./"
 let make_module_filename name =
     default_directory ^ String.uncapitalize_ascii name ^ ".cp"
 
+let load_file filename =
+    let ic = open_in filename in
+    let n = in_channel_length ic in
+    let text = really_input_string ic n in
+    close_in ic;
+    text
+
+
 let is_true = function
     | VBool b -> b
     | _ -> error "type error (boolean)"
@@ -161,25 +169,48 @@ and eval_decl env = function
         (env, eval_expr env e)
 
 and import id =
-(*
     let filename = make_module_filename id in
-*)
     let prev = Symbol.get_current_module () in
-    ignore (Symbol.set_module id);
-(*
+    let env = Symbol.set_module id in
     (try
-        load_source filename
-    with Error s | Sys_error s -> print_endline s);
-*)
+        load_module env filename
+    with Error s | Sys_error s -> print_endline s
+        | End_of_file -> ());
     Symbol.set_current_module prev
 
-let eval_one e =
+and load_module env filename =
+    try
+        let text = load_file filename in
+        eval_module env @@ Parser.parse @@ Scanner.from_string text
+    with
+        | Error s | Sys_error s -> print_endline s
+        | End_of_file -> ()
+
+and eval_module env el = 
+    let rec loop env = function
+        | [] -> env 
+        | x::xs ->
+            let (new_env, v) = eval_decl env x in
+            loop new_env xs
+    in
+    let env = loop env el in
+    Symbol.set_current_env env
+
+and load_source filename =
+    try
+        let text = load_file filename in
+        eval_all @@ Parser.parse @@ Scanner.from_string text
+    with
+        | Error s | Sys_error s -> print_endline s
+        | End_of_file -> ()
+
+and eval_one e =
     let env = Symbol.get_current_env () in
     let (env, v) = eval_decl env e in
     Symbol.set_current_env env;
     v
 
-let eval_all el = 
+and eval_all el = 
     let rec loop env = function
         | [] -> env 
         | x::xs ->
@@ -190,4 +221,11 @@ let eval_all el =
     let env = Symbol.get_current_env () in
     let env = loop env el in
     Symbol.set_current_env env
+
+let eval_line text =
+    let e = Parser.parse_one @@ Scanner.from_string text in
+(*
+    print_endline (expr_to_string e);
+*)
+    eval_one e
 
