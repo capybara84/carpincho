@@ -164,8 +164,9 @@ and eval_decl env = function
     | Import (id, None) ->
         import id;
         (env, VUnit)
-    | Import (id, Some ren) ->
+    | Import (id, Some asid) ->
         import id;
+        Symbol.rename_module id asid;
         (env, VUnit)
     | e ->
         (env, eval_expr env e)

@@ -49,3 +49,8 @@ let lookup mod_name id =
     let symtab = lookup_module mod_name in
     Env.lookup id symtab.env
 
+let rename_module old_name new_name =
+    let tab = lookup_module old_name in
+    let module_list = List.remove_assoc old_name !all_modules in
+    all_modules := Env.extend new_name tab module_list
+
