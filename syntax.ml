@@ -4,6 +4,7 @@ exception Error of string
 type token_type
     = EOF | NEWLINE | ID of string | BOOL_LIT of bool | INT_LIT of int
     | CHAR_LIT of char | STRING_LIT of string
+    | MODULE | IMPORT | AS
     | LET | FN | FUN | IF | THEN | ELSE
     | EQ | EQL | NEQ | LT | LE | GT | GE
     | MINUS | PLUS | SLASH | STAR | PERCENT
@@ -35,6 +36,8 @@ type expr =
     | Fn of expr * expr
     | If of expr * expr * expr
     | Comp of expr list
+    | Module of ident
+    | Import of ident * ident option
 
 type typ =
     | TUnit | TBool | TInt | TChar | TString
@@ -58,6 +61,7 @@ let token_type_to_string = function
     | ID id -> id | BOOL_LIT true -> "true" | BOOL_LIT false -> "false"
     | INT_LIT n -> string_of_int n | CHAR_LIT c -> "'" ^ String.make 1 c ^ "'"
     | STRING_LIT s -> "\"" ^ s ^ "\""
+    | MODULE -> "module" | IMPORT -> "import" | AS -> "as"
     | LET -> "let" | FN -> "fn" | FUN -> "fun" | IF -> "if" | THEN -> "then"
     | ELSE -> "else" | EQ -> "=" | EQL -> "==" | NEQ -> "!=" | LT -> "<"
     | LE -> "<=" | GT -> ">" | GE -> ">=" | MINUS -> "-" | PLUS -> "+"
@@ -109,6 +113,13 @@ let rec expr_to_string = function
         ^ expr_to_string e3 ^ ")"
     | Comp el ->
         "{" ^ comp_to_string el ^ "}"
+    | Module name ->
+        "module " ^ name
+    | Import (name, Some rename) ->
+        "import " ^ name ^ " as " ^ rename
+    | Import (name, None) ->
+        "import " ^ name
+
 and
     comp_to_string = function
     | [] -> ""

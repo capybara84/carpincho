@@ -458,16 +458,48 @@ and parse_decl pars =
     debug_parse_out "parse_decl";
     e
 
+let parse_import pars =
+    debug_parse_in "parse_import";
+    next_token pars;
+    let id = expect_id pars in
+    let rename =
+        if peek_token_type pars = AS then
+            (next_token pars; Some (expect_id pars))
+        else
+            None
+    in
+    debug_parse_out "parse_import";
+    Import (id, rename)
+
+let parse_module pars =
+    debug_parse_in "parse_module";
+    next_token pars;
+    let id = expect_id pars in
+    debug_parse_out "parse_module";
+    Module id
+
+let rec parse_top_level pars =
+    debug_parse_in "parse_top_level";
+    let e = match peek_token_type pars with
+        | EOF -> Eof
+        | NEWLINE | SEMI -> next_token pars; parse_top_level pars
+        | MODULE -> parse_module pars
+        | IMPORT -> parse_import pars
+        | _ -> parse_decl pars
+    in
+    debug_parse_out "parse_top_level";
+    e
+
 let parse_one tokens =
     let pars = { tokens = tokens } in
     debug_token ("token = " ^ (token_to_string @@ peek_token pars));
-    parse_decl pars
+    parse_top_level pars
 
 let parse tokens =
     let pars = { tokens = tokens } in
     debug_token ("token = " ^ (token_to_string @@ peek_token pars));
     let rec loop res =
-        let e = parse_decl pars in
+        let e = parse_top_level pars in
         if e = Eof then
             List.rev res
         else

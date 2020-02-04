@@ -105,6 +105,9 @@ let all_exprs = [
                                         Apply (Ident "fact",
                                             Binary (BinSub, Ident "n",
                                                 IntLit 1))))))));
+    ("module List", Module "List");
+    ("import Array", Import ("Array", None));
+    ("import Array as A", Import ("Array", Some "A"));
 ]
 
 let parser_test verbose =

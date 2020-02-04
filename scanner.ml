@@ -52,6 +52,9 @@ let scan_ident scan =
     let id = cut_token is_ident scan in
     match id with
     | "_" -> WILDCARD
+    | "module" -> MODULE
+    | "import" -> IMPORT
+    | "as" -> AS
     | "let" -> LET
     | "fn" -> FN
     | "fun" -> FUN

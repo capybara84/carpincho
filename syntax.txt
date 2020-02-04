@@ -1,6 +1,10 @@
 
 program
-    = {decl}
+    = {top_level}
+top_level
+    = MODULE ID
+    | IMPORT ID [AS ID]
+    | decl
 decl
     = LET ID '=' expr
     | FUN ID param '=' expr

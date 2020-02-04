@@ -4,6 +4,7 @@ open Syntax
 let test_text = "
 identifier 12345
 'a' '\\t' \"abc\\n\"
+module import as
 let fn if then else
 = == != < <= > >=
 - + / * %
@@ -15,6 +16,7 @@ _ , [] : ;
 let test_tokens = [
     NEWLINE; ID "identifier"; INT_LIT 12345; NEWLINE;
     CHAR_LIT 'a'; CHAR_LIT '\t'; STRING_LIT "abc\n"; NEWLINE;
+    MODULE; IMPORT; AS; NEWLINE;
     LET; FN; IF; THEN; ELSE; NEWLINE;
     EQ; EQL; NEQ; LT; LE; GT; GE; NEWLINE;
     MINUS; PLUS; SLASH; STAR; PERCENT; NEWLINE;
