@@ -35,7 +35,7 @@ unary_expr
 simple_expr
     = ID ['.' ID]
     | BOOL_LIT | INT_LIT | CHAR_LIT | STRING_LIT 
-    | '()' | '(' expr ')'
+    | '()' | '(' expr {',' expr} ')'
     | '[' [expr {',' expr}] ']'
 logical_op = '||' | '&&'
 equal_op = '==' | '!=' | '<' | '<=' | '>' | '>='

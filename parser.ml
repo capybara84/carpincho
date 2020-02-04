@@ -184,8 +184,25 @@ and parse_simple pars =
         next_token pars;
         skip_newline pars;
         let e = parse_expr pars in
-        expect pars RPAR;
-        e
+        let rec loop lst =
+            let e = parse_expr pars in
+            if peek_token_type pars = COMMA then begin
+                next_token pars;
+                skip_newline pars;
+                loop (e::lst)
+            end else
+                List.rev (e::lst)
+        in
+        if peek_token_type pars = COMMA then begin
+            next_token pars;
+            skip_newline pars;
+            let e2 = loop [] in
+            expect pars RPAR;
+            Tuple (e::e2)
+        end else begin
+            expect pars RPAR;
+            e
+        end
     | LBRA ->
         next_token pars;
         skip_newline pars;

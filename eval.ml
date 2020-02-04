@@ -89,6 +89,8 @@ let rec eval_expr env = function
                 !(Symbol.lookup mod_name id)
             with Not_found -> error("'" ^ mod_name ^ "." ^ id ^ "' not found")
         end
+    | Tuple el ->
+        VTuple (List.map (fun x -> eval_expr env x) el)
     | Binary (BinLor, lhs, rhs) ->
         let vl = eval_expr env lhs in
         if is_true vl then

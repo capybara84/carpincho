@@ -1,6 +1,7 @@
 open Syntax
 
 let error s = raise (Error ("Runtime error: " ^ s))
+let type_error s = error ("type '" ^ s ^ "' required")
 
 let fn_nl _ =
     print_newline ();
@@ -9,21 +10,29 @@ let fn_nl _ =
 
 let fn_putn = function
     | VInt n -> print_int n; VUnit
-    | _ -> error "type error ('int' required)"
+    | _ -> type_error "int"
 
 let fn_puts = function
     | VString s -> print_string s; VUnit
-    | _ -> error "type error ('string' required)"
+    | _ -> type_error "string"
 
 let fn_head = function
     | VCons (hd, _) -> hd
-    | _ -> error "type error ('list' required)"
+    | _ -> type_error "list"
 
 let fn_tail = function
     | VCons (_, tl) -> tl
-    | _ -> error "type error ('list' required)"
+    | _ -> type_error "list"
 
-let fn_desc v =
+let fn_first = function
+    | VTuple (x::_) -> x
+    | _ -> type_error "tuple"
+
+let fn_second = function
+    | VTuple (_::x::_) -> x
+    | _ -> type_error "tuple"
+
+let fn_describe v =
     describe_value v;
     VUnit
 
@@ -42,21 +51,22 @@ let fn_env _ =
     List.iter show_sym tab.env;
     VUnit
 
-let setup env =
-    let add_fn name func env =
-        Env.extend name (ref (VBuiltin func)) env
-    in
-    let env = add_fn "nl" fn_nl env in
-    let env = add_fn "putn" fn_putn env in
-    let env = add_fn "puts" fn_puts env in
-    let env = add_fn "hd" fn_head env in
-    let env = add_fn "tl" fn_tail env in
-    let env = add_fn "desc" fn_desc env in
-    let env = add_fn "_mod" fn_modules env in
-    let env = add_fn "_env" fn_env env in
-    env
+let builtin_list = [
+    ("nl", fn_nl);
+    ("putn", fn_putn);
+    ("puts", fn_puts);
+    ("hd", fn_head);
+    ("tl", fn_tail);
+    ("fst", fn_first);
+    ("snd", fn_second);
+    ("desc", fn_describe);
+    ("modules", fn_modules);
+    ("env", fn_env);
+]
 
 let init () =
-    let env = Symbol.get_default_env () in
-    let env = setup env in
-    Symbol.set_default_env env
+    let add_func (name, fn) =
+        Symbol.insert_default name (VBuiltin fn)
+    in
+    List.iter add_func builtin_list
+

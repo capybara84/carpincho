@@ -10,9 +10,9 @@ let lookup_module id =
     Env.lookup id !all_modules
 
 let insert_module id =
-    let modu = { name = id; env = Env.empty } in
-    all_modules := Env.extend id modu !all_modules;
-    modu
+    let tab = { env = Env.empty } in
+    all_modules := Env.extend id tab !all_modules;
+    tab
 
 let default_module = insert_module default_module_name
 let current_module = ref default_module
@@ -22,8 +22,8 @@ let get_default_env () = default_module.env
 let set_default_env env = default_module.env <- env
 
 let get_current_module () = !current_module
-let set_current_module modu =
-    current_module := modu
+let set_current_module tab =
+    current_module := tab
 
 let set_default_module () =
     current_module := default_module
@@ -38,6 +38,9 @@ let set_module id =
     with Not_found ->
         current_module := insert_module id);
     !current_module.env
+
+let insert_default name fn =
+    default_module.env <- Env.extend name (ref fn) default_module.env 
 
 let lookup_default id =
     Env.lookup id (default_module.env)

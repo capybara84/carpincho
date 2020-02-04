@@ -29,6 +29,7 @@ type expr =
     | Eof | Unit | Null | WildCard
     | BoolLit of bool | IntLit of int | CharLit of char | StrLit of string
     | Ident of ident | IdentMod of ident * ident
+    | Tuple of expr list
     | Binary of binop * expr * expr
     | Unary of unop * expr
     | Apply of expr * expr
@@ -42,23 +43,23 @@ type expr =
 
 type typ =
     | TUnit | TBool | TInt | TChar | TString
+    | TTuple of typ list
     | TList of typ
     | TFun of typ * typ
     | TVar of int * typ option ref
 
 type value =
-    | VUnit
-    | VNull
+    | VUnit | VNull
     | VBool of bool
     | VInt of int
     | VChar of char
     | VString of string
+    | VTuple of value list
     | VCons of value * value
     | VClosure of expr * expr * (value ref) Env.t
     | VBuiltin of (value -> value)
 
 type symtab = {
-    name : ident;
     mutable env : value ref Env.t;
 }
 
@@ -102,6 +103,7 @@ let rec expr_to_string = function
     | StrLit s -> "\"" ^ s ^ "\""
     | Ident id -> id
     | IdentMod (mid, id) -> mid ^ "." ^ id
+    | Tuple el -> "(" ^ tuple_to_string el ^ ")"
     | Binary (op, lhs, rhs) ->
         "(" ^ expr_to_string lhs ^ " " ^ string_of_binop op ^ " "
             ^ expr_to_string rhs ^ ")"
@@ -126,9 +128,11 @@ let rec expr_to_string = function
         "import " ^ name ^ " as " ^ rename
     | Import (name, None) ->
         "import " ^ name
-
-and
-    comp_to_string = function
+and tuple_to_string = function
+    | [] -> ""
+    | x::[] -> expr_to_string x
+    | x::xs -> expr_to_string x ^ ", " ^ tuple_to_string xs
+and comp_to_string = function
     | [] -> ""
     | x::xs -> expr_to_string x ^ "; " ^ comp_to_string xs
 
@@ -140,6 +144,7 @@ let rec value_to_string = function
     | VInt n -> string_of_int n
     | VChar c -> String.make 1 c
     | VString s -> s
+    | VTuple vl -> "(" ^ vlist_to_string vl ^ ")"
     | VCons (_, VCons _) as e -> "[" ^ value_list_to_string e ^ "]"
     | VCons (car, VNull) -> "[" ^ value_to_string car ^ "]"
     | VCons (car, cdr) -> value_to_string car ^ ":" ^ value_to_string cdr
@@ -154,6 +159,10 @@ and value_list_to_string = function
         | _ -> failwith "list rhs bug"
         end
     | _ -> failwith "list bug"
+and vlist_to_string = function
+    | [] -> ""
+    | x::[] -> value_to_string x
+    | x::xs -> value_to_string x ^ ", " ^ vlist_to_string xs
 
 let describe_value = function
     | VClosure (Ident x, body, _) ->
