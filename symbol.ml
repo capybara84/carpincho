@@ -22,6 +22,8 @@ let get_default_env () = default_module.env
 let set_default_env env = default_module.env <- env
 
 let get_current_module () = !current_module
+let set_current_module modu =
+    current_module := modu
 
 let set_default_module () =
     current_module := default_module
@@ -36,15 +38,6 @@ let set_module id =
     with Not_found ->
         current_module := insert_module id);
     !current_module.env
-
-let import_module id =
-    (*TODO*)
-    ()
-
-let import_module_as id ren =
-    (*TODO*)
-    ()
-
 
 let lookup_default id =
     Env.lookup id (default_module.env)

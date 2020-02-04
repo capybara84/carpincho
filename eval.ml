@@ -3,6 +3,10 @@ open Syntax
 
 let error msg = raise (Error ("Runtime error: " ^ msg))
 
+let default_directory = "./"
+let make_module_filename name =
+    default_directory ^ String.uncapitalize_ascii name ^ ".cp"
+
 let is_true = function
     | VBool b -> b
     | _ -> error "type error (boolean)"
@@ -148,13 +152,26 @@ and eval_decl env = function
         let new_env = Symbol.set_module id in 
         (new_env, VUnit)
     | Import (id, None) ->
-        Symbol.import_module id;
+        import id;
         (env, VUnit)
     | Import (id, Some ren) ->
-        Symbol.import_module_as id ren;
+        import id;
         (env, VUnit)
     | e ->
         (env, eval_expr env e)
+
+and import id =
+(*
+    let filename = make_module_filename id in
+*)
+    let prev = Symbol.get_current_module () in
+    ignore (Symbol.set_module id);
+(*
+    (try
+        load_source filename
+    with Error s | Sys_error s -> print_endline s);
+*)
+    Symbol.set_current_module prev
 
 let eval_one e =
     let env = Symbol.get_current_env () in
