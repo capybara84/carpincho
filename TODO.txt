@@ -10,3 +10,6 @@ TODO
 - typedef
 - type inference
 - compile
+
+- nested comment /* */
+

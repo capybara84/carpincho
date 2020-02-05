@@ -28,15 +28,15 @@ or_pattern
 cons_pattern
     = a_pattern {':' a_pattern}
 a_pattern
-    | '_'
-    | BOOL_LIT | INT_LIT | CHAR_LIT | STRING_LIT 
-    | '(' list_pattern ')'
-    | '[' list_pattern ']'
     | '[]'
+    | '_'
     | ID
-list_pattern
+    | BOOL_LIT | INT_LIT | CHAR_LIT | STRING_LIT 
+    | '(' pattern_list ')'
+    | '[' pattern_list ']'
+pattern_list
     = pattern
-    | pattern ',' list_pattern
+    | pattern ',' pattern_list
 
 
 logical_expr

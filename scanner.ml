@@ -61,6 +61,7 @@ let scan_ident scan =
     | "if" -> IF
     | "then" -> THEN
     | "else" -> ELSE
+    | "match" -> MATCH
     | "true" -> BOOL_LIT true
     | "false" -> BOOL_LIT false
     | _ -> ID id
@@ -160,10 +161,7 @@ let rec scan_token scan =
     | Some '-' -> scan_token2 '>' ARROW MINUS
     | Some '(' -> scan_token2 ')' UNIT LPAR
     | Some '[' -> scan_token2 ']' NULL LBRA
-    | Some '|' ->
-        next_char scan;
-        if peek scan = Some '|' then (next_char scan; LOR)
-        else raise (Error ("illegal character '|'"))
+    | Some '|' -> scan_token2 '|' LOR OR
     | Some '&' ->
         next_char scan;
         if peek scan = Some '&' then (next_char scan; LAND)

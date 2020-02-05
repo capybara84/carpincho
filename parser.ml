@@ -152,66 +152,67 @@ let rec parse_list_expr pars =
 and parse_simple pars =
     debug_parse_in "parse_simple";
     let res =
-    match peek_token_type pars with
-    | EOF -> Eof
-    | UNIT ->
-        next_token pars;
-        Unit
-    | NULL ->
-        next_token pars;
-        Null
-    | ID id ->
-        next_token pars;
-        if peek_token_type pars = DOT then begin
+        match peek_token_type pars with
+        | EOF -> Eof
+        | UNIT ->
             next_token pars;
-            let id2 = expect_id pars in
-            IdentMod (id, id2)
-        end else
-            Ident id
-    | BOOL_LIT b ->
-        next_token pars;
-        BoolLit b
-    | INT_LIT i ->
-        next_token pars;
-        IntLit i
-    | CHAR_LIT c ->
-        next_token pars;
-        CharLit c
-    | STRING_LIT s ->
-        next_token pars;
-        StrLit s
-    | LPAR ->
-        next_token pars;
-        skip_newline pars;
-        let e = parse_expr pars in
-        let rec loop lst =
+            Unit
+        | NULL ->
+            next_token pars;
+            Null
+        | ID id ->
+            next_token pars;
+            if peek_token_type pars = DOT then begin
+                next_token pars;
+                let id2 = expect_id pars in
+                IdentMod (id, id2)
+            end else
+                Ident id
+        | BOOL_LIT b ->
+            next_token pars;
+            BoolLit b
+        | INT_LIT i ->
+            next_token pars;
+            IntLit i
+        | CHAR_LIT c ->
+            next_token pars;
+            CharLit c
+        | STRING_LIT s ->
+            next_token pars;
+            StrLit s
+        | LPAR ->
+            next_token pars;
+            skip_newline pars;
             let e = parse_expr pars in
+            let rec loop lst =
+                let e = parse_expr pars in
+                if peek_token_type pars = COMMA then begin
+                    next_token pars;
+                    skip_newline pars;
+                    loop (e::lst)
+                end else
+                    List.rev (e::lst)
+            in
             if peek_token_type pars = COMMA then begin
                 next_token pars;
                 skip_newline pars;
-                loop (e::lst)
-            end else
-                List.rev (e::lst)
-        in
-        if peek_token_type pars = COMMA then begin
+                let e2 = loop [] in
+                expect pars RPAR;
+                Tuple (e::e2)
+            end else begin
+                expect pars RPAR;
+                e
+            end
+        | LBRA ->
             next_token pars;
             skip_newline pars;
-            let e2 = loop [] in
-            expect pars RPAR;
-            Tuple (e::e2)
-        end else begin
-            expect pars RPAR;
+            let e = parse_list_expr pars in
+            expect pars RBRA;
+            (*TODO calc list size, if 0 then it is NULL *)
             e
-        end
-    | LBRA ->
-        next_token pars;
-        skip_newline pars;
-        let e = parse_list_expr pars in
-        expect pars RBRA;
-        e
-    | t ->
-        next_token pars;
-        error pars ("syntax error at '" ^ token_type_to_string t ^ "'")
+        | t ->
+            next_token pars;
+            error pars ("syntax error at '" ^ token_type_to_string t ^ "'")
     in
     debug_parse_out "parse_simple";
     res
@@ -421,6 +422,140 @@ and parse_fn pars =
     debug_parse_out "parse_fn";
     e
 
+and parse_pattern_list pars =
+    debug_parse_in "parse_pattern_list";
+    let rec loop res =
+        if peek_token_type pars <> COMMA then
+            List.rev res
+        else begin
+            next_token pars;
+            skip_newline pars;
+            let e = parse_pattern pars in
+            loop (e::res)
+        end
+    in
+    let e = parse_pattern pars in
+    let e = loop [e] in
+    debug_parse_in "parse_pattern_list";
+    e
+
+and parse_a_pattern pars =
+    debug_parse_in "parse_a_pattern";
+    let e =
+        match peek_token_type pars with
+        | NULL -> next_token pars; PatNull
+        | WILDCARD -> next_token pars; PatWildCard
+        | ID id -> next_token pars; PatIdent id
+        | BOOL_LIT b -> next_token pars; PatBool b
+        | INT_LIT i -> next_token pars; PatInt i
+        | CHAR_LIT c -> next_token pars; PatChar c
+        | STRING_LIT s -> next_token pars; PatStr s
+        | LPAR ->
+            next_token pars;
+            skip_newline pars;
+            let pl = parse_pattern_list pars in
+            expect pars RPAR;
+            if List.length pl = 1 then
+                List.hd pl
+            else
+                PatTuple pl
+        | LBRA ->
+            next_token pars;
+            skip_newline pars;
+            let pl = parse_pattern_list pars in
+            expect pars RBRA;
+            if List.length pl == 0 then
+                PatNull
+            else
+                PatList pl
+        | t ->
+            next_token pars;
+            error pars ("syntax error at '" ^ token_type_to_string t ^ "'")
+    in
+    debug_parse_out "parse_a_pattern";
+    e
+
+and parse_cons_pattern pars =
+    debug_parse_in "parse_cons_pattern";
+    let rec parse_rhs lhs =
+        let tt = peek_token_type pars in
+        if tt <> COLON then
+            lhs
+        else begin
+            next_token pars;
+            let rhs = parse_a_pattern pars in
+            PatCons (lhs, parse_rhs rhs)
+        end
+    in
+    let e = parse_a_pattern pars in
+    let e = parse_rhs e in
+    debug_parse_out "parse_cons_pattern";
+    e
+
+and parse_or_pattern pars =
+    debug_parse_in "parse_or_pattern";
+    let rec parse_rhs lhs =
+        let tt = peek_token_type pars in
+        if tt <> OR then
+            lhs
+        else begin
+            next_token pars;
+            let rhs = parse_cons_pattern pars in
+            PatOr (lhs, parse_rhs rhs)
+        end
+    in
+    let e = parse_cons_pattern pars in
+    let e = parse_rhs e in
+    debug_parse_out "parse_or_pattern";
+    e
+
+and parse_pattern pars =
+    debug_parse_in "parse_pattern";
+    let e = parse_or_pattern pars in
+    let e =
+        if peek_token_type pars = AS then begin
+            next_token pars;
+            PatAs (e, expect_id pars)
+        end else
+            e
+    in
+    debug_parse_out "parse_pattern";
+    e
+
+and parse_match_list pars =
+    debug_parse_in "parse_match_list";
+    let rec loop res =
+        match peek_token_type pars with
+        | EOF | END -> res
+        | _ ->
+            begin
+                let p = parse_pattern pars in
+                expect pars ARROW;
+                skip_newline pars;
+                let e = parse_expr pars in
+                skip_newline pars;
+                if peek_token_type pars == OR then begin
+                    next_token pars;
+                    loop ((p, e) :: res)
+                end else
+                    (p, e) :: res
+            end
+    in
+    let lst = loop [] in
+    debug_parse_out "parse_match_list";
+    List.rev lst
+
+and parse_match pars =
+    debug_parse_in "parse_match";
+    next_token pars;
+    let e = parse_expr pars in
+    expect pars BEGIN;
+    skip_newline pars;
+    let lst = parse_match_list pars in
+    expect pars END;
+    debug_parse_out "parse_match";
+    Match (e, lst)
+
 and parse_expr pars =
     debug_parse_in "parse_expr";
     let e = match peek_token_type pars with
@@ -428,6 +563,7 @@ and parse_expr pars =
         | NEWLINE | SEMI -> next_token pars; parse_expr pars
         | FN -> parse_fn pars
         | IF -> parse_if pars
+        | MATCH -> parse_match pars
         | BEGIN -> parse_compound pars
         | _ -> parse_logical pars
     in

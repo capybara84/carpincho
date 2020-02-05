@@ -5,10 +5,10 @@ type token_type
     = EOF | NEWLINE | ID of string | BOOL_LIT of bool | INT_LIT of int
     | CHAR_LIT of char | STRING_LIT of string
     | MODULE | IMPORT | AS
-    | LET | FN | FUN | IF | THEN | ELSE
+    | LET | FN | FUN | IF | THEN | ELSE | MATCH
     | EQ | EQL | NEQ | LT | LE | GT | GE
     | MINUS | PLUS | SLASH | STAR | PERCENT
-    | NOT | UNIT | LOR | LAND
+    | NOT | UNIT | OR | LOR | LAND
     | ARROW | LPAR | RPAR | LBRA | RBRA | BEGIN | END
     | WILDCARD | COMMA | DOT | NULL | COLON | SEMI
 
@@ -25,6 +25,16 @@ type binop = BinAdd | BinSub | BinMul | BinDiv | BinMod
 
 type unop = UNot | UMinus
 
+type pattern =
+    | PatNull | PatWildCard
+    | PatBool of bool | PatInt of int | PatChar of char | PatStr of string
+    | PatIdent of ident
+    | PatTuple of pattern list
+    | PatList of pattern list
+    | PatCons of pattern * pattern
+    | PatAs of pattern * ident
+    | PatOr of pattern * pattern
+
 type expr =
     | Eof | Unit | Null | WildCard
     | BoolLit of bool | IntLit of int | CharLit of char | StrLit of string
@@ -37,6 +47,7 @@ type expr =
     | LetRec of ident * expr
     | Fn of expr * expr
     | If of expr * expr * expr
+    | Match of expr * (pattern * expr) list
     | Comp of expr list
     | Module of ident
     | Import of ident * ident option
@@ -70,10 +81,11 @@ let token_type_to_string = function
     | STRING_LIT s -> "\"" ^ s ^ "\""
     | MODULE -> "module" | IMPORT -> "import" | AS -> "as"
     | LET -> "let" | FN -> "fn" | FUN -> "fun" | IF -> "if" | THEN -> "then"
-    | ELSE -> "else" | EQ -> "=" | EQL -> "==" | NEQ -> "!=" | LT -> "<"
+    | ELSE -> "else" | MATCH -> "match"
+    | EQ -> "=" | EQL -> "==" | NEQ -> "!=" | LT -> "<"
     | LE -> "<=" | GT -> ">" | GE -> ">=" | MINUS -> "-" | PLUS -> "+"
     | SLASH -> "/" | STAR -> "*" | PERCENT -> "%"
-    | NOT -> "!" | UNIT -> "()" | LOR -> "||" | LAND -> "&&"
+    | NOT -> "!" | UNIT -> "()" | OR -> "|" | LOR -> "||" | LAND -> "&&"
     | ARROW -> "->" | LPAR -> "(" | RPAR -> ")" | LBRA -> "[" | RBRA -> "]"
     | BEGIN -> "{" | END -> "}" | WILDCARD -> "_" | COMMA -> "," | DOT -> "."
     | NULL -> "[]" | COLON -> ":" | SEMI -> ";"
@@ -120,6 +132,8 @@ let rec expr_to_string = function
     | If (e1, e2, e3) ->
         "(if " ^ expr_to_string e1 ^ " then " ^ expr_to_string e2 ^ " else "
         ^ expr_to_string e3 ^ ")"
+    | Match (e, lst) ->
+        "(match " ^ expr_to_string e ^ " {" ^ match_list_to_string lst ^ "})"
     | Comp el ->
         "{" ^ comp_to_string el ^ "}"
     | Module name ->
@@ -135,6 +149,30 @@ and tuple_to_string = function
 and comp_to_string = function
     | [] -> ""
     | x::xs -> expr_to_string x ^ "; " ^ comp_to_string xs
+and match_list_to_string = function
+    | [] -> ""
+    | (pat, e)::rest ->
+        " | " ^ pattern_to_string pat ^ " -> "
+            ^ expr_to_string e ^ match_list_to_string rest
+and pattern_to_string = function
+    | PatNull -> "[]"
+    | PatWildCard -> "_"
+    | PatBool true -> "true"
+    | PatBool false -> "false"
+    | PatInt n -> string_of_int n
+    | PatChar c -> "'" ^ String.make 1 c ^ "'"
+    | PatStr s -> "\"" ^ s ^ "\""
+    | PatIdent id -> id
+    | PatTuple pl ->
+        List.fold_left (fun a b -> a ^ " " ^ pattern_to_string b) "" pl
+    | PatList lst ->
+        List.fold_left (fun a b -> a ^ " " ^ pattern_to_string b) "" lst
+    | PatCons (p1, p2) ->
+        pattern_to_string p1 ^ " | " ^ pattern_to_string p2
+    | PatAs (pat, id) ->
+        "(" ^ pattern_to_string pat ^ ") as " ^ id
+    | PatOr (p1, p2) ->
+        pattern_to_string p1 ^ ":" ^ pattern_to_string p2
 
 let rec value_to_string = function
     | VUnit -> "()"
