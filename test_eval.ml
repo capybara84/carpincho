@@ -76,6 +76,19 @@ let all_exprs = [
     ("L.length [1,2,3,4]", VInt 4);
     ("fst (1,2)", VInt 1);
     ("snd (1,2)", VInt 2);
+    ("(fn n -> match n { 0 -> 'a' | 1 -> 'b' | 2 -> 'c' }) 1", VChar 'b');
+    ("(fn n -> match n { (_,_,x) -> x }) (1,2,3)", VInt 3);
+    ("(fn n -> match n { 0 | 1 | 2 -> 'a' | 3 -> 'b' }) 1", VChar 'a');
+    ("(fn n -> match n { 0 | 1 | 2 -> 'a' | 3 -> 'b' }) 2", VChar 'a');
+    ("(fn n -> match n { 0 | 1 | 2 -> 'a' | 3 -> 'b' }) 3", VChar 'b');
+    ("match [1,2,3] { [a,b,c] as d -> a }", VInt 1);
+    ("match [1,2,3] { [a,b,c] as d -> b }", VInt 2);
+    ("match [1,2,3] { [a,b,c] as d -> c }", VInt 3);
+    ("match [1,2,3] { [a,b,c] as d -> d }",
+        VCons (VInt 1, VCons (VInt 2, VCons (VInt 3, VNull))));
+    ("match [1,2,3] { x:xs -> x }", VInt 1);
+    ("match [1,2,3] { x:y:xs -> y }", VInt 2);
+    ("match [1,2,3] { x:xs -> xs }", VCons(VInt 2, VCons (VInt 3, VNull)));
 ]
 
 let eval_test verbose =

@@ -132,10 +132,79 @@ let rec eval_expr env = function
         let vc = eval_expr env e1 in
         let v = eval_expr env (if is_true vc then e2 else e3)
         in v
+    | Match (e, ml) ->
+        let v = eval_expr env e in
+        eval_match env v ml
     | Comp el ->
         let (_, v) = eval_list env el in
         v
     | _ -> failwith ("eval bug")
+
+and eval_match env v match_list =
+    let rec match_with env = function
+        | (PatNull, VNull) -> (env, true)
+        | (PatNull, _) -> (env, false)
+        | (PatWildCard, _) -> (env, true)
+        | (PatBool b, VBool vb) when b = vb -> (env, true)
+        | (PatBool _, _) -> (env, false)
+        | (PatInt i, VInt vi) when i = vi -> (env, true)
+        | (PatInt _, _) -> (env, false)
+        | (PatChar c, VChar vc) when c = vc -> (env, true)
+        | (PatChar _, _) -> (env, false)
+        | (PatStr s, VString vs) when s = vs -> (env, true)
+        | (PatStr _, _) -> (env, false)
+        | (PatIdent id, v) -> (Env.extend id (ref v) env, true)
+        | (PatTuple tl, VTuple vl) ->
+            let rec list_match new_env = function
+                | ([],[]) -> (new_env, true)
+                | ([], _) | (_, []) -> (env, false)
+                | (x::xs, y::ys) ->
+                    let (new_env, result) = match_with new_env (x, y) in
+                    if result then
+                        list_match new_env (xs, ys)
+                    else
+                        (env, false)
+            in list_match env (tl, vl)
+        | (PatTuple _, _) -> (env, false)
+        | (PatList (x::xs), v) ->
+            match_with env (PatCons (x, PatList xs), v)
+        | (PatList [], VNull) -> (env, true)
+        | (PatList _, _) -> (env, false)
+        | (PatCons (p1, p2), VCons (x, xs)) ->
+            let (new_env, result) = match_with env (p1, x) in
+            if result then
+                match_with new_env (p2, xs)
+            else
+                (env, false)
+        | (PatCons _, _) -> (env, false)
+        | (PatAs (pat, id), v) ->
+            let (env, result) = match_with env (pat, v) in
+            if result then
+                (Env.extend id (ref v) env, true)
+            else
+                (env, false)
+        | (PatOr (p1, p2), v) ->
+            let (new_env, result) = match_with env (p1, v) in
+            if result then
+                (new_env, true)
+            else
+                let (new_env, result) = match_with env (p2, v) in
+                if result then
+                    (new_env, true)
+                else
+                    (env, false)
+    in
+    let rec find_match env = function
+        | [] -> error "match failure"
+        | (pat, body)::rest ->
+            let (env, result) = match_with env (pat, v) in
+            if result then
+                (env, body)
+            else
+                find_match env rest
+    in
+    let (env, e) = find_match env match_list in
+    eval_expr env e
 
 and eval_list env = function
     | [] -> (env, VUnit)

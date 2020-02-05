@@ -511,6 +511,9 @@ and parse_or_pattern pars =
 
 and parse_pattern pars =
     debug_parse_in "parse_pattern";
+    if peek_token_type pars = OR then
+        next_token pars
+    else ();
     let e = parse_or_pattern pars in
     let e =
         if peek_token_type pars = AS then begin

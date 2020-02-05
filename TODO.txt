@@ -1,8 +1,9 @@
 TODO
 * module
 * tuple
+* pattern
+* nested comment /* */
 
-- pattern
 - variant
 - struct
 - mutable
@@ -10,6 +11,3 @@ TODO
 - typedef
 - type inference
 - compile
-
-- nested comment /* */
-

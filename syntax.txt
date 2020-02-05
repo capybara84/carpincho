@@ -20,7 +20,7 @@ param_list
 param
     = '_' | ID
 match_list
-    = pattern '->' expr {'|' pattern '->' expr}
+    = ['|'] pattern '->' expr {'|' pattern '->' expr}
 pattern
     | or_pattern [AS ID]
 or_pattern
