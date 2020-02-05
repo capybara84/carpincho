@@ -241,14 +241,18 @@ and eval_decl env = function
         (env, eval_expr env e)
 
 and import id =
-    let filename = make_module_filename id in
-    let prev = Symbol.get_current_module () in
-    let env = Symbol.set_module id in
-    (try
-        load_module env filename
-    with Error s | Sys_error s -> print_endline s
-        | End_of_file -> ());
-    Symbol.set_current_module prev
+    if Symbol.exist_module id then
+        ()
+    else begin
+        let filename = make_module_filename id in
+        let prev = Symbol.get_current_module () in
+        let env = Symbol.set_module id in
+        (try
+            load_module env filename
+        with Error s | Sys_error s -> print_endline s
+            | End_of_file -> ());
+        Symbol.set_current_module prev
+    end
 
 and load_module env filename =
     try

@@ -9,6 +9,11 @@ let get_all_modules () = !all_modules
 let lookup_module id =
     Env.lookup id !all_modules
 
+let exist_module id =
+    try ignore (Env.lookup id !all_modules);
+        true
+    with Not_found -> false
+
 let insert_module id =
     let tab = { env = Env.empty } in
     all_modules := Env.extend id tab !all_modules;
