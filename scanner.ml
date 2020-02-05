@@ -52,12 +52,16 @@ let scan_ident scan =
     let id = cut_token is_ident scan in
     match id with
     | "_" -> WILDCARD
+    | "module" -> MODULE
+    | "import" -> IMPORT
+    | "as" -> AS
     | "let" -> LET
     | "fn" -> FN
     | "fun" -> FUN
     | "if" -> IF
     | "then" -> THEN
     | "else" -> ELSE
+    | "match" -> MATCH
     | "true" -> BOOL_LIT true
     | "false" -> BOOL_LIT false
     | _ -> ID id
@@ -118,8 +122,29 @@ let rec skip_newline scan =
 and skip_comment scan =
     next_char scan;
     match peek scan with
-    | Some ch when ch <> '\n' -> skip_comment scan
-    | _ -> skip_newline scan
+    | Some '\n' -> skip_newline scan
+    | _ -> skip_comment scan
+
+let rec skip_nested_comment scan =
+    next_char scan;
+    let rec loop () =
+        match peek scan with
+        | Some '*' ->
+            next_char scan;
+            if peek scan = Some '/' then
+                next_char scan
+            else
+                loop ()
+        | Some '/' ->
+            next_char scan;
+            if peek scan = Some '*' then
+                skip_nested_comment scan
+            else ();
+            loop ()
+        | _ ->
+            next_char scan;
+            loop ()
+    in loop ()
 
 let rec scan_token scan =
     let scan_token2 ch token_type2 token_type1 =
@@ -143,8 +168,8 @@ let rec scan_token scan =
     | Some '{' -> next_char scan; BEGIN
     | Some '}' -> next_char scan; END
     | Some ',' -> next_char scan; COMMA
+    | Some '.' -> next_char scan; DOT
     | Some '+' -> next_char scan; PLUS
-    | Some '/' -> next_char scan; SLASH
     | Some '*' -> next_char scan; STAR
     | Some '%' -> next_char scan; PERCENT
     | Some ':' -> next_char scan; COLON
@@ -156,10 +181,14 @@ let rec scan_token scan =
     | Some '-' -> scan_token2 '>' ARROW MINUS
     | Some '(' -> scan_token2 ')' UNIT LPAR
     | Some '[' -> scan_token2 ']' NULL LBRA
-    | Some '|' ->
+    | Some '|' -> scan_token2 '|' LOR OR
+    | Some '/' ->
         next_char scan;
-        if peek scan = Some '|' then (next_char scan; LOR)
-        else raise (Error ("illegal character '|'"))
+        if peek scan = Some '*' then begin
+            skip_nested_comment scan; 
+            scan_token scan
+        end else
+            SLASH
     | Some '&' ->
         next_char scan;
         if peek scan = Some '&' then (next_char scan; LAND)

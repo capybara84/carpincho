@@ -105,6 +105,45 @@ let all_exprs = [
                                         Apply (Ident "fact",
                                             Binary (BinSub, Ident "n",
                                                 IntLit 1))))))));
+    ("module List", Module "List");
+    ("import Array", Import ("Array", None));
+    ("import Array as A", Import ("Array", Some "A"));
+    ("Array.length", IdentMod ("Array", "length"));
+    ("(1)", IntLit 1);
+    ("(1,2)", Tuple [IntLit 1; IntLit 2]);
+    ("(1,2,3)", Tuple [IntLit 1; IntLit 2; IntLit 3]);
+    ("match x { 0 -> 'a' | 1 -> 'b' | 2 -> 'c' }",
+        Match (Ident "x",
+                [(PatInt 0, CharLit 'a');
+                 (PatInt 1, CharLit 'b');
+                 (PatInt 2, CharLit 'c')]));
+    ("match x { [] -> 0 | _:xs -> 1 }",
+        Match (Ident "x",
+                [(PatNull, IntLit 0);
+                 (PatCons (PatWildCard, PatIdent "xs"), IntLit 1)]));
+    ("match 1 { x -> x }",
+        Match (IntLit 1,
+                [(PatIdent "x", Ident "x")]));
+    ("match n { 1 | 2 | 3 -> 0 | 4 -> 1 }",
+        Match (Ident "n",
+                [(PatOr (PatInt 1, PatOr (PatInt 2, PatInt 3)), IntLit 0);
+                 (PatInt 4, IntLit 1)]));
+    ("match n { _ as a -> 1}",
+        Match (Ident "n",
+                [(PatAs (PatWildCard, "a"), IntLit 1)]));
+    ("match n { [a,b,c] -> 3 }",
+        Match (Ident "n",
+                [(PatList [PatIdent "a"; PatIdent "b"; PatIdent "c"], IntLit 3)]));
+    ("match n { (1) -> 2 }",
+        Match (Ident "n",
+                [(PatInt 1, IntLit 2)]));
+    ("match n { (1, 'c') -> 3 }",
+        Match (Ident "n",
+                [(PatTuple [PatInt 1; PatChar 'c']), IntLit 3]));
+    ("match n { (_,_,x) -> x }",
+        Match (Ident "n",
+                [(PatTuple [PatWildCard; PatWildCard; PatIdent "x"], Ident "x")]));
+
 ]
 
 let parser_test verbose =

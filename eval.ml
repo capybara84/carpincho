@@ -3,6 +3,18 @@ open Syntax
 
 let error msg = raise (Error ("Runtime error: " ^ msg))
 
+let default_directory = "./"
+let make_module_filename name =
+    default_directory ^ String.uncapitalize name ^ ".cp"
+
+let load_file filename =
+    let ic = open_in filename in
+    let n = in_channel_length ic in
+    let text = really_input_string ic n in
+    close_in ic;
+    text
+
+
 let is_true = function
     | VBool b -> b
     | _ -> error "type error (boolean)"
@@ -66,8 +78,19 @@ let rec eval_expr env = function
         begin
             try
                 !(Env.lookup id env)
-            with Not_found -> error("'" ^ id ^ "' not found")
+            with Not_found ->
+                try
+                    !(Symbol.lookup_default id)
+                with Not_found -> error("'" ^ id ^ "' not found")
         end
+    | IdentMod (mod_name, id) ->
+        begin
+            try
+                !(Symbol.lookup mod_name id)
+            with Not_found -> error("'" ^ mod_name ^ "." ^ id ^ "' not found")
+        end
+    | Tuple el ->
+        VTuple (List.map (fun x -> eval_expr env x) el)
     | Binary (BinLor, lhs, rhs) ->
         let vl = eval_expr env lhs in
         if is_true vl then
@@ -109,10 +132,79 @@ let rec eval_expr env = function
         let vc = eval_expr env e1 in
         let v = eval_expr env (if is_true vc then e2 else e3)
         in v
+    | Match (e, ml) ->
+        let v = eval_expr env e in
+        eval_match env v ml
     | Comp el ->
         let (_, v) = eval_list env el in
         v
     | _ -> failwith ("eval bug")
+
+and eval_match env v match_list =
+    let rec match_with env = function
+        | (PatNull, VNull) -> (env, true)
+        | (PatNull, _) -> (env, false)
+        | (PatWildCard, _) -> (env, true)
+        | (PatBool b, VBool vb) when b = vb -> (env, true)
+        | (PatBool _, _) -> (env, false)
+        | (PatInt i, VInt vi) when i = vi -> (env, true)
+        | (PatInt _, _) -> (env, false)
+        | (PatChar c, VChar vc) when c = vc -> (env, true)
+        | (PatChar _, _) -> (env, false)
+        | (PatStr s, VString vs) when s = vs -> (env, true)
+        | (PatStr _, _) -> (env, false)
+        | (PatIdent id, v) -> (Env.extend id (ref v) env, true)
+        | (PatTuple tl, VTuple vl) ->
+            let rec list_match new_env = function
+                | ([],[]) -> (new_env, true)
+                | ([], _) | (_, []) -> (env, false)
+                | (x::xs, y::ys) ->
+                    let (new_env, result) = match_with new_env (x, y) in
+                    if result then
+                        list_match new_env (xs, ys)
+                    else
+                        (env, false)
+            in list_match env (tl, vl)
+        | (PatTuple _, _) -> (env, false)
+        | (PatList (x::xs), v) ->
+            match_with env (PatCons (x, PatList xs), v)
+        | (PatList [], VNull) -> (env, true)
+        | (PatList _, _) -> (env, false)
+        | (PatCons (p1, p2), VCons (x, xs)) ->
+            let (new_env, result) = match_with env (p1, x) in
+            if result then
+                match_with new_env (p2, xs)
+            else
+                (env, false)
+        | (PatCons _, _) -> (env, false)
+        | (PatAs (pat, id), v) ->
+            let (env, result) = match_with env (pat, v) in
+            if result then
+                (Env.extend id (ref v) env, true)
+            else
+                (env, false)
+        | (PatOr (p1, p2), v) ->
+            let (new_env, result) = match_with env (p1, v) in
+            if result then
+                (new_env, true)
+            else
+                let (new_env, result) = match_with env (p2, v) in
+                if result then
+                    (new_env, true)
+                else
+                    (env, false)
+    in
+    let rec find_match env = function
+        | [] -> error "match failure"
+        | (pat, body)::rest ->
+            let (env, result) = match_with env (pat, v) in
+            if result then
+                (env, body)
+            else
+                find_match env rest
+    in
+    let (env, e) = find_match env match_list in
+    eval_expr env e
 
 and eval_list env = function
     | [] -> (env, VUnit)
@@ -135,14 +227,77 @@ and eval_decl env = function
         let new_env = Env.extend id r env in
         r := eval_expr new_env e;
         (new_env, VUnit)
+    | Module id ->
+        let new_env = Symbol.set_module id in 
+        (new_env, VUnit)
+    | Import (id, None) ->
+        import id;
+        (env, VUnit)
+    | Import (id, Some asid) ->
+        import id;
+        Symbol.rename_module id asid;
+        (env, VUnit)
     | e ->
         (env, eval_expr env e)
 
-let eval_top top_env el = 
+and import id =
+    let filename = make_module_filename id in
+    let prev = Symbol.get_current_module () in
+    let env = Symbol.set_module id in
+    (try
+        load_module env filename
+    with Error s | Sys_error s -> print_endline s
+        | End_of_file -> ());
+    Symbol.set_current_module prev
+
+and load_module env filename =
+    try
+        let text = load_file filename in
+        eval_module env @@ Parser.parse @@ Scanner.from_string text
+    with
+        | Error s | Sys_error s -> print_endline s
+        | End_of_file -> ()
+
+and eval_module env el = 
     let rec loop env = function
         | [] -> env 
         | x::xs ->
             let (new_env, v) = eval_decl env x in
             loop new_env xs
     in
-    loop top_env el
+    let env = loop env el in
+    Symbol.set_current_env env
+
+and load_source filename =
+    try
+        let text = load_file filename in
+        eval_all @@ Parser.parse @@ Scanner.from_string text
+    with
+        | Error s | Sys_error s -> print_endline s
+        | End_of_file -> ()
+
+and eval_one e =
+    let env = Symbol.get_current_env () in
+    let (env, v) = eval_decl env e in
+    Symbol.set_current_env env;
+    v
+
+and eval_all el = 
+    let rec loop env = function
+        | [] -> env 
+        | x::xs ->
+            let (new_env, v) = eval_decl env x in
+            loop new_env xs
+    in
+    Symbol.set_default_module ();
+    let env = Symbol.get_current_env () in
+    let env = loop env el in
+    Symbol.set_current_env env
+
+let eval_line text =
+    let e = Parser.parse_one @@ Scanner.from_string text in
+(*
+    print_endline (expr_to_string e);
+*)
+    eval_one e
+

@@ -1,6 +1,10 @@
 
 program
-    = {decl}
+    = {top_level}
+top_level
+    = MODULE ID
+    | IMPORT ID [AS ID]
+    | decl
 decl
     = LET ID '=' expr
     | FUN ID param '=' expr
@@ -8,12 +12,33 @@ decl
 expr
     = FN param_list '->' expr
     | IF expr THEN expr ELSE expr
+    | MATCH expr '{' match_list '}'
     | '{' {decl} '}'
     | logical_expr
 param_list
     = '()' | param {param}
 param
     = '_' | ID
+match_list
+    = ['|'] pattern '->' expr {'|' pattern '->' expr}
+pattern
+    | or_pattern [AS ID]
+or_pattern
+    = cons_pattern {'|' cons_pattern}
+cons_pattern
+    = a_pattern {':' a_pattern}
+a_pattern
+    | '[]'
+    | '_'
+    | ID
+    | BOOL_LIT | INT_LIT | CHAR_LIT | STRING_LIT 
+    | '(' pattern_list ')'
+    | '[' pattern_list ']'
+pattern_list
+    = pattern
+    | pattern ',' pattern_list
+
+
 logical_expr
     = equal_expr {logical_op equal_expr}
 equal_expr
@@ -29,9 +54,9 @@ apply_expr
 unary_expr
     = [unary_op] simple_expr
 simple_expr
-    = ID
+    = ID ['.' ID]
     | BOOL_LIT | INT_LIT | CHAR_LIT | STRING_LIT 
-    | '()' | '(' expr ')'
+    | '()' | '(' expr {',' expr} ')'
     | '[' [expr {',' expr}] ']'
 logical_op = '||' | '&&'
 equal_op = '==' | '!=' | '<' | '<=' | '>' | '>='
