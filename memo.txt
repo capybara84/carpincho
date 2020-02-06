@@ -1,0 +1,35 @@
+
+type token_type = EOF | NEWLINE | ID string | INT_LIT int
+    | MODULE | IMPORT | AS
+
+type token = Token {
+    token_type : token_type
+    line : int
+}
+type ident = string
+
+type pattern =
+    | PatNull | PatIdent ident
+    | PatTuple pattern list
+    | PatList pattern list
+    | PatCons pattern * pattern
+
+type ('a,'b) t = { aaa : 'a; bbb : 'b }
+
+
+fun map f x = match x {
+    | [] -> []
+    | x:xs -> f x : map f xs
+}
+
+decl map : ('a -> 'b) -> 'a list -> 'b list
+fun map (f:'a->'b) (x:'a list) = match x {
+}
+
+(int*int)*int
+int*(int*int)
+
+((a,b),c)
+(a,(b,c))
+
+

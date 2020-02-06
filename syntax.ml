@@ -53,6 +53,8 @@ type expr =
 
 and typ =
     | TUnit | TBool | TInt | TChar | TFloat | TString
+    | TIdent of ident
+    | TParamId of typ * ident
     | TTuple of typ list
     | TList of typ
     | TFun of typ * typ
@@ -94,19 +96,19 @@ let token_type_to_string = function
 let token_to_string t = token_type_to_string t.token_type
 
 let int_to_alpha x =
-    if x <= Char.code 'z' - Char.code 'a' + 1 then
-        String.make 1 (Char.chr ((Char.code 'a') + x - 1))
+    if x <= Char.code 'z' - Char.code 'a' then
+        String.make 1 (Char.chr ((Char.code 'a') + x))
     else
         string_of_int x
 
 let rec type_to_string ty =
     let rec to_s n ty =
-        let rec type_list_to_string p = function
+        let rec tuple_string = function
             | [] -> ""
-            | x::[] -> to_s p x
+            | x::[] -> to_s 0 x
             | x::xs ->
-                let s = to_s p x in
-                s ^ " * " ^ type_list_to_string (p+1) xs
+                let s = to_s 0 x in
+                s ^ ", " ^ tuple_string xs
         in
         let (m, str) =
             match ty with
@@ -116,8 +118,10 @@ let rec type_to_string ty =
             | TChar -> (100, "char")
             | TFloat -> (100, "float")
             | TString -> (100, "string")
-            | TTuple tl -> (2, type_list_to_string 2 tl)
-            | TList t -> (100, to_s 2 t ^ " list")
+            | TIdent id -> (100, id)
+            | TParamId (t, id) -> (100, to_s 0 t ^ " " ^ id)
+            | TTuple tl -> (2, "(" ^ tuple_string tl ^ ")")
+            | TList t -> (100, "[" ^ to_s 0 t ^ "]")
             | TFun (t1, t2) ->
                 let s1 = to_s 1 t1 in
                 let s2 = to_s 0 t2 in
@@ -175,7 +179,7 @@ let rec expr_to_string = function
         "(match " ^ expr_to_string e ^ " {" ^ match_list_to_string lst ^ "})"
     | Comp el ->
         "{" ^ comp_to_string el ^ "}"
-    | TypeDef (id, ty) -> "typedef " ^ id ^ " = " ^ type_to_string ty
+    | TypeDef (id, ty) -> "type " ^ id ^ " = " ^ type_to_string ty
     | Module name ->
         "module " ^ name
     | Import (name, Some rename) ->

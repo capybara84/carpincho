@@ -237,6 +237,9 @@ and eval_decl env = function
         import id;
         Symbol.rename_module id asid;
         (env, VUnit)
+    | TypeDef (id, typ) ->
+        (*TODO*)
+        (env, VUnit)
     | e ->
         (env, eval_expr env e)
 

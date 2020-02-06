@@ -597,8 +597,9 @@ and parse_fun pars =
     let args = parse_params pars in
     expect pars EQ;
     skip_newline pars;
-    let e = List.fold_right (fun arg body -> Fn (arg, body))
-                            args (parse_expr pars)
+    let e = List.fold_right
+                (fun arg body -> Fn (arg, body))
+                args (parse_expr pars)
     in
     debug_parse_out "parse_fun";
     LetRec (id, e)
@@ -639,6 +640,75 @@ let parse_module pars =
     debug_parse_out "parse_module";
     Module id
 
+let rec parse_type pars =
+    debug_parse_in "parse_type";
+    let t =
+        match peek_token_type pars with
+        | UNIT -> next_token pars; TUnit
+        | BOOL -> next_token pars; TBool
+        | INT -> next_token pars; TInt
+        | CHAR -> next_token pars; TChar
+        | FLOAT -> next_token pars; TFloat
+        | STRING -> next_token pars; TString
+        | ID id -> next_token pars; TIdent id
+        | LBRA ->
+            next_token pars;
+            let t = parse_type pars in
+            expect pars RBRA;
+            TList t
+        | LPAR ->
+            next_token pars;
+            let t = parse_type pars in
+            if peek_token_type pars <> COMMA then begin
+                expect pars RPAR;
+                t
+            end else begin
+                next_token pars;
+                skip_newline pars;
+                let rec loop tl =
+                    let t = parse_type pars in
+                    match peek_token_type pars with
+                    | COMMA ->
+                        next_token pars;
+                        skip_newline pars;
+                        loop (t::tl)
+                    | _ -> List.rev (t::tl)
+                in
+                TTuple (loop [t])
+            end
+        | _ -> error pars "type syntax error"
+    in
+    let t2 =
+        if peek_token_type pars <> ARROW then
+            t
+        else begin
+            next_token pars;
+            skip_newline pars;
+            TFun (t, parse_type pars)
+        end
+    in
+    let t3 =
+        match peek_token_type pars with
+        | ID id ->
+            next_token pars;
+            TParamId (t2, id)
+        | _ -> t2
+    in
+    debug_parse_out "parse_type";
+    t3
+
+and parse_type_def pars =
+    debug_parse_in "parse_type_def";
+    next_token pars;
+    skip_newline pars;
+    let id = expect_id pars in
+    skip_newline pars;
+    expect pars EQ;
+    skip_newline pars;
+    let t = parse_type pars in
+    debug_parse_out "parse_type_def";
+    TypeDef (id, t)
+
 let rec parse_top_level pars =
     debug_parse_in "parse_top_level";
     let e = match peek_token_type pars with
@@ -646,6 +716,7 @@ let rec parse_top_level pars =
         | NEWLINE | SEMI -> next_token pars; parse_top_level pars
         | MODULE -> parse_module pars
         | IMPORT -> parse_import pars
+        | TYPE -> parse_type_def pars
         | _ -> parse_decl pars
     in
     debug_parse_out "parse_top_level";

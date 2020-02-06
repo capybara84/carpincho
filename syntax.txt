@@ -11,9 +11,11 @@ type_def
 type
     = UNIT | BOOL | INT | CHAR | FLOAT | STRING
     | ID
+    | type ID
     | '(' type ')'
+    | '(' type {',' type} ')'
+    | '[' type ']'
     | type '->' type
-    | type '*' type
 
 decl
     = LET ID '=' expr

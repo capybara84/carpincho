@@ -25,6 +25,7 @@ let do_test () =
     Test_scanner.init false;
     Test_parser.init false;
     Test_eval.init false;
+    Test_type.init false;
     Test.run()
 
 let main () =
@@ -39,6 +40,7 @@ let main () =
         (fun name -> filenames := name::!filenames)
         "usage: cpc [-ti][-d N] filename...";
     List.iter Eval.load_source (List.rev !filenames);
+
     if !interactive then
         top_level()
     else ()
