@@ -21,24 +21,26 @@ let rec top_level () =
         | End_of_file -> ()
 
 
-let do_test () =
-    Test_scanner.init false;
-    Test_parser.init false;
-    Test_eval.init false;
-    Test_type.init false;
+let do_test verbose =
+    Test_scanner.init verbose;
+    Test_parser.init verbose;
+    Test_eval.init verbose;
+    Test_type.init verbose;
     Test.run()
 
 let main () =
     let interactive = ref false in
+    let verbose = ref false in
     Builtins.init ();
 
     Arg.parse [("-d", Arg.Int (fun n -> Parser.debug := n),
                         "N  set debug level N");
-               ("-t", Arg.Unit do_test, "  test mode");
+               ("-v", Arg.Unit (fun () -> verbose := true), "  verbose");
+               ("-t", Arg.Unit (fun () -> do_test !verbose), "  test mode");
                ("-i", Arg.Unit (fun () -> interactive := true),
                                 "  interactive mode"); ]
         (fun name -> filenames := name::!filenames)
-        "usage: cpc [-ti][-d N] filename...";
+        "usage: cpc [-d N][-v][-t][-i] filename...";
     List.iter Eval.load_source (List.rev !filenames);
 
     if !interactive then
