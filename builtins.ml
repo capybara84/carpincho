@@ -36,6 +36,22 @@ let fn_describe v =
     describe_value v;
     VUnit
 
+let fn_show_type _ =
+    print_endline @@ Syntax.type_to_string TUnit;
+    print_endline @@ Syntax.type_to_string TBool;
+    print_endline @@ Syntax.type_to_string TInt;
+    print_endline @@ Syntax.type_to_string TChar;
+    print_endline @@ Syntax.type_to_string TFloat;
+    print_endline @@ Syntax.type_to_string TString;
+    print_endline @@ Syntax.type_to_string (TTuple [TInt;TString]);
+    print_endline @@ Syntax.type_to_string (TList TInt);
+    print_endline @@ Syntax.type_to_string (TFun (TChar, TInt));
+    print_endline @@ Syntax.type_to_string (TFun (TChar, TFun (TChar, TInt)));
+    print_endline @@ Syntax.type_to_string (TFun (TFun (TChar, TChar), TInt));
+    print_endline @@ Syntax.type_to_string (TVar (1, {contents = None}));
+    print_endline @@ Syntax.type_to_string (TVar (0, {contents = Some TInt}));
+    VUnit
+
 let show_sym (id,v) = print_endline (" " ^ id ^ " = " ^ value_to_string !v)
 
 let fn_modules _ =
@@ -60,7 +76,8 @@ let builtin_list = [
     ("fst", fn_first);
     ("snd", fn_second);
     ("desc", fn_describe);
-    ("modules", fn_modules);
+    ("showt", fn_show_type);
+    ("mods", fn_modules);
     ("env", fn_env);
 ]
 

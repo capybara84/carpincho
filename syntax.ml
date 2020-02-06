@@ -47,11 +47,11 @@ type expr =
     | If of expr * expr * expr
     | Match of expr * (pattern * expr) list
     | Comp of expr list
-    | TypeDef of indent * typ
+    | TypeDef of ident * typ
     | Module of ident
     | Import of ident * ident option
 
-type typ =
+and typ =
     | TUnit | TBool | TInt | TChar | TFloat | TString
     | TTuple of typ list
     | TList of typ
@@ -93,8 +93,21 @@ let token_type_to_string = function
 
 let token_to_string t = token_type_to_string t.token_type
 
+let int_to_alpha x =
+    if x <= Char.code 'z' - Char.code 'a' + 1 then
+        String.make 1 (Char.chr ((Char.code 'a') + x - 1))
+    else
+        string_of_int x
+
 let rec type_to_string ty =
     let rec to_s n ty =
+        let rec type_list_to_string p = function
+            | [] -> ""
+            | x::[] -> to_s p x
+            | x::xs ->
+                let s = to_s p x in
+                s ^ " * " ^ type_list_to_string (p+1) xs
+        in
         let (m, str) =
             match ty with
             | TUnit -> (100, "unit")
