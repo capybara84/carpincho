@@ -47,11 +47,12 @@ type expr =
     | If of expr * expr * expr
     | Match of expr * (pattern * expr) list
     | Comp of expr list
+    | TypeDef of indent * typ
     | Module of ident
     | Import of ident * ident option
 
 type typ =
-    | TUnit | TBool | TInt | TChar | TString
+    | TUnit | TBool | TInt | TChar | TFloat | TString
     | TTuple of typ list
     | TList of typ
     | TFun of typ * typ
@@ -91,6 +92,31 @@ let token_type_to_string = function
     | NULL -> "[]" | COLON -> ":" | SEMI -> ";"
 
 let token_to_string t = token_type_to_string t.token_type
+
+let rec type_to_string ty =
+    let rec to_s n ty =
+        let (m, str) =
+            match ty with
+            | TUnit -> (100, "unit")
+            | TBool -> (100, "bool")
+            | TInt -> (100, "int")
+            | TChar -> (100, "char")
+            | TFloat -> (100, "float")
+            | TString -> (100, "string")
+            | TTuple tl -> (2, type_list_to_string 2 tl)
+            | TList t -> (100, to_s 2 t ^ " list")
+            | TFun (t1, t2) ->
+                let s1 = to_s 1 t1 in
+                let s2 = to_s 0 t2 in
+                (1, s1 ^ " -> " ^ s2)
+            | TVar (x, {contents = None}) ->
+                (100, "'" ^ int_to_alpha x)
+            | TVar (_, {contents = Some t}) ->
+                (n+1, to_s n t)
+        in
+        if m > n then str
+        else "(" ^ str ^ ")"
+    in to_s (-1) ty
 
 let string_of_binop = function
     | BinAdd -> "+" | BinSub -> "-" | BinMul -> "*"
@@ -136,6 +162,7 @@ let rec expr_to_string = function
         "(match " ^ expr_to_string e ^ " {" ^ match_list_to_string lst ^ "})"
     | Comp el ->
         "{" ^ comp_to_string el ^ "}"
+    | TypeDef (id, ty) -> "typedef " ^ id ^ " = " ^ type_to_string ty
     | Module name ->
         "module " ^ name
     | Import (name, Some rename) ->

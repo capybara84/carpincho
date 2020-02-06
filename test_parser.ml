@@ -143,7 +143,6 @@ let all_exprs = [
     ("match n { (_,_,x) -> x }",
         Match (Ident "n",
                 [(PatTuple [PatWildCard; PatWildCard; PatIdent "x"], Ident "x")]));
-
 ]
 
 let parser_test verbose =

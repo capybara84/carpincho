@@ -5,6 +5,7 @@ let test_text = "
 identifier 12345
 'a' '\\t' \"abc\\n\"
 module import as
+type unit bool int char float string
 let fn if then else match
 = == != < <= > >=
 - + / * %
@@ -17,6 +18,7 @@ let test_tokens = [
     NEWLINE; ID "identifier"; INT_LIT 12345; NEWLINE;
     CHAR_LIT 'a'; CHAR_LIT '\t'; STRING_LIT "abc\n"; NEWLINE;
     MODULE; IMPORT; AS; NEWLINE;
+    TYPE; UNIT; BOOL; INT; CHAR; FLOAT; STRING; NEWLINE;
     LET; FN; IF; THEN; ELSE; MATCH; NEWLINE;
     EQ; EQL; NEQ; LT; LE; GT; GE; NEWLINE;
     MINUS; PLUS; SLASH; STAR; PERCENT; NEWLINE;
