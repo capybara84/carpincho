@@ -3,11 +3,11 @@ TODO
 * tuple
 * pattern
 * nested comment /* */
+- typedef
 
 - variant
 - struct
 - mutable
 - float
-- typedef
 - type inference
 - compile

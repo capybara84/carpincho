@@ -4,12 +4,10 @@ exception Error of string
 type token_type
     = EOF | NEWLINE | ID of string | BOOL_LIT of bool | INT_LIT of int
     | CHAR_LIT of char | STRING_LIT of string
-    | MODULE | IMPORT | AS
+    | MODULE | IMPORT | AS | TYPE | UNIT | BOOL | INT | CHAR | FLOAT | STRING
     | LET | FN | FUN | IF | THEN | ELSE | MATCH
-    | EQ | EQL | NEQ | LT | LE | GT | GE
-    | MINUS | PLUS | SLASH | STAR | PERCENT
-    | NOT | UNIT | OR | LOR | LAND
-    | ARROW | LPAR | RPAR | LBRA | RBRA | BEGIN | END
+    | EQ | EQL | NEQ | LT | LE | GT | GE | MINUS | PLUS | SLASH | STAR | PERCENT
+    | NOT | EMPTY | OR | LOR | LAND | ARROW | LPAR | RPAR | LBRA | RBRA | BEGIN | END
     | WILDCARD | COMMA | DOT | NULL | COLON | SEMI
 
 type token = {
@@ -80,12 +78,14 @@ let token_type_to_string = function
     | INT_LIT n -> string_of_int n | CHAR_LIT c -> "'" ^ String.make 1 c ^ "'"
     | STRING_LIT s -> "\"" ^ s ^ "\""
     | MODULE -> "module" | IMPORT -> "import" | AS -> "as"
+    | TYPE -> "type" | UNIT -> "unit" | BOOL -> "bool" | INT -> "int"
+    | CHAR -> "char" | FLOAT -> "float" | STRING -> "string"
     | LET -> "let" | FN -> "fn" | FUN -> "fun" | IF -> "if" | THEN -> "then"
     | ELSE -> "else" | MATCH -> "match"
     | EQ -> "=" | EQL -> "==" | NEQ -> "!=" | LT -> "<"
     | LE -> "<=" | GT -> ">" | GE -> ">=" | MINUS -> "-" | PLUS -> "+"
     | SLASH -> "/" | STAR -> "*" | PERCENT -> "%"
-    | NOT -> "!" | UNIT -> "()" | OR -> "|" | LOR -> "||" | LAND -> "&&"
+    | NOT -> "!" | EMPTY -> "()" | OR -> "|" | LOR -> "||" | LAND -> "&&"
     | ARROW -> "->" | LPAR -> "(" | RPAR -> ")" | LBRA -> "[" | RBRA -> "]"
     | BEGIN -> "{" | END -> "}" | WILDCARD -> "_" | COMMA -> "," | DOT -> "."
     | NULL -> "[]" | COLON -> ":" | SEMI -> ";"

@@ -55,6 +55,13 @@ let scan_ident scan =
     | "module" -> MODULE
     | "import" -> IMPORT
     | "as" -> AS
+    | "type" -> TYPE
+    | "unit" -> UNIT
+    | "bool" -> BOOL
+    | "int" -> INT
+    | "char" -> CHAR
+    | "float" -> FLOAT
+    | "string" -> STRING
     | "let" -> LET
     | "fn" -> FN
     | "fun" -> FUN
@@ -179,7 +186,7 @@ let rec scan_token scan =
     | Some '<' -> scan_token2 '=' LE LT
     | Some '>' -> scan_token2 '=' GE GT
     | Some '-' -> scan_token2 '>' ARROW MINUS
-    | Some '(' -> scan_token2 ')' UNIT LPAR
+    | Some '(' -> scan_token2 ')' EMPTY LPAR
     | Some '[' -> scan_token2 ']' NULL LBRA
     | Some '|' -> scan_token2 '|' LOR OR
     | Some '/' ->

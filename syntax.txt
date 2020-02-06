@@ -4,7 +4,17 @@ program
 top_level
     = MODULE ID
     | IMPORT ID [AS ID]
+    | type_def
     | decl
+type_def
+    = TYPE ID '=' type
+type
+    = UNIT | BOOL | INT | CHAR | FLOAT | STRING
+    | ID
+    | '(' type ')'
+    | type '->' type
+    | type '*' type
+
 decl
     = LET ID '=' expr
     | FUN ID param '=' expr

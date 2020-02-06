@@ -89,7 +89,7 @@ let is_apply e t =
     | Fn _ | Apply _ | Ident _ | IdentMod _ ->
         begin
             match t with
-            | UNIT | NULL | ID _ | BOOL_LIT _ | INT_LIT _ | CHAR_LIT _
+            | EMPTY | NULL | ID _ | BOOL_LIT _ | INT_LIT _ | CHAR_LIT _
             | STRING_LIT _ | LPAR | LBRA -> true
             | _ -> false
         end
@@ -154,7 +154,7 @@ and parse_simple pars =
     let res =
         match peek_token_type pars with
         | EOF -> Eof
-        | UNIT ->
+        | EMPTY ->
             next_token pars;
             Unit
         | NULL ->
@@ -402,7 +402,7 @@ and parse_param_list pars args =
 and parse_params pars =
     debug_parse_in "parse_params pars";
     let e =
-        if peek_token_type pars = UNIT then
+        if peek_token_type pars = EMPTY then
             (next_token pars; [Unit])
         else
             parse_param_list pars []
