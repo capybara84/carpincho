@@ -5,7 +5,7 @@ let error msg = raise (Error ("Runtime error: " ^ msg))
 
 let default_directory = "./"
 let make_module_filename name =
-    default_directory ^ String.uncapitalize name ^ ".cp"
+    default_directory ^ String.uncapitalize_ascii name ^ ".cp"
 
 let load_file filename =
     let ic = open_in filename in
@@ -13,7 +13,6 @@ let load_file filename =
     let text = really_input_string ic n in
     close_in ic;
     text
-
 
 let is_true = function
     | VBool b -> b
@@ -218,11 +217,11 @@ and eval_list env = function
             eval_list new_env xs
 
 and eval_decl env = function
-    | Let (id, e) ->
+    | Let ((id, ty), e) ->
         let v = eval_expr env e in
         let new_env = Env.extend id (ref v) env in
         (new_env, VUnit)
-    | LetRec (id, e) ->
+    | LetRec ((id, ty), e) ->
         let r = ref VUnit in
         let new_env = Env.extend id r env in
         r := eval_expr new_env e;

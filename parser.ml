@@ -587,7 +587,7 @@ and parse_let pars =
     let e = parse_expr pars in
     skip_newline pars;
     debug_parse_out "parse_let";
-    Let (id, e)
+    Let ((id, Type.new_unknown()), e)
 
 and parse_fun pars =
     debug_parse_in "parse_fun";
@@ -602,7 +602,7 @@ and parse_fun pars =
                 args (parse_expr pars)
     in
     debug_parse_out "parse_fun";
-    LetRec (id, e)
+    LetRec ((id, Type.new_unknown()), e)
 
 and parse_decl pars =
     debug_parse_in "parse_decl";
