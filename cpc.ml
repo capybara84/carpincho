@@ -4,19 +4,19 @@ let filenames = ref []
 let welcome () =
     print_endline "cpc - carpincho v0.0"
 
-let rec top_level () =
+let rec top_level verbose =
     try
         print_string "> ";
         flush stdout;
         let line = input_line stdin in
-        let v = Eval.eval_line line in
+        let v = Eval.eval_line verbose line in
         if v <> Syntax.VUnit then
             print_endline @@ Syntax.value_to_string v
         else
             ();
-        top_level ()
+        top_level verbose
     with
-        | Syntax.Error s -> (print_endline s; top_level ())
+        | Syntax.Error s -> (print_endline s; top_level verbose)
         | Sys_error s -> print_endline s
         | End_of_file -> ()
 
@@ -30,21 +30,24 @@ let do_test verbose =
 
 let main () =
     let interactive = ref false in
+    let test = ref false in
     let verbose = ref false in
     Builtins.init ();
 
     Arg.parse [("-d", Arg.Int (fun n -> Parser.debug := n),
                         "N  set debug level N");
                ("-v", Arg.Unit (fun () -> verbose := true), "  verbose");
-               ("-t", Arg.Unit (fun () -> do_test !verbose), "  test mode");
+               ("-t", Arg.Unit (fun () -> test := true), "  test mode");
                ("-i", Arg.Unit (fun () -> interactive := true),
                                 "  interactive mode"); ]
         (fun name -> filenames := name::!filenames)
         "usage: cpc [-d N][-v][-t][-i] filename...";
     List.iter Eval.load_source (List.rev !filenames);
 
-    if !interactive then
-        top_level()
+    if !test then
+        do_test !verbose
+    else if !interactive then
+        top_level !verbose
     else ()
 
 let () = main ()

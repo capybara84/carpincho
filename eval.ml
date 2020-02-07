@@ -301,10 +301,10 @@ and eval_all el =
     let env = loop env el in
     Symbol.set_current_env env
 
-let eval_line text =
+let eval_line verbose text =
     let e = Parser.parse_one @@ Scanner.from_string text in
-(*
-    print_endline (expr_to_string e);
-*)
+    if verbose then
+        print_endline (expr_to_string e)
+    else ();
     eval_one e
 
