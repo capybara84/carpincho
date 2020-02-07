@@ -73,6 +73,7 @@ type value =
 
 type symtab = {
     mutable env : value ref Env.t;
+    mutable tenv : typ Env.t;
 }
 
 let token_type_to_string = function
@@ -102,6 +103,8 @@ let int_to_alpha x =
         string_of_int x
 
 let rec type_to_string ty =
+    let counter = ref 0 in
+    let dic = ref [] in
     let rec to_s n ty =
         let rec tuple_string = function
             | [] -> ""
@@ -112,24 +115,32 @@ let rec type_to_string ty =
         in
         let (m, str) =
             match ty with
-            | TUnit -> (100, "unit")
-            | TBool -> (100, "bool")
-            | TInt -> (100, "int")
-            | TChar -> (100, "char")
-            | TFloat -> (100, "float")
-            | TString -> (100, "string")
-            | TIdent id -> (100, id)
-            | TParamId (t, id) -> (100, to_s 0 t ^ " " ^ id)
+            | TUnit -> (3, "unit")
+            | TBool -> (3, "bool")
+            | TInt -> (3, "int")
+            | TChar -> (3, "char")
+            | TFloat -> (3, "float")
+            | TString -> (3, "string")
+            | TIdent id -> (3, id)
+            | TParamId (t, id) -> (3, to_s 0 t ^ " " ^ id)
             | TTuple tl -> (2, "(" ^ tuple_string tl ^ ")")
-            | TList t -> (100, "[" ^ to_s 0 t ^ "]")
+            | TList t -> (3, "[" ^ to_s 0 t ^ "]")
             | TFun (t1, t2) ->
                 let s1 = to_s 1 t1 in
                 let s2 = to_s 0 t2 in
                 (1, s1 ^ " -> " ^ s2)
             | TVar (x, {contents = None}, known) ->
-                (100, "'" ^ int_to_alpha x ^ (if !known then "" else "*"))
+                let y =
+                    try List.assoc x !dic
+                    with Not_found ->
+                        dic := (x, !counter) :: !dic;
+                        let n = !counter in
+                        incr counter;
+                        n
+                in
+                (3, "'" ^ int_to_alpha y ^ (if !known then "" else "*"))
             | TVar (_, {contents = Some t}, _) ->
-                (n+1, to_s n t)
+                (3, to_s n t)
         in
         if m > n then str
         else "(" ^ str ^ ")"

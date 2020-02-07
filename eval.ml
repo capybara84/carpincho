@@ -5,7 +5,7 @@ let error msg = raise (Error ("Runtime error: " ^ msg))
 
 let default_directory = "./"
 let make_module_filename name =
-    default_directory ^ String.uncapitalize_ascii name ^ ".cp"
+    default_directory ^ String.uncapitalize name ^ ".cp"
 
 let load_file filename =
     let ic = open_in filename in
@@ -74,20 +74,16 @@ let rec eval_expr env = function
     | CharLit c -> VChar c
     | StrLit s -> VString s
     | Ident id ->
-        begin
-            try
-                !(Env.lookup id env)
-            with Not_found ->
-                try
-                    !(Symbol.lookup_default id)
-                with Not_found -> error("'" ^ id ^ "' not found")
-        end
+        (try
+            !(Env.lookup id env)
+        with Not_found ->
+            (try
+                !(Symbol.lookup_default id)
+            with Not_found -> error("'" ^ id ^ "' not found")))
     | IdentMod (mod_name, id) ->
-        begin
-            try
-                !(Symbol.lookup mod_name id)
-            with Not_found -> error("'" ^ mod_name ^ "." ^ id ^ "' not found")
-        end
+        (try
+            !(Symbol.lookup mod_name id)
+        with Not_found -> error("'" ^ mod_name ^ "." ^ id ^ "' not found"))
     | Tuple el ->
         VTuple (List.map (fun x -> eval_expr env x) el)
     | Binary (BinLor, lhs, rhs) ->
@@ -228,7 +224,7 @@ and eval_decl env = function
         (new_env, VUnit)
     | Module id ->
         let new_env = Symbol.set_module id in 
-        (new_env, VUnit)
+        (new_env.env, VUnit)
     | Import (id, None) ->
         import id;
         (env, VUnit)
@@ -237,7 +233,6 @@ and eval_decl env = function
         Symbol.rename_module id asid;
         (env, VUnit)
     | TypeDef (id, typ) ->
-        (*TODO*)
         (env, VUnit)
     | e ->
         (env, eval_expr env e)
@@ -248,31 +243,33 @@ and import id =
     else begin
         let filename = make_module_filename id in
         let prev = Symbol.get_current_module () in
-        let env = Symbol.set_module id in
+        let tab = Symbol.set_module id in
         (try
-            load_module env filename
+            load_module tab filename
         with Error s | Sys_error s -> print_endline s
             | End_of_file -> ());
         Symbol.set_current_module prev
     end
 
-and load_module env filename =
+and load_module tab filename =
     try
         let text = load_file filename in
-        eval_module env @@ Parser.parse @@ Scanner.from_string text
+        eval_module tab @@ Parser.parse @@ Scanner.from_string text
     with
         | Error s | Sys_error s -> print_endline s
         | End_of_file -> ()
 
-and eval_module env el = 
-    let rec loop env = function
-        | [] -> env 
+and eval_module tab el = 
+    let rec loop env tenv = function
+        | [] -> (env, tenv)
         | x::xs ->
-            let (new_env, v) = eval_decl env x in
-            loop new_env xs
+            let (new_tenv, _) = Type.infer tenv x in
+            let (new_env, _) = eval_decl env x in
+            loop new_env new_tenv xs
     in
-    let env = loop env el in
-    Symbol.set_current_env env
+    let (env, tenv) = loop tab.env tab.tenv el in
+    Symbol.set_current_env env;
+    Symbol.set_current_tenv tenv
 
 and load_source filename =
     try
@@ -283,22 +280,26 @@ and load_source filename =
         | End_of_file -> ()
 
 and eval_one e =
-    let env = Symbol.get_current_env () in
-    let (env, v) = eval_decl env e in
+    let tab = Symbol.get_current_module () in
+    let (tenv, t) = Type.infer tab.tenv e in
+    let (env, v) = eval_decl tab.env e in
     Symbol.set_current_env env;
-    v
+    Symbol.set_current_tenv tenv;
+    (v, t)
 
 and eval_all el = 
-    let rec loop env = function
-        | [] -> env 
+    let rec loop env tenv = function
+        | [] -> (env, tenv)
         | x::xs ->
-            let (new_env, v) = eval_decl env x in
-            loop new_env xs
+            let (new_tenv, _) = Type.infer tenv x in
+            let (new_env, _) = eval_decl env x in
+            loop new_env new_tenv xs
     in
     Symbol.set_default_module ();
-    let env = Symbol.get_current_env () in
-    let env = loop env el in
-    Symbol.set_current_env env
+    let tab = Symbol.get_current_module () in
+    let (env, tenv) = loop tab.env tab.tenv el in
+    Symbol.set_current_env env;
+    Symbol.set_current_tenv tenv
 
 let eval_line verbose text =
     let e = Parser.parse_one @@ Scanner.from_string text in

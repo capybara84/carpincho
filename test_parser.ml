@@ -95,7 +95,9 @@ let all_exprs = [
     ("(1)", IntLit 1);
     ("true", BoolLit true);
     ("false", BoolLit false);
-    ("fun one () = 1", LetRec (("one", TVar (2, {contents=None}, ref false)), (Fn (Unit, IntLit 1))));
+    ("fun one () = 1",
+        LetRec (("one", TVar (2, {contents=None}, ref false)),
+            (Fn (Unit, IntLit 1))));
     ("fun fact n = if n < 1 then 1 else n * fact (n-1)",
         LetRec (("fact", TVar (3, {contents=None}, ref false)),
                 Fn (Ident "n",
@@ -149,16 +151,17 @@ let parser_test verbose =
     let do_parse_test (text, expected) =
         try
             if verbose then 
-                print_endline ("text> " ^ text)
+                print_endline ("text    > " ^ text)
             else ();
             let expr = Parser.parse_one @@ Scanner.from_string text in
+            let parsed = expr_to_string expr in
+            let expected = expr_to_string expected in
             if verbose then begin
-                print_endline ("parsed> " ^ expr_to_string expr);
-                print_endline ("expected> " ^ expr_to_string expected)
+                print_endline ("parsed  > " ^ parsed);
+                print_endline ("expected> " ^ expected)
             end else ();
-            Test.equal expr expected
-                ("result:" ^ expr_to_string expr ^ " != "
-                    ^ expr_to_string expected ^ "\n")
+            Test.equal parsed expected
+                ("result:" ^ parsed ^ " != " ^ expected ^ "\n")
         with Error s -> Test.fail s
     in
     List.iter do_parse_test all_exprs

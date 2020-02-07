@@ -1,4 +1,6 @@
 
+open Syntax
+
 let filenames = ref []
 
 let welcome () =
@@ -9,14 +11,14 @@ let rec top_level verbose =
         print_string "> ";
         flush stdout;
         let line = input_line stdin in
-        let v = Eval.eval_line verbose line in
-        if v <> Syntax.VUnit then
-            print_endline @@ Syntax.value_to_string v
-        else
+        let (v, t) = Eval.eval_line verbose line in
+        if v <> VUnit then begin
+            print_endline @@ value_to_string v ^ " : " ^ type_to_string t
+        end else
             ();
         top_level verbose
     with
-        | Syntax.Error s -> (print_endline s; top_level verbose)
+        | Error s -> (print_endline s; top_level verbose)
         | Sys_error s -> print_endline s
         | End_of_file -> ()
 

@@ -97,9 +97,10 @@ let eval_test verbose =
             if verbose then
                 print_endline ("text> " ^ text)
             else ();
-            let v = Eval.eval_line verbose text in
+            let (v, t) = Eval.eval_line verbose text in
             if verbose then begin
-                print_endline ("evaluated> " ^ value_to_string v);
+                print_endline ("evaluated> " ^ value_to_string v ^ " : "
+                                    ^ type_to_string t);
                 print_endline ("expected > " ^ value_to_string expected)
             end else ();
             Test.equal v expected
