@@ -74,6 +74,36 @@ let create_poly_type ty =
     let (free_vars, unwrapped_type) = unwrap_var [] ty in
     { vars = free_vars; body = unwrapped_type }
 
+let create_alpha_equivalent ts =
+    let rec fresh_vars res_vars res_map = function
+        | [] -> (List.rev res_vars, List.rev res_map)
+        | x::xs ->
+            let newx = new_tvar () in
+            fresh_vars (newx::res_vars) ((x,newx)::res_map) xs
+    in
+    let rec subst map = function
+        | TTuple tl -> TTuple (List.map (fun x -> subst map x) tl)
+        | TList t -> TList (subst map t)
+        | TFun (t1, t2) -> TFun (subst map t1, subst map t2)
+        | TVar (_, {contents = Some t}) -> subst map t
+        | TVar (n, {contents = None}) ->
+            (try
+                let new_n = List.assoc n map in
+                new_n
+                (*
+                TVar (new_n, {contents = None})
+                *)
+            with Not_found -> error "subst failed")
+        | t -> t
+    in
+    let (new_vars, var_map) = fresh_vars [] [] ts.vars in
+    { vars = List.map
+                (fun x -> match x with
+                    | TVar (n, {contents=None})
+                        -> n
+                    | _ -> failwith "create_alpha_equivalent")
+                new_vars;
+      body = subst var_map ts.body }
 
 let rec prune = function
     | TVar (_, ({contents = Some t'} as instance)) ->
