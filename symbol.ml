@@ -40,19 +40,19 @@ let set_module id =
         current_module := insert_module id);
     !current_module
 
-let insert_default name ty fn =
+let insert_default name ts fn =
     default_module.env <- Env.extend name (ref fn) default_module.env;
-    default_module.tenv <- Env.extend name ty default_module.tenv
+    default_module.tenv <- Env.extend name (ref ts) default_module.tenv
 
 let lookup_default id =
-    Env.lookup id (default_module.env)
+    Env.lookup id default_module.env
 
 let lookup mod_name id =
     let symtab = lookup_module mod_name in
     Env.lookup id symtab.env
 
 let lookup_default_type id =
-    Env.lookup id (default_module.tenv)
+    Env.lookup id default_module.tenv
 
 let lookup_type mod_name id =
     let symtab = lookup_module mod_name in

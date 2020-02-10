@@ -41,8 +41,8 @@ type expr =
     | Binary of binop * expr * expr
     | Unary of unop * expr
     | Apply of expr * expr
-    | Let of (ident * typ) * expr
-    | LetRec of (ident * typ) * expr
+    | Let of ident * expr
+    | LetRec of ident * expr
     | Fn of expr * expr
     | If of expr * expr * expr
     | Match of expr * (pattern * expr) list
@@ -58,7 +58,11 @@ and typ =
     | TTuple of typ list
     | TList of typ
     | TFun of typ * typ
-    | TVar of int * typ option ref * bool ref
+    | TVar of int * typ option ref
+and type_schema = {
+    vars : int list;
+    body : typ;
+}
 
 type value =
     | VUnit | VNull
@@ -73,7 +77,7 @@ type value =
 
 type symtab = {
     mutable env : value ref Env.t;
-    mutable tenv : typ Env.t;
+    mutable tenv : type_schema ref Env.t;
 }
 
 let token_type_to_string = function
@@ -129,7 +133,7 @@ let rec type_to_string ty =
                 let s1 = to_s 1 t1 in
                 let s2 = to_s 0 t2 in
                 (1, s1 ^ " -> " ^ s2)
-            | TVar (x, {contents = None}, known) ->
+            | TVar (x, {contents = None}) ->
                 let y =
                     try List.assoc x !dic
                     with Not_found ->
@@ -138,13 +142,24 @@ let rec type_to_string ty =
                         incr counter;
                         n
                 in
-                (3, "'" ^ int_to_alpha y ^ (if !known then "" else "*"))
-            | TVar (_, {contents = Some t}, _) ->
-                (3, to_s n t)
+                (3, "'" ^ int_to_alpha y)
+            | TVar (_, {contents = Some t}) ->
+                (3, (to_s n t) ^ "!")
         in
         if m > n then str
         else "(" ^ str ^ ")"
     in to_s (-1) ty
+
+let type_schema_to_string ts =
+    let rec list_to_string = function
+        | [] -> ""
+        | x::[] ->
+            string_of_int x
+        | x::xs ->
+            string_of_int x ^ "," ^ list_to_string xs
+
+    in
+    "{ vars:" ^ list_to_string ts.vars ^ ", body:" ^ type_to_string ts.body ^ "}"
 
 let string_of_binop = function
     | BinAdd -> "+" | BinSub -> "-" | BinMul -> "*"
@@ -177,10 +192,10 @@ let rec expr_to_string = function
         "(" ^ string_of_unop op ^ expr_to_string e ^ ")"
     | Apply (e1, e2) ->
         "(" ^ expr_to_string e1 ^ " " ^ expr_to_string e2 ^ ")"
-    | Let ((id,ty), e) ->
-        "(let " ^ id ^ " : " ^ type_to_string ty ^ " = " ^ expr_to_string e ^ ")"
-    | LetRec ((id,ty), e) ->
-        "(letrec " ^ id ^ " : " ^ type_to_string ty ^ " " ^ expr_to_string e ^ ")"
+    | Let (id, e) ->
+        "(let " ^ id ^ " = " ^ expr_to_string e ^ ")"
+    | LetRec (id, e) ->
+        "(letrec " ^ id ^ " " ^ expr_to_string e ^ ")"
     | Fn (e1, e2) ->
         "(fn " ^ expr_to_string e1 ^ " -> " ^ expr_to_string e2 ^ ")"
     | If (e1, e2, e3) ->

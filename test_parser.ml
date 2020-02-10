@@ -53,7 +53,7 @@ let all_exprs = [
             Binary (BinMul, IntLit 300,
                 Binary (BinAdd, IntLit 12, IntLit 3))));
     ("let fact = fn n -> if n < 1 then 1 else n * fact (n - 1)",
-            Let (("fact", TVar (0, {contents = None}, ref false)),
+            Let ("fact",
                 Fn (Ident "n",
                     (If (Binary (BinLT, Ident "n", IntLit 1),
                           IntLit 1,
@@ -68,7 +68,7 @@ let all_exprs = [
     ("{1; 2; 3}",
         Comp [IntLit 1; IntLit 2; IntLit 3]);
     ("let fact = fn n -> if n < 1 then 1 else n * fact (n - 1)",
-        Let (("fact", TVar (1, {contents = None}, ref false)),
+        Let ("fact",
                 Fn (Ident "n",
                     (If (Binary (BinLT, Ident "n", IntLit 1),
                           IntLit 1,
@@ -96,10 +96,9 @@ let all_exprs = [
     ("true", BoolLit true);
     ("false", BoolLit false);
     ("fun one () = 1",
-        LetRec (("one", TVar (2, {contents=None}, ref false)),
-            (Fn (Unit, IntLit 1))));
+        LetRec ("one", (Fn (Unit, IntLit 1))));
     ("fun fact n = if n < 1 then 1 else n * fact (n-1)",
-        LetRec (("fact", TVar (3, {contents=None}, ref false)),
+        LetRec ("fact",
                 Fn (Ident "n",
                     (If (Binary (BinLT, Ident "n", IntLit 1),
                           IntLit 1,

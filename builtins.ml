@@ -48,12 +48,12 @@ let fn_show_type _ =
     print_endline @@ Syntax.type_to_string (TFun (TChar, TInt));
     print_endline @@ Syntax.type_to_string (TFun (TChar, TFun (TChar, TInt)));
     print_endline @@ Syntax.type_to_string (TFun (TFun (TChar, TChar), TInt));
-    print_endline @@ Syntax.type_to_string (TVar (1, {contents = None}, ref false));
-    print_endline @@ Syntax.type_to_string (TVar (0, {contents = Some TInt}, ref false));
+    print_endline @@ Syntax.type_to_string (TVar (1, {contents = None}));
+    print_endline @@ Syntax.type_to_string (TVar (0, {contents = Some TInt}));
     VUnit
 
 let show_sym (id,v) = print_endline (" " ^ id ^ " = " ^ value_to_string !v)
-let show_symt (id,t) = print_endline (" " ^ id ^ " = " ^ type_to_string t)
+let show_symt (id,t) = print_endline (" " ^ id ^ " = " ^ type_schema_to_string !t)
 
 let fn_modules _ =
     let show_env (id,symtab) =
@@ -94,7 +94,7 @@ let builtin_list =
 
 let init () =
     let add_func (name, ty, fn) =
-        Symbol.insert_default name ty (VBuiltin fn)
+        Symbol.insert_default name (Type.create_poly_type ty) (VBuiltin fn)
     in
     List.iter add_func builtin_list
 

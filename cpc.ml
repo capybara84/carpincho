@@ -44,7 +44,7 @@ let main () =
                                 "  interactive mode"); ]
         (fun name -> filenames := name::!filenames)
         "usage: cpc [-d N][-v][-t][-i] filename...";
-    List.iter Eval.load_source (List.rev !filenames);
+    List.iter (Eval.load_source !verbose) (List.rev !filenames);
 
     if !test then
         do_test !verbose

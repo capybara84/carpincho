@@ -213,11 +213,11 @@ and eval_list env = function
             eval_list new_env xs
 
 and eval_decl env = function
-    | Let ((id, ty), e) ->
+    | Let (id, e) ->
         let v = eval_expr env e in
         let new_env = Env.extend id (ref v) env in
         (new_env, VUnit)
-    | LetRec ((id, ty), e) ->
+    | LetRec (id, e) ->
         let r = ref VUnit in
         let new_env = Env.extend id r env in
         r := eval_expr new_env e;
@@ -263,7 +263,7 @@ and eval_module tab el =
     let rec loop env tenv = function
         | [] -> (env, tenv)
         | x::xs ->
-            let (new_tenv, _) = Type.infer tenv x in
+            let (new_tenv, _) = Type.infer false tenv x in
             let (new_env, _) = eval_decl env x in
             loop new_env new_tenv xs
     in
@@ -271,27 +271,30 @@ and eval_module tab el =
     Symbol.set_current_env env;
     Symbol.set_current_tenv tenv
 
-and load_source filename =
+and load_source verbose filename =
     try
         let text = load_file filename in
-        eval_all @@ Parser.parse @@ Scanner.from_string text
+        eval_all verbose @@ Parser.parse @@ Scanner.from_string text
     with
         | Error s | Sys_error s -> print_endline s
         | End_of_file -> ()
 
-and eval_one e =
+and eval_one verbose e =
     let tab = Symbol.get_current_module () in
-    let (tenv, t) = Type.infer tab.tenv e in
+    let (tenv, t) = Type.infer verbose tab.tenv e in
+    if verbose then
+        print_endline (expr_to_string e)
+    else ();
     let (env, v) = eval_decl tab.env e in
     Symbol.set_current_env env;
     Symbol.set_current_tenv tenv;
     (v, t)
 
-and eval_all el = 
+and eval_all verbose el = 
     let rec loop env tenv = function
         | [] -> (env, tenv)
         | x::xs ->
-            let (new_tenv, _) = Type.infer tenv x in
+            let (new_tenv, _) = Type.infer verbose tenv x in
             let (new_env, _) = eval_decl env x in
             loop new_env new_tenv xs
     in
@@ -303,8 +306,5 @@ and eval_all el =
 
 let eval_line verbose text =
     let e = Parser.parse_one @@ Scanner.from_string text in
-    if verbose then
-        print_endline (expr_to_string e)
-    else ();
-    eval_one e
+    eval_one verbose e
 
