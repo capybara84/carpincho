@@ -1,6 +1,8 @@
 
 exception Error of string
 
+let g_verbose = ref false
+
 type token_type
     = EOF | NEWLINE | ID of string | BOOL_LIT of bool | INT_LIT of int
     | CHAR_LIT of char | STRING_LIT of string
