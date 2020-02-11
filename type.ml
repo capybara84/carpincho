@@ -61,7 +61,8 @@ let rec unwrap_var free_vars = function
         else
             (n::free_vars, typ)
     | TVar (_, ({contents = Some t})) ->
-        (free_vars, t)
+        let (free_vars, new_t) = unwrap_var free_vars t in
+        (free_vars, new_t)
     | typ -> (free_vars, typ)
 and unwrap_tl_var free_vars new_tl = function
     | [] -> (free_vars, List.rev new_tl)
@@ -78,32 +79,23 @@ let create_alpha_equivalent ts =
     let rec fresh_vars res_vars res_map = function
         | [] -> (List.rev res_vars, List.rev res_map)
         | x::xs ->
-            let newx = new_tvar () in
-            fresh_vars (newx::res_vars) ((x,newx)::res_map) xs
+            let n = !seed in
+            let ty = TVar (n, ref None) in
+            incr seed;
+            fresh_vars (n::res_vars) ((x, ty)::res_map) xs
     in
     let rec subst map = function
         | TTuple tl -> TTuple (List.map (fun x -> subst map x) tl)
         | TList t -> TList (subst map t)
         | TFun (t1, t2) -> TFun (subst map t1, subst map t2)
         | TVar (_, {contents = Some t}) -> subst map t
-        | TVar (n, {contents = None}) ->
-            (try
-                let new_n = List.assoc n map in
-                new_n
-                (*
-                TVar (new_n, {contents = None})
-                *)
-            with Not_found -> error "subst failed")
+        | TVar (n, {contents = None}) as t->
+            (try List.assoc n map with Not_found -> t)
         | t -> t
     in
     let (new_vars, var_map) = fresh_vars [] [] ts.vars in
-    { vars = List.map
-                (fun x -> match x with
-                    | TVar (n, {contents=None})
-                        -> n
-                    | _ -> failwith "create_alpha_equivalent")
-                new_vars;
-      body = subst var_map ts.body }
+    { vars = new_vars; body = subst var_map ts.body }
+
 
 let rec prune = function
     | TVar (_, ({contents = Some t'} as instance)) ->
@@ -137,8 +129,10 @@ and occurs_in t types =
     List.exists (fun t2 -> occurs_in_type t t2) types
 
 let rec unify t1 t2 =
+(*
     let t1 = prune t1 in
     let t2 = prune t2 in
+*)
 (*
 print_endline ("T* unify " ^ type_to_string t1 ^ " " ^ type_to_string t2);
 *)
@@ -173,9 +167,10 @@ print_endline ("T* unify " ^ type_to_string t1 ^ " " ^ type_to_string t2);
         error (type_to_string t2 ^ " != " ^ type_to_string t1)
 
 let rec infer verbose tenv e =
-    if verbose then
-        print_endline ("T* infer " ^ expr_to_string e)
-    else ();
+if verbose then
+    print_endline ("T* infer " ^ expr_to_string e)
+else ();
+let (tenv, ty) =
     match e with
     | Eof | Unit -> (tenv, TUnit)
     | Null -> (tenv, TList (new_tvar ()))
@@ -188,18 +183,31 @@ let rec infer verbose tenv e =
     *)
     | StrLit _ -> (tenv, TString)
     | Ident id ->
-        (try
-            let t = Env.lookup id tenv in
-            (tenv, !t.body)
-        with Not_found ->
+if verbose then
+    print_endline ("T* Ident " ^ id)
+else ();
+        let ts =
             (try
-                let t = Symbol.lookup_default_type id in
-                (tenv, !t.body)
-            with Not_found -> error("'" ^ id ^ "' is not defined")))
+                Env.lookup id tenv
+             with Not_found ->
+                (try
+                    Symbol.lookup_default_type id
+                 with Not_found ->
+                    error("'" ^ id ^ "' undefined" )))
+        in
+if verbose then
+    print_endline ("T* Ident " ^ id ^ " ts = " ^ type_schema_to_string !ts)
+else ();
+        let new_ts = create_alpha_equivalent !ts in
+if verbose then
+    print_endline ("T* Ident " ^ id ^ " ts alpha = " ^ type_schema_to_string new_ts)
+else ();
+        (tenv, new_ts.body)
     | IdentMod (mod_name, id) ->
         (try
-            let t = Symbol.lookup_type mod_name id in
-            (tenv, !t.body)
+            let ts = Symbol.lookup_type mod_name id in
+            let new_ts = create_alpha_equivalent !ts in
+            (tenv, new_ts.body)
         with Not_found -> error("'" ^ mod_name ^ "." ^ id ^ "' is not defined"))
     | Tuple el ->
         let tl = List.map (fun x -> let (_, t) = infer verbose tenv x in t) el in
@@ -220,16 +228,22 @@ let rec infer verbose tenv e =
         unify t1 (TFun (t2, t));
         (tenv, t)
     | Fn (Ident x, e) ->
-        if verbose then
-            print_endline ("T* Fn (" ^ x ^ ", " ^ expr_to_string e ^ ")")
-        else ();
+if verbose then
+    print_endline ("T* Fn (" ^ x ^ ", " ^ expr_to_string e ^ ")")
+else ();
         let t_arg = new_tvar () in
-        let ts = create_poly_type t_arg in
+if verbose then
+    print_endline ("T* " ^ x ^ " type = " ^ type_to_string_raw t_arg)
+else ();
+        let ts = { vars = []; body = t_arg } in
+if verbose then
+    print_endline ("T* " ^ x ^ " ts = " ^ type_schema_to_string ts)
+else ();
         let tenv = Env.extend x (ref ts) tenv in
         let (tenv, t_body) = infer verbose tenv e in
-        if verbose then
-            print_endline ("T* after infer " ^ type_to_string t_body)
-        else ();
+if verbose then
+    print_endline ("T* after infer " ^ type_to_string_raw t_body)
+else ();
         (tenv, TFun (t_arg, t_body))
     | Fn (WildCard, e) ->
         let t_arg = new_tvar () in
@@ -251,24 +265,36 @@ let rec infer verbose tenv e =
     | Comp el ->
         infer_list verbose tenv el
     | Let (id, e) ->
-        if verbose then
-            print_endline ("T* let " ^ id ^ " = " ^ expr_to_string e)
-        else ();
+if verbose then
+    print_endline ("T* let " ^ id ^ " = " ^ expr_to_string e)
+else ();
         let (_, t) = infer verbose tenv e in
-        if verbose then
-            print_endline ("T* after infer e " ^ type_to_string t)
-        else ();
+if verbose then
+    print_endline ("T* after infer e " ^ type_to_string_raw t)
+else ();
         let ts = create_poly_type t in
-        if verbose then
-            print_endline ("T* poly type = " ^ type_schema_to_string ts)
-        else ();
+if verbose then
+    print_endline ("T* poly type = " ^ type_schema_to_string ts)
+else ();
         let tenv = Env.extend id (ref ts) tenv in
         (tenv, TUnit)
     | LetRec (id, e) ->
+if verbose then
+    print_endline ("T* letrec " ^ id ^ " = " ^ expr_to_string e)
+else ();
         let r = ref (new_type_schema ()) in
+if verbose then
+    print_endline ("T* " ^ id ^ " type_schema = " ^ type_schema_to_string !r)
+else ();
         let tenv = Env.extend id r tenv in
         let (_, t_val) = infer verbose tenv e in
+if verbose then
+    print_endline ("T* after infer e " ^ type_to_string_raw t_val)
+else ();
         r := create_poly_type t_val;
+if verbose then
+    print_endline ("T* poly type = " ^ type_schema_to_string !r)
+else ();
         (tenv, TUnit)
     | TypeDef (id, typ) ->
         let ts = create_poly_type typ in
@@ -279,6 +305,11 @@ let rec infer verbose tenv e =
         (tab.tenv, TUnit)
     | Import (_, _) ->
         (tenv, TUnit)
+    in
+if verbose then
+    print_endline ("T* infer " ^ expr_to_string e ^ " result = " ^ type_to_string_raw ty)
+else ();
+    (tenv, ty)
 
 and infer_binary op tl tr =
 (*

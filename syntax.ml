@@ -150,6 +150,41 @@ let rec type_to_string ty =
         else "(" ^ str ^ ")"
     in to_s (-1) ty
 
+
+let rec type_to_string_raw ty =
+    let rec to_s n ty =
+        let rec tuple_string = function
+            | [] -> ""
+            | x::[] -> to_s 0 x
+            | x::xs ->
+                let s = to_s 0 x in
+                s ^ ", " ^ tuple_string xs
+        in
+        let (m, str) =
+            match ty with
+            | TUnit -> (3, "unit")
+            | TBool -> (3, "bool")
+            | TInt -> (3, "int")
+            | TChar -> (3, "char")
+            | TFloat -> (3, "float")
+            | TString -> (3, "string")
+            | TIdent id -> (3, id)
+            | TParamId (t, id) -> (3, to_s 0 t ^ " " ^ id)
+            | TTuple tl -> (2, "(" ^ tuple_string tl ^ ")")
+            | TList t -> (3, "[" ^ to_s 0 t ^ "]")
+            | TFun (t1, t2) ->
+                let s1 = to_s 1 t1 in
+                let s2 = to_s 0 t2 in
+                (1, s1 ^ " -> " ^ s2)
+            | TVar (x, {contents = None}) ->
+                (3, "'" ^ int_to_alpha x)
+            | TVar (_, {contents = Some t}) ->
+                (3, (to_s n t) ^ "!")
+        in
+        if m > n then str
+        else "(" ^ str ^ ")"
+    in to_s (-1) ty
+
 let type_schema_to_string ts =
     let rec list_to_string = function
         | [] -> ""
@@ -159,7 +194,7 @@ let type_schema_to_string ts =
             string_of_int x ^ "," ^ list_to_string xs
 
     in
-    "{ vars:" ^ list_to_string ts.vars ^ ", body:" ^ type_to_string ts.body ^ "}"
+    "{ vars:[" ^ list_to_string ts.vars ^ "] body:" ^ type_to_string_raw ts.body ^ "}"
 
 let string_of_binop = function
     | BinAdd -> "+" | BinSub -> "-" | BinMul -> "*"
