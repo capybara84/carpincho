@@ -104,6 +104,10 @@ let rec prune = function
         inst
     | t -> t
 
+let rec unvar = function
+    | TVar (_, {contents = Some t}) ->
+        unvar t
+    | t -> t
 
 let rec type_var_equal t1 t2 =
     match (t1, t2) with
@@ -261,7 +265,7 @@ else ();
         unify t_then t_else;
         (tenv, t_then)
     | Match (e, ml) ->
-        infer_match tenv e ml
+        (tenv, infer_match tenv e ml)
     | Comp el ->
         infer_list tenv el
     | Let (id, e) ->
@@ -365,9 +369,96 @@ and infer_unary op t =
         unify TBool t;
         TBool
 
-and infer_match tenv e ml =
-    (*TODO*)
-    (tenv, TUnit)
+    and pattern_to_type tenv = function
+        | PatNull -> (tenv, TList (new_tvar ()))
+        | PatWildCard -> (tenv, new_tvar ())
+        | PatBool _ -> (tenv, TBool)
+        | PatInt _ -> (tenv, TInt)
+        | PatChar _ -> (tenv, TChar)
+        | PatStr _ -> (tenv, TString)
+        | PatIdent id ->
+            let t = new_tvar () in
+            let ts = create_poly_type t in
+            (Env.extend id (ref ts) tenv, t)
+        | PatTuple pl ->
+            let rec pattern_list_to_type_list res tenv = function
+                | [] -> (tenv, List.rev res)
+                | x::xs ->
+                    let (tenv, t) = pattern_to_type tenv x in
+                    pattern_list_to_type_list (t::res) tenv xs
+            in
+            let (tenv, tl) = pattern_list_to_type_list [] tenv pl in
+            (tenv, TTuple tl)
+        | PatCons (p1, p2) ->
+            let (tenv, t) = pattern_to_type tenv p1 in
+            let (tenv, t') = pattern_to_type tenv p2 in
+            unify t' (TList t);
+            (tenv, t')
+        (* TODO
+        | PatList _ ->
+        | PatAs ->
+        | PatOr ->
+        *)
+        | _ -> failwith "pattern_to_type bug"
+
+    and unify_pat tenv (p, t') =
+        let t = unvar t' in
+        match (p, t) with
+        | (PatNull, TList _)
+        | (PatWildCard, _)
+        | (PatBool _, TBool)
+        | (PatInt _, TInt)
+        | (PatChar _, TChar)
+        | (PatStr _, TString) -> tenv
+        | (PatIdent id, t) ->
+            let ts = create_poly_type t in
+            Env.extend id (ref ts) tenv
+        | (PatTuple pl, TTuple tl) ->
+            let rec loop tenv = function
+                | ([],[]) -> tenv
+                | (p::ps, t::ts) ->
+                    let tenv = unify_pat tenv (p, t) in
+                    loop tenv (ps, ts)
+                | ([],_) | (_,[]) ->
+                    error ("pattern tuple error" ^ pattern_to_string p ^
+                            " & " ^ type_to_string t)
+            in loop tenv (pl, tl)
+        | (PatList (x::xs), t) ->
+            unify_pat tenv (PatCons (x, PatList xs), t)
+        | (PatList [], TList _) -> tenv
+        | (PatCons (p1, p2), TList t) ->
+            let tenv = unify_pat tenv (p1, t) in
+            unify_pat tenv (p2, TList t)
+        | (PatAs (pat, id), t) ->
+            let tenv = unify_pat tenv (pat, t) in
+            let ts = create_poly_type t in
+            Env.extend id (ref ts) tenv
+        | (PatOr (p1, p2), t) ->
+            let tenv = unify_pat tenv (p1, t) in
+            unify_pat tenv (p2, t)
+        | (pat, TVar (_, {contents = None})) ->
+            let (tenv, t) = pattern_to_type tenv pat in
+            unify t t';
+            tenv
+        | _ -> error ("pattern type error (" ^ pattern_to_string p ^ " & "
+                                            ^ type_to_string t ^ ")")
+
+and infer_match tenv e_var pat_list =
+    let (_, t_var) = infer tenv e_var in
+    match pat_list with
+    | [] -> TUnit
+    | [(pat, exp)] ->
+        let new_tenv = unify_pat tenv (pat, t_var) in
+        let (_, body_typ) = infer new_tenv exp in
+        body_typ
+    | (pat, exp)::rest ->
+        let new_tenv = unify_pat tenv (pat, t_var) in
+        let (_, body_typ) = infer new_tenv exp in
+        List.iter (fun (pat, exp) ->
+                    let new_env = unify_pat tenv (pat, t_var) in
+                    let (_, b_typ) = infer new_env exp in
+                    unify body_typ b_typ) rest;
+        body_typ
 
 and infer_list tenv el =
     match el with
