@@ -137,9 +137,9 @@ let rec unify t1 t2 =
     let t1 = prune t1 in
     let t2 = prune t2 in
 *)
-(*
-print_endline ("T* unify " ^ type_to_string t1 ^ " " ^ type_to_string t2);
-*)
+if !g_verbose then
+    print_endline ("T* unify " ^ type_to_string t1 ^ " " ^ type_to_string t2)
+else ();
     match (t1, t2) with
     | (TUnit, TUnit) | (TBool, TBool) | (TInt, TInt) | (TChar, TChar)
     | (TFloat, TFloat) | (TString, TString) -> ()
@@ -160,13 +160,27 @@ print_endline ("T* unify " ^ type_to_string t1 ^ " " ^ type_to_string t2);
     | (TVar (_, ({contents = None} as r1)), _) ->
         if occurs_in_type t1 t2 then
             error "circularity"
-        else
-            r1 := Some t2
+        else begin
+if !g_verbose then
+    print_string ("T* unify result " ^ type_to_string t1 ^ " = ")
+else ();
+            r1 := Some t2;
+if !g_verbose then
+    print_endline (type_to_string t1)
+else ();
+        end
     | (_, TVar (_, ({contents = None} as r2))) ->
         if occurs_in_type t2 t1 then
             error "circularity"
-        else
-            r2 := Some t1
+        else begin
+if !g_verbose then
+    print_string ("T* unify result " ^ type_to_string t2 ^ " = ")
+else ();
+            r2 := Some t1;
+if !g_verbose then
+    print_endline (type_to_string t2)
+else ();
+        end
     | (_, _) ->
         error (type_to_string t2 ^ " != " ^ type_to_string t1)
 
@@ -258,6 +272,10 @@ else ();
         (tenv, TFun (TUnit, t_body))
     | Fn (_, _) -> failwith "type bug"
     | If (e1, e2, e3) ->
+if !g_verbose then
+    print_endline ("T* If " ^ expr_to_string e1 ^ " then " ^ expr_to_string e2 ^ " else "
+        ^ expr_to_string e3)
+else ();
         let (_, t1) = infer tenv e1 in
         unify TBool t1;
         let (_, t_then) = infer tenv e2 in
@@ -381,12 +399,6 @@ and infer_unary op t =
             let ts = create_poly_type t in
             (Env.extend id (ref ts) tenv, t)
         | PatTuple pl ->
-            let rec pattern_list_to_type_list res tenv = function
-                | [] -> (tenv, List.rev res)
-                | x::xs ->
-                    let (tenv, t) = pattern_to_type tenv x in
-                    pattern_list_to_type_list (t::res) tenv xs
-            in
             let (tenv, tl) = pattern_list_to_type_list [] tenv pl in
             (tenv, TTuple tl)
         | PatCons (p1, p2) ->
@@ -395,11 +407,16 @@ and infer_unary op t =
             unify t' (TList t);
             (tenv, t')
         (* TODO
-        | PatList _ ->
+        | PatList pl ->
         | PatAs ->
         | PatOr ->
         *)
         | _ -> failwith "pattern_to_type bug"
+    and pattern_list_to_type_list res tenv = function
+        | [] -> (tenv, List.rev res)
+        | x::xs ->
+            let (tenv, t) = pattern_to_type tenv x in
+            pattern_list_to_type_list (t::res) tenv xs
 
     and unify_pat tenv (p, t') =
         let t = unvar t' in

@@ -146,7 +146,7 @@ let rec type_to_string ty =
                 in
                 (3, "'" ^ int_to_alpha y)
             | TVar (_, {contents = Some t}) ->
-                (3, (to_s n t) ^ "!")
+                (3, to_s n t)
         in
         if m > n then str
         else "(" ^ str ^ ")"
