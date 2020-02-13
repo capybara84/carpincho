@@ -346,7 +346,10 @@ and infer_unary op t =
         TBool
 
 and infer_match tenv e_var pat_list =
-    let rec pattern_to_type tenv = function
+    verbose ("infer_match " ^ expr_to_string e_var);
+    let rec pattern_to_type tenv p = 
+        verbose ("pattern_to_type " ^ pattern_to_string p);
+        match p with
         | PatNull -> (tenv, TList (new_tvar ()))
         | PatWildCard -> (tenv, new_tvar ())
         | PatBool _ -> (tenv, TBool)
@@ -355,7 +358,7 @@ and infer_match tenv e_var pat_list =
         | PatStr _ -> (tenv, TString)
         | PatIdent id ->
             let t = new_tvar () in
-            let ts = create_poly_type t in
+            let ts = { vars = []; body = t } in
             (Env.extend id (ref ts) tenv, t)
         | PatTuple pl ->
             let rec  pattern_list_to_type_list res tenv = function
@@ -379,6 +382,7 @@ and infer_match tenv e_var pat_list =
         | _ -> failwith "pattern_to_type bug"
 
     and unify_pat tenv (p, t') =
+        verbose ("unify_pat (" ^ pattern_to_string p ^ ", " ^ type_to_string t' ^ ")");
         let t = unvar t' in
         match (p, t) with
         | (PatNull, TList _)
@@ -388,7 +392,7 @@ and infer_match tenv e_var pat_list =
         | (PatChar _, TChar)
         | (PatStr _, TString) -> tenv
         | (PatIdent id, t) ->
-            let ts = create_poly_type t in
+            let ts = { vars =[]; body = t } in
             Env.extend id (ref ts) tenv
         | (PatTuple pl, TTuple tl) ->
             let rec loop tenv = function
@@ -397,13 +401,28 @@ and infer_match tenv e_var pat_list =
                     let tenv = unify_pat tenv (p, t) in
                     loop tenv (ps, ts)
                 | ([],_) | (_,[]) ->
-                    error ("pattern tuple error" ^ pattern_to_string p ^
+                    error ("pattern tuple error " ^ pattern_to_string p ^
                             " & " ^ type_to_string t)
             in loop tenv (pl, tl)
-        | (PatList (x::xs), t) ->
-            unify_pat tenv (PatCons (x, PatList xs), t)
-        | (PatList [], TList _) -> tenv
+        | (PatList pl, t) ->
+            let check_list pl =
+                let is_same_type = function
+                    | [] -> true
+                    | x::xs ->
+                        List.for_all (fun y -> equal x y) xs
+                in
+                let tl = List.map (fun p -> let (tenv, t) = pattern_to_type tenv p in t) pl in
+                if not (is_same_type tl) then
+                    error "pattern list type error"
+                else ();
+                List.hd tl
+            in
+            verbose ("unify_pat (PatList (x::xs), t)");
+            let list_t = check_list pl in
+            unify list_t t;
+            tenv
         | (PatCons (p1, p2), TList t) ->
+            verbose ("unify_pat PatCons (" ^ pattern_to_string p1 ^ ", " ^ pattern_to_string p2 ^ ")");
             let tenv = unify_pat tenv (p1, t) in
             unify_pat tenv (p2, TList t)
         | (PatAs (pat, id), t) ->
@@ -414,6 +433,7 @@ and infer_match tenv e_var pat_list =
             let tenv = unify_pat tenv (p1, t) in
             unify_pat tenv (p2, t)
         | (pat, TVar (_, {contents = None})) ->
+            verbose ("unify_pat (pat, TVar (_, {contents = None}))");
             let (tenv, t) = pattern_to_type tenv pat in
             unify t t';
             tenv
@@ -421,13 +441,18 @@ and infer_match tenv e_var pat_list =
                                             ^ type_to_string t ^ ")")
     in
     let (_, t_var) = infer tenv e_var in
+    verbose ("after infer " ^ type_to_string t_var);
     match pat_list with
-    | [] -> TUnit
+    | [] ->
+        verbose "pat_list .. []";
+        TUnit
     | [(pat, exp)] ->
+        verbose "pat_list .. [(pat,expr)]";
         let new_tenv = unify_pat tenv (pat, t_var) in
         let (_, body_typ) = infer new_tenv exp in
         body_typ
     | (pat, exp)::rest ->
+        verbose "pat_list .. (pat,expr)::rest";
         let new_tenv = unify_pat tenv (pat, t_var) in
         let (_, body_typ) = infer new_tenv exp in
         List.iter (fun (pat, exp) ->

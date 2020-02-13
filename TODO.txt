@@ -12,6 +12,28 @@ TODO
 - float
 - compile
 
+
+---
+↓と思ったけど、よく考えたら違った。
+let b = が出てきた時に、create_alpha_equivalentで
+コピーしているのが問題か。
+コピーしているので、後でbが出てきてもコピー先にしか推論結果が
+入らない。もとのbは多相型のまま。
+やはり最初のアルゴリズム（letの時にコピーする）が間違っていたか。
+let id = fn x -> x みたいのはコピーしておいて
+使うたびに、id true なら bool -> bool 、id 3 なら
+int -> int と違う推論結果が入るのだが。
+let b = x y; if b then ... なら b は bool ってのが解けない
+let b = x y in if b then でもいっしょだろう。
+
+と、ここまで書いて、やはり in があればいいのでは？と思えてきたぞ。
+inでつながっているときはbでコピーしなければいいような気がしてきた。
+ん？いやでも
+let id = fn x -> x in if id true then id 1 else id 2
+のときダメか。
+
+---
+
 LET IN はよくできている
 let b = ... IN ... b ... でbの型推論ができる
 letを別の式にしてしまったので、

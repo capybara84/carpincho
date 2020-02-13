@@ -84,6 +84,18 @@ let all_exprs = [
     (*TODO
     ("fn b -> fn f -> { let g1 = fn x -> x f; let g2 = fn x -> x f; fn z -> if b then g1 z g2 else g2 z g1}", "bool -> 'a -> ('a -> (('a -> 'b) -> 'b) -> 'c) -> 'c");
     *)
+
+    ("fn x -> match x { [] -> 0 | _ -> 1}", "['a] -> int");
+    ("fn x -> match x { true -> 0 | _ -> 2}", "bool -> int");
+    ("fn x -> match x { \"abc\" -> 0 | _ -> 2}", "string -> int");
+    ("fn x -> match x { x -> x+1 }", "int -> int");
+    ("fn x -> match x { x -> x }", "'a -> 'a");
+    ("fn x -> match x { (a,b) -> a }", "('a, 'b) -> 'a");
+    ("fn x -> match x { (a,b) -> b }", "('a, 'b) -> 'b");
+    ("fn x -> match x { [1] -> 0 }", "[int] -> int");
+(*
+    ("fn x -> match x { [1,2] -> 0 | _ -> 1}", "[int] -> int");
+*)
 ]
 
 let type_print_test verbose =
