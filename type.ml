@@ -3,6 +3,12 @@ open Syntax
 
 let error msg = raise (Error ("Type error: " ^ msg))
 
+let verbose msg =
+    if !g_verbose then
+        print_endline ("T* " ^ msg)
+    else
+        ()
+
 let seed = ref 0
 
 let new_tvar () =
@@ -137,9 +143,7 @@ let rec unify t1 t2 =
     let t1 = prune t1 in
     let t2 = prune t2 in
 *)
-if !g_verbose then
-    print_endline ("T* unify " ^ type_to_string t1 ^ " " ^ type_to_string t2)
-else ();
+    verbose ("unify " ^ type_to_string t1 ^ " " ^ type_to_string t2);
     match (t1, t2) with
     | (TUnit, TUnit) | (TBool, TBool) | (TInt, TInt) | (TChar, TChar)
     | (TFloat, TFloat) | (TString, TString) -> ()
@@ -161,34 +165,24 @@ else ();
         if occurs_in_type t1 t2 then
             error "circularity"
         else begin
-if !g_verbose then
-    print_string ("T* unify result " ^ type_to_string t1 ^ " = ")
-else ();
+            verbose ("unify result " ^ type_to_string t1 ^ " ... ");
             r1 := Some t2;
-if !g_verbose then
-    print_endline (type_to_string t1)
-else ();
+            verbose ("... " ^ type_to_string t1)
         end
     | (_, TVar (_, ({contents = None} as r2))) ->
         if occurs_in_type t2 t1 then
             error "circularity"
         else begin
-if !g_verbose then
-    print_string ("T* unify result " ^ type_to_string t2 ^ " = ")
-else ();
+            verbose ("unify result " ^ type_to_string t2 ^ " ... ");
             r2 := Some t1;
-if !g_verbose then
-    print_endline (type_to_string t2)
-else ();
+            verbose ("... " ^ type_to_string t2)
         end
     | (_, _) ->
         error (type_to_string t2 ^ " != " ^ type_to_string t1)
 
 let rec infer tenv e =
-if !g_verbose then
-    print_endline ("T* infer " ^ expr_to_string e)
-else ();
-let (tenv, ty) =
+    verbose ("infer " ^ expr_to_string e);
+    let (tenv, ty) =
     match e with
     | Eof | Unit -> (tenv, TUnit)
     | Null -> (tenv, TList (new_tvar ()))
@@ -201,9 +195,7 @@ let (tenv, ty) =
     *)
     | StrLit _ -> (tenv, TString)
     | Ident id ->
-if !g_verbose then
-    print_endline ("T* Ident " ^ id)
-else ();
+        verbose ("infer Ident " ^ id);
         let ts =
             (try
                 Env.lookup id tenv
@@ -213,13 +205,9 @@ else ();
                  with Not_found ->
                     error("'" ^ id ^ "' undefined" )))
         in
-if !g_verbose then
-    print_endline ("T* Ident " ^ id ^ " ts = " ^ type_schema_to_string !ts)
-else ();
+        verbose ("infer Ident " ^ id ^ " ... type schema is " ^ type_schema_to_string !ts);
         let new_ts = create_alpha_equivalent !ts in
-if !g_verbose then
-    print_endline ("T* Ident " ^ id ^ " ts alpha = " ^ type_schema_to_string new_ts)
-else ();
+        verbose ("infer Ident " ^ id ^ " ... ts alpha = " ^ type_schema_to_string new_ts);
         (tenv, new_ts.body)
     | IdentMod (mod_name, id) ->
         (try
@@ -246,22 +234,14 @@ else ();
         unify t1 (TFun (t2, t));
         (tenv, t)
     | Fn (Ident x, e) ->
-if !g_verbose then
-    print_endline ("T* Fn (" ^ x ^ ", " ^ expr_to_string e ^ ")")
-else ();
+        verbose ("infer Fn (" ^ x ^ ", " ^ expr_to_string e ^ ")");
         let t_arg = new_tvar () in
-if !g_verbose then
-    print_endline ("T* " ^ x ^ " type = " ^ type_to_string_raw t_arg)
-else ();
+        verbose ("infer " ^ x ^ " ... arg type = " ^ type_to_string_raw t_arg);
         let ts = { vars = []; body = t_arg } in
-if !g_verbose then
-    print_endline ("T* " ^ x ^ " ts = " ^ type_schema_to_string ts)
-else ();
+        verbose ("infer " ^ x ^ " ... arg ts = " ^ type_schema_to_string ts);
         let tenv = Env.extend x (ref ts) tenv in
         let (tenv, t_body) = infer tenv e in
-if !g_verbose then
-    print_endline ("T* after infer " ^ type_to_string_raw t_body)
-else ();
+        verbose ("after infer " ^ type_to_string_raw t_body);
         (tenv, TFun (t_arg, t_body))
     | Fn (WildCard, e) ->
         let t_arg = new_tvar () in
@@ -272,10 +252,8 @@ else ();
         (tenv, TFun (TUnit, t_body))
     | Fn (_, _) -> failwith "type bug"
     | If (e1, e2, e3) ->
-if !g_verbose then
-    print_endline ("T* If " ^ expr_to_string e1 ^ " then " ^ expr_to_string e2 ^ " else "
-        ^ expr_to_string e3)
-else ();
+        verbose ("infer If " ^ expr_to_string e1 ^ " then " ^ expr_to_string e2 ^ " else "
+                    ^ expr_to_string e3);
         let (_, t1) = infer tenv e1 in
         unify TBool t1;
         let (_, t_then) = infer tenv e2 in
@@ -287,36 +265,22 @@ else ();
     | Comp el ->
         infer_list tenv el
     | Let (id, e) ->
-if !g_verbose then
-    print_endline ("T* let " ^ id ^ " = " ^ expr_to_string e)
-else ();
+        verbose ("infer let " ^ id ^ " = " ^ expr_to_string e);
         let (_, t) = infer tenv e in
-if !g_verbose then
-    print_endline ("T* after infer e " ^ type_to_string_raw t)
-else ();
+        verbose ("after infer " ^ type_to_string_raw t);
         let ts = create_poly_type t in
-if !g_verbose then
-    print_endline ("T* poly type = " ^ type_schema_to_string ts)
-else ();
+        verbose ("poly type = " ^ type_schema_to_string ts);
         let tenv = Env.extend id (ref ts) tenv in
         (tenv, TUnit)
     | LetRec (id, e) ->
-if !g_verbose then
-    print_endline ("T* letrec " ^ id ^ " = " ^ expr_to_string e)
-else ();
+        verbose ("infer letrec " ^ id ^ " = " ^ expr_to_string e);
         let r = ref (new_type_schema ()) in
-if !g_verbose then
-    print_endline ("T* " ^ id ^ " type_schema = " ^ type_schema_to_string !r)
-else ();
+        verbose ("infer " ^ id ^ " type_schema = " ^ type_schema_to_string !r);
         let tenv = Env.extend id r tenv in
         let (_, t_val) = infer tenv e in
-if !g_verbose then
-    print_endline ("T* after infer e " ^ type_to_string_raw t_val)
-else ();
+        verbose ("after infer " ^ type_to_string_raw t_val);
         r := create_poly_type t_val;
-if !g_verbose then
-    print_endline ("T* poly type = " ^ type_schema_to_string !r)
-else ();
+        verbose ("infer poly type = " ^ type_schema_to_string !r);
         (tenv, TUnit)
     | TypeDef (id, typ) ->
         let ts = create_poly_type typ in
@@ -328,22 +292,16 @@ else ();
     | Import (_, _) ->
         (tenv, TUnit)
     in
-if !g_verbose then
-    print_endline ("T* infer " ^ expr_to_string e ^ " result = " ^ type_to_string_raw ty)
-else ();
+    verbose ("infer " ^ expr_to_string e ^ " result = " ^ type_to_string_raw ty);
     (tenv, ty)
 
 and infer_binary op tl tr =
-(*
-print_endline ("T* infer_binary " ^ string_of_binop op ^ " "
+    verbose ("infer_binary " ^ string_of_binop op ^ " "
                 ^ type_to_string tl ^ " " ^ type_to_string tr);
-*)
     match op with
     | BinAdd ->
         unify tl tr;
-(*
-print_endline ("T* after unify " ^ type_to_string tl ^ " " ^ type_to_string tr);
-*)
+        verbose ("after unify " ^ type_to_string tl ^ " " ^ type_to_string tr);
         if (equal tl TInt) || (equal tl TString) || (equal tl TFloat) then begin
 (*
 print_endline ("T* int or string or float");
