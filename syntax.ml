@@ -273,7 +273,9 @@ and pattern_to_string = function
     | PatTuple pl ->
         List.fold_left (fun a b -> a ^ " " ^ pattern_to_string b) "" pl
     | PatList lst ->
+        "[" ^
         List.fold_left (fun a b -> a ^ " " ^ pattern_to_string b) "" lst
+        ^ "]"
     | PatCons (p1, p2) ->
         pattern_to_string p1 ^ " | " ^ pattern_to_string p2
     | PatAs (pat, id) ->

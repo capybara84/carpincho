@@ -345,7 +345,8 @@ and infer_unary op t =
         unify TBool t;
         TBool
 
-    and pattern_to_type tenv = function
+and infer_match tenv e_var pat_list =
+    let rec pattern_to_type tenv = function
         | PatNull -> (tenv, TList (new_tvar ()))
         | PatWildCard -> (tenv, new_tvar ())
         | PatBool _ -> (tenv, TBool)
@@ -357,6 +358,12 @@ and infer_unary op t =
             let ts = create_poly_type t in
             (Env.extend id (ref ts) tenv, t)
         | PatTuple pl ->
+            let rec  pattern_list_to_type_list res tenv = function
+                | [] -> (tenv, List.rev res)
+                | x::xs ->
+                    let (tenv, t) = pattern_to_type tenv x in
+                    pattern_list_to_type_list (t::res) tenv xs
+            in
             let (tenv, tl) = pattern_list_to_type_list [] tenv pl in
             (tenv, TTuple tl)
         | PatCons (p1, p2) ->
@@ -364,17 +371,12 @@ and infer_unary op t =
             let (tenv, t') = pattern_to_type tenv p2 in
             unify t' (TList t);
             (tenv, t')
-        (* TODO
-        | PatList pl ->
+        (*
+        | PatList ->
         | PatAs ->
         | PatOr ->
         *)
         | _ -> failwith "pattern_to_type bug"
-    and pattern_list_to_type_list res tenv = function
-        | [] -> (tenv, List.rev res)
-        | x::xs ->
-            let (tenv, t) = pattern_to_type tenv x in
-            pattern_list_to_type_list (t::res) tenv xs
 
     and unify_pat tenv (p, t') =
         let t = unvar t' in
@@ -417,8 +419,7 @@ and infer_unary op t =
             tenv
         | _ -> error ("pattern type error (" ^ pattern_to_string p ^ " & "
                                             ^ type_to_string t ^ ")")
-
-and infer_match tenv e_var pat_list =
+    in
     let (_, t_var) = infer tenv e_var in
     match pat_list with
     | [] -> TUnit
