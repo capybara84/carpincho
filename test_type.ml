@@ -70,8 +70,20 @@ let all_exprs = [
         "'a -> 'a");
     ("{ let s = fn x -> fn y -> fn z -> x z (y z); let kk = fn x -> fn y -> y; s kk kk }",
         "'a -> 'b -> 'b");
+
+    (* TODO 
     ("fn x -> fn y -> fn z -> { let b = x y z ; if b then z y else y }",
         "('a -> ('a -> 'a) -> bool) -> 'a -> ('a -> 'a) -> 'a");
+    *)
+
+    ("{let pair = fn x1 -> fn x2 -> fn y -> y x1 x2; let proj1 = fn p -> p (fn x1 -> fn x2 -> x1); let proj2 = fn p -> p (fn x1 -> fn x2 -> x2); proj1 (pair 1 100)}", "int");
+    ("{let pair = fn x1 -> fn x2 -> fn y -> y x1 x2; let proj1 = fn p -> p (fn x1 -> fn x2 -> x1); let proj2 = fn p -> p (fn x1 -> fn x2 -> x2); proj1 (proj2 (pair 10 (pair 20 30)))}", "int");
+    ("{let f = fn x -> x; if f true then f 1 else f 2}", "int");
+    ("{let f = fn x -> 3; f true + f 4}", "int");
+    ("fn b -> {let f = fn x -> x; let g = fn y -> y; if b then f g else g f}", "bool -> 'a -> 'a");
+    (*TODO
+    ("fn b -> fn f -> { let g1 = fn x -> x f; let g2 = fn x -> x f; fn z -> if b then g1 z g2 else g2 z g1}", "bool -> 'a -> ('a -> (('a -> 'b) -> 'b) -> 'c) -> 'c");
+    *)
 ]
 
 let type_print_test verbose =
