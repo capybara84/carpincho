@@ -152,6 +152,12 @@ let rec type_to_string ty =
         else "(" ^ str ^ ")"
     in to_s (-1) ty
 
+let rec type_list_to_string = function
+    | [] -> ""
+    | x::[] -> type_to_string x
+    | x::xs ->
+        type_to_string x ^ ", " ^ type_list_to_string xs
+
 
 let rec type_to_string_raw ty =
     let rec to_s n ty =
@@ -179,7 +185,7 @@ let rec type_to_string_raw ty =
                 let s2 = to_s 0 t2 in
                 (1, s1 ^ " -> " ^ s2)
             | TVar (x, {contents = None}) ->
-                (3, "'" ^ int_to_alpha x)
+                (3, "'" ^ string_of_int x)
             | TVar (_, {contents = Some t}) ->
                 (3, (to_s n t) ^ "!")
         in
@@ -271,17 +277,21 @@ and pattern_to_string = function
     | PatStr s -> "\"" ^ s ^ "\""
     | PatIdent id -> id
     | PatTuple pl ->
-        List.fold_left (fun a b -> a ^ " " ^ pattern_to_string b) "" pl
+        "(" ^ pat_list_to_string pl ^ ")"
     | PatList lst ->
-        "[" ^
-        List.fold_left (fun a b -> a ^ " " ^ pattern_to_string b) "" lst
-        ^ "]"
+        "[" ^ pat_list_to_string lst ^ "]"
     | PatCons (p1, p2) ->
         pattern_to_string p1 ^ " | " ^ pattern_to_string p2
     | PatAs (pat, id) ->
         "(" ^ pattern_to_string pat ^ ") as " ^ id
     | PatOr (p1, p2) ->
         pattern_to_string p1 ^ ":" ^ pattern_to_string p2
+
+and pat_list_to_string = function
+    | [] -> ""
+    | x::[] -> pattern_to_string x
+    | x::xs ->
+        pattern_to_string x ^ ", " ^ pat_list_to_string xs
 
 let rec value_to_string = function
     | VUnit -> "()"

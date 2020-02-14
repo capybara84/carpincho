@@ -47,6 +47,12 @@ and list_equal = function
         else
             false
 
+let pat_equal t1 t2 =
+    match (t1, t2) with
+    | (TVar (_, {contents = None}), _)
+    | (_, TVar (_, {contents = None})) -> true
+    | _ -> equal t1 t2
+
 let rec unwrap_var free_vars = function
     | TParamId (ty, id) ->
         let (free_vars, unwrapped_type) = unwrap_var free_vars ty in
@@ -143,7 +149,7 @@ let rec unify t1 t2 =
     let t1 = prune t1 in
     let t2 = prune t2 in
 *)
-    verbose ("unify " ^ type_to_string t1 ^ " " ^ type_to_string t2);
+    verbose ("unify " ^ type_to_string_raw t1 ^ " " ^ type_to_string_raw t2);
     match (t1, t2) with
     | (TUnit, TUnit) | (TBool, TBool) | (TInt, TInt) | (TChar, TChar)
     | (TFloat, TFloat) | (TString, TString) -> ()
@@ -165,17 +171,17 @@ let rec unify t1 t2 =
         if occurs_in_type t1 t2 then
             error "circularity"
         else begin
-            verbose ("unify result " ^ type_to_string t1 ^ " ... ");
+            verbose ("unify result " ^ type_to_string_raw t1 ^ " ... ");
             r1 := Some t2;
-            verbose ("... " ^ type_to_string t1)
+            verbose ("... " ^ type_to_string_raw t1)
         end
     | (_, TVar (_, ({contents = None} as r2))) ->
         if occurs_in_type t2 t1 then
             error "circularity"
         else begin
-            verbose ("unify result " ^ type_to_string t2 ^ " ... ");
+            verbose ("unify result " ^ type_to_string_raw t2 ^ " ... ");
             r2 := Some t1;
-            verbose ("... " ^ type_to_string t2)
+            verbose ("... " ^ type_to_string_raw t2)
         end
     | (_, _) ->
         error (type_to_string t2 ^ " != " ^ type_to_string t1)
@@ -405,24 +411,33 @@ and infer_match tenv e_var pat_list =
                             " & " ^ type_to_string t)
             in loop tenv (pl, tl)
         | (PatList pl, t) ->
-            let check_list pl =
-                let is_same_type = function
-                    | [] -> true
+            verbose ("unify_pat (PatList (x::xs), t)");
+            let check_list tenv pl =
+                verbose ("check_list [" ^ pat_list_to_string pl ^ "]");
+                let rec pat_list_to_type_list tenv tl = function
+                    | [] -> (tenv, tl)
                     | x::xs ->
-                        List.for_all (fun y -> equal x y) xs
+                        let (tenv, t) = pattern_to_type tenv x in
+                        pat_list_to_type_list tenv (t::tl) xs
                 in
-                let tl = List.map (fun p -> let (tenv, t) = pattern_to_type tenv p in t) pl in
-                if not (is_same_type tl) then
+                let (tenv, tl) = pat_list_to_type_list tenv [] pl in
+                verbose (" type_list [" ^ type_list_to_string tl ^ "]");
+                let list_same_type = function
+                    | [] -> true
+                    | _::[] -> true
+                    | x::xs -> List.for_all (fun y -> pat_equal x y) xs
+                in
+                if not (list_same_type tl) then
                     error "pattern list type error"
                 else ();
-                List.hd tl
+                (tenv, tl)
             in
-            verbose ("unify_pat (PatList (x::xs), t)");
-            let list_t = check_list pl in
-            unify list_t t;
+            let (tenv, tl) = check_list tenv pl in
+            List.iter (fun x -> unify t (TList x)) tl;
             tenv
         | (PatCons (p1, p2), TList t) ->
-            verbose ("unify_pat PatCons (" ^ pattern_to_string p1 ^ ", " ^ pattern_to_string p2 ^ ")");
+            verbose ("unify_pat PatCons (" ^ pattern_to_string p1 ^
+                                            ", " ^ pattern_to_string p2 ^ ")");
             let tenv = unify_pat tenv (p1, t) in
             unify_pat tenv (p2, TList t)
         | (PatAs (pat, id), t) ->

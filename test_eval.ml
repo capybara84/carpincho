@@ -81,6 +81,7 @@ let all_exprs = [
     ("(fn n -> match n { 0 | 1 | 2 -> 'a' | 3 -> 'b' }) 1", VChar 'a');
     ("(fn n -> match n { 0 | 1 | 2 -> 'a' | 3 -> 'b' }) 2", VChar 'a');
     ("(fn n -> match n { 0 | 1 | 2 -> 'a' | 3 -> 'b' }) 3", VChar 'b');
+    ("match [1,2,3] { [a,b,c] -> a }", VInt 1);
     ("match [1,2,3] { [a,b,c] as d -> a }", VInt 1);
     ("match [1,2,3] { [a,b,c] as d -> b }", VInt 2);
     ("match [1,2,3] { [a,b,c] as d -> c }", VInt 3);

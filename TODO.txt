@@ -3,7 +3,7 @@ TODO
 * tuple
 * pattern
 * nested comment /* */
-- type inference
+* type inference
 - typedef
 
 - struct
@@ -12,6 +12,10 @@ TODO
 - float
 - compile
 
+
+---
+とりあえず型推論はこのままにしておいて他の実装をすすめる
+後でちゃんとHM型推論を実装しよう。
 
 ---
 ↓と思ったけど、よく考えたら違った。

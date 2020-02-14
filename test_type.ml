@@ -87,15 +87,23 @@ let all_exprs = [
 
     ("fn x -> match x { [] -> 0 | _ -> 1}", "['a] -> int");
     ("fn x -> match x { true -> 0 | _ -> 2}", "bool -> int");
+    ("fn x -> match x { 1 -> 0 | _ -> 2}", "int -> int");
+    ("fn x -> match x { 'a' -> 0 | _ -> 2}", "char -> int");
     ("fn x -> match x { \"abc\" -> 0 | _ -> 2}", "string -> int");
     ("fn x -> match x { x -> x+1 }", "int -> int");
     ("fn x -> match x { x -> x }", "'a -> 'a");
     ("fn x -> match x { (a,b) -> a }", "('a, 'b) -> 'a");
     ("fn x -> match x { (a,b) -> b }", "('a, 'b) -> 'b");
     ("fn x -> match x { [1] -> 0 }", "[int] -> int");
-(*
     ("fn x -> match x { [1,2] -> 0 | _ -> 1}", "[int] -> int");
-*)
+    ("match 1 { a -> a }", "int");
+    ("match [1] { [a] -> a }", "int");
+    ("match [1,2] { [a,b] -> a }", "int");
+    ("match [1,2] { [a,b] -> b }", "int");
+    ("match (1,2) { (a,b) as c -> a }", "int");
+    ("match (1,2) { (a,b) as c -> b }", "int");
+    ("match (1,2) { (a,b) as c -> c }", "(int, int)");
+    ("match 1 { 1 | 2 -> 'a' | _ -> 'b' }", "char");
 ]
 
 let type_print_test verbose =
