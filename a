@@ -1,0 +1,5629 @@
+Test
+Scanner [32m.[0m[<NEWLINE>, 2]
+[identifier, 2]
+[12345, 2]
+[<NEWLINE>, 3]
+['a', 3]
+['	', 3]
+["abc
+", 3]
+[<NEWLINE>, 4]
+[module, 4]
+[import, 4]
+[as, 4]
+[<NEWLINE>, 5]
+[type, 5]
+[unit, 5]
+[bool, 5]
+[int, 5]
+[char, 5]
+[float, 5]
+[string, 5]
+[<NEWLINE>, 6]
+[let, 6]
+[fn, 6]
+[if, 6]
+[then, 6]
+[else, 6]
+[match, 6]
+[<NEWLINE>, 7]
+[=, 7]
+[==, 7]
+[!=, 7]
+[<, 7]
+[<=, 7]
+[>, 7]
+[>=, 7]
+[<NEWLINE>, 8]
+[-, 8]
+[+, 8]
+[/, 8]
+[*, 8]
+[%, 8]
+[<NEWLINE>, 9]
+[!, 9]
+[(), 9]
+[|, 9]
+[||, 9]
+[&&, 9]
+[<NEWLINE>, 10]
+[->, 10]
+[(, 10]
+[), 10]
+[[, 10]
+[], 10]
+[{, 10]
+[}, 10]
+[<NEWLINE>, 11]
+[_, 11]
+[,, 11]
+[[], 11]
+[:, 11]
+[;, 11]
+[<NEWLINE>, 12]
+[<EOF>, 12]
+[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m[32m.[0m
+Parser text    > 'a'
+parsed  > 'a'
+expected> 'a'
+[32m.[0mtext    > "abc"
+parsed  > "abc"
+expected> "abc"
+[32m.[0mtext    > 12
+parsed  > 12
+expected> 12
+[32m.[0mtext    > 300 + 12
+parsed  > (300 + 12)
+expected> (300 + 12)
+[32m.[0mtext    > 300 * 12 + 3
+parsed  > ((300 * 12) + 3)
+expected> ((300 * 12) + 3)
+[32m.[0mtext    > 300 * (12 + 3)
+parsed  > (300 * (12 + 3))
+expected> (300 * (12 + 3))
+[32m.[0mtext    > 1 / 2 < 3 * 4
+parsed  > ((1 / 2) < (3 * 4))
+expected> ((1 / 2) < (3 * 4))
+[32m.[0mtext    > 2 * -(1 + 2)
+parsed  > (2 * (-(1 + 2)))
+expected> (2 * (-(1 + 2)))
+[32m.[0mtext    > 5 % 2
+parsed  > (5 % 2)
+expected> (5 % 2)
+[32m.[0mtext    > a && b
+parsed  > (a && b)
+expected> (a && b)
+[32m.[0mtext    > a || b
+parsed  > (a || b)
+expected> (a || b)
+[32m.[0mtext    > !(x < y)
+parsed  > (!(x < y))
+expected> (!(x < y))
+[32m.[0mtext    > 1 <= 2
+parsed  > (1 <= 2)
+expected> (1 <= 2)
+[32m.[0mtext    > 1 > 2
+parsed  > (1 > 2)
+expected> (1 > 2)
+[32m.[0mtext    > 1 >= 2
+parsed  > (1 >= 2)
+expected> (1 >= 2)
+[32m.[0mtext    > 1 == 2
+parsed  > (1 == 2)
+expected> (1 == 2)
+[32m.[0mtext    > 1 != 2
+parsed  > (1 != 2)
+expected> (1 != 2)
+[32m.[0mtext    > fn x -> x + 1
+parsed  > (fn x -> (x + 1))
+expected> (fn x -> (x + 1))
+[32m.[0mtext    > f 3
+parsed  > (f 3)
+expected> (f 3)
+[32m.[0mtext    > -(f 3)
+parsed  > (-(f 3))
+expected> (-(f 3))
+[32m.[0mtext    > f (-3)
+parsed  > (f (-3))
+expected> (f (-3))
+[32m.[0mtext    > f -3
+parsed  > (f - 3)
+expected> (f - 3)
+[32m.[0mtext    > fn () -> 1
+parsed  > (fn () -> 1)
+expected> (fn () -> 1)
+[32m.[0mtext    > (fn x -> x + 1) (300 * (12 + 3))
+parsed  > ((fn x -> (x + 1)) (300 * (12 + 3)))
+expected> ((fn x -> (x + 1)) (300 * (12 + 3)))
+[32m.[0mtext    > let fact = fn n -> if n < 1 then 1 else n * fact (n - 1)
+parsed  > (let fact = (fn n -> (if (n < 1) then 1 else (n * (fact (n - 1))))))
+expected> (let fact = (fn n -> (if (n < 1) then 1 else (n * (fact (n - 1))))))
+[32m.[0mtext    > {}
+parsed  > {}
+expected> {}
+[32m.[0mtext    > {1; 2; }
+parsed  > {1; 2; }
+expected> {1; 2; }
+[32m.[0mtext    > {1; 2; 3}
+parsed  > {1; 2; 3; }
+expected> {1; 2; 3; }
+[32m.[0mtext    > let fact = fn n -> if n < 1 then 1 else n * fact (n - 1)
+parsed  > (let fact = (fn n -> (if (n < 1) then 1 else (n * (fact (n - 1))))))
+expected> (let fact = (fn n -> (if (n < 1) then 1 else (n * (fact (n - 1))))))
+[32m.[0mtext    > 1+2+3
+parsed  > ((1 + 2) + 3)
+expected> ((1 + 2) + 3)
+[32m.[0mtext    > f 1 2
+parsed  > ((f 1) 2)
+expected> ((f 1) 2)
+[32m.[0mtext    > f 1 2 3
+parsed  > (((f 1) 2) 3)
+expected> (((f 1) 2) 3)
+[32m.[0mtext    > 1:2:3:[]
+parsed  > (1 : (2 : (3 : [])))
+expected> (1 : (2 : (3 : [])))
+[32m.[0mtext    > [1,2,3]
+parsed  > (1 : (2 : (3 : [])))
+expected> (1 : (2 : (3 : [])))
+[32m.[0mtext    > (1)
+parsed  > 1
+expected> 1
+[32m.[0mtext    > true
+parsed  > true
+expected> true
+[32m.[0mtext    > false
+parsed  > false
+expected> false
+[32m.[0mtext    > fun one () = 1
+parsed  > (letrec one (fn () -> 1))
+expected> (letrec one (fn () -> 1))
+[32m.[0mtext    > fun fact n = if n < 1 then 1 else n * fact (n-1)
+parsed  > (letrec fact (fn n -> (if (n < 1) then 1 else (n * (fact (n - 1))))))
+expected> (letrec fact (fn n -> (if (n < 1) then 1 else (n * (fact (n - 1))))))
+[32m.[0mtext    > module List
+parsed  > module List
+expected> module List
+[32m.[0mtext    > import Array
+parsed  > import Array
+expected> import Array
+[32m.[0mtext    > import Array as A
+parsed  > import Array as A
+expected> import Array as A
+[32m.[0mtext    > Array.length
+parsed  > Array.length
+expected> Array.length
+[32m.[0mtext    > (1)
+parsed  > 1
+expected> 1
+[32m.[0mtext    > (1,2)
+parsed  > (1, 2)
+expected> (1, 2)
+[32m.[0mtext    > (1,2,3)
+parsed  > (1, 2, 3)
+expected> (1, 2, 3)
+[32m.[0mtext    > match x { 0 -> 'a' | 1 -> 'b' | 2 -> 'c' }
+parsed  > (match x { | 0 -> 'a' | 1 -> 'b' | 2 -> 'c'})
+expected> (match x { | 0 -> 'a' | 1 -> 'b' | 2 -> 'c'})
+[32m.[0mtext    > match x { [] -> 0 | _:xs -> 1 }
+parsed  > (match x { | [] -> 0 | _::xs -> 1})
+expected> (match x { | [] -> 0 | _::xs -> 1})
+[32m.[0mtext    > match 1 { x -> x }
+parsed  > (match 1 { | x -> x})
+expected> (match 1 { | x -> x})
+[32m.[0mtext    > match n { 1 | 2 | 3 -> 0 | 4 -> 1 }
+parsed  > (match n { | 1 | 2 | 3 -> 0 | 4 -> 1})
+expected> (match n { | 1 | 2 | 3 -> 0 | 4 -> 1})
+[32m.[0mtext    > match n { _ as a -> 1}
+parsed  > (match n { | (_) as a -> 1})
+expected> (match n { | (_) as a -> 1})
+[32m.[0mtext    > match n { [a,b,c] -> 3 }
+[31m![0mmissing token ']' at ','
+text    > match n { (1) -> 2 }
+parsed  > (match n { | 1 -> 2})
+expected> (match n { | 1 -> 2})
+[32m.[0mtext    > match n { (1, 'c') -> 3 }
+parsed  > (match n { | (1, 'c') -> 3})
+expected> (match n { | (1, 'c') -> 3})
+[32m.[0mtext    > match n { (_,_,x) -> x }
+parsed  > (match n { | (_, _, x) -> x})
+expected> (match n { | (_, _, x) -> x})
+[32m.[0m
+Eval text> 'a'
+T* infer 'a'
+T* infer 'a' result = char
+'a'
+evaluated> a : char
+expected > a
+[32m.[0mtext> "abc"
+T* infer "abc"
+T* infer "abc" result = string
+"abc"
+evaluated> abc : string
+expected > abc
+[32m.[0mtext> 12
+T* infer 12
+T* infer 12 result = int
+12
+evaluated> 12 : int
+expected > 12
+[32m.[0mtext> 300 + 12
+T* infer (300 + 12)
+T* infer 300
+T* infer 300 result = int
+T* infer 12
+T* infer 12 result = int
+T* infer_binary + int int
+T* unify int int
+T* after unify int int
+T* infer (300 + 12) result = int
+(300 + 12)
+evaluated> 312 : int
+expected > 312
+[32m.[0mtext> 300 * 12 + 3
+T* infer ((300 * 12) + 3)
+T* infer (300 * 12)
+T* infer 300
+T* infer 300 result = int
+T* infer 12
+T* infer 12 result = int
+T* infer_binary * int int
+T* unify int int
+T* infer (300 * 12) result = int
+T* infer 3
+T* infer 3 result = int
+T* infer_binary + int int
+T* unify int int
+T* after unify int int
+T* infer ((300 * 12) + 3) result = int
+((300 * 12) + 3)
+evaluated> 3603 : int
+expected > 3603
+[32m.[0mtext> 300 * (12 + 3)
+T* infer (300 * (12 + 3))
+T* infer 300
+T* infer 300 result = int
+T* infer (12 + 3)
+T* infer 12
+T* infer 12 result = int
+T* infer 3
+T* infer 3 result = int
+T* infer_binary + int int
+T* unify int int
+T* after unify int int
+T* infer (12 + 3) result = int
+T* infer_binary * int int
+T* unify int int
+T* infer (300 * (12 + 3)) result = int
+(300 * (12 + 3))
+evaluated> 4500 : int
+expected > 4500
+[32m.[0mtext> 300 / (12 - 3)
+T* infer (300 / (12 - 3))
+T* infer 300
+T* infer 300 result = int
+T* infer (12 - 3)
+T* infer 12
+T* infer 12 result = int
+T* infer 3
+T* infer 3 result = int
+T* infer_binary - int int
+T* unify int int
+T* infer (12 - 3) result = int
+T* infer_binary / int int
+T* unify int int
+T* infer (300 / (12 - 3)) result = int
+(300 / (12 - 3))
+evaluated> 33 : int
+expected > 33
+[32m.[0mtext> 300 % (12 - 3)
+T* infer (300 % (12 - 3))
+T* infer 300
+T* infer 300 result = int
+T* infer (12 - 3)
+T* infer 12
+T* infer 12 result = int
+T* infer 3
+T* infer 3 result = int
+T* infer_binary - int int
+T* unify int int
+T* infer (12 - 3) result = int
+T* infer_binary % int int
+T* unify int int
+T* infer (300 % (12 - 3)) result = int
+(300 % (12 - 3))
+evaluated> 3 : int
+expected > 3
+[32m.[0mtext> 1 < 2
+T* infer (1 < 2)
+T* infer 1
+T* infer 1 result = int
+T* infer 2
+T* infer 2 result = int
+T* infer_binary < int int
+T* unify int int
+T* infer (1 < 2) result = bool
+(1 < 2)
+evaluated> true : bool
+expected > true
+[32m.[0mtext> 1 <= 1
+T* infer (1 <= 1)
+T* infer 1
+T* infer 1 result = int
+T* infer 1
+T* infer 1 result = int
+T* infer_binary <= int int
+T* unify int int
+T* infer (1 <= 1) result = bool
+(1 <= 1)
+evaluated> true : bool
+expected > true
+[32m.[0mtext> 1 > 2
+T* infer (1 > 2)
+T* infer 1
+T* infer 1 result = int
+T* infer 2
+T* infer 2 result = int
+T* infer_binary > int int
+T* unify int int
+T* infer (1 > 2) result = bool
+(1 > 2)
+evaluated> false : bool
+expected > false
+[32m.[0mtext> 2 >= 2
+T* infer (2 >= 2)
+T* infer 2
+T* infer 2 result = int
+T* infer 2
+T* infer 2 result = int
+T* infer_binary >= int int
+T* unify int int
+T* infer (2 >= 2) result = bool
+(2 >= 2)
+evaluated> true : bool
+expected > true
+[32m.[0mtext> 2 == 2
+T* infer (2 == 2)
+T* infer 2
+T* infer 2 result = int
+T* infer 2
+T* infer 2 result = int
+T* infer_binary == int int
+T* unify int int
+T* infer (2 == 2) result = bool
+(2 == 2)
+evaluated> true : bool
+expected > true
+[32m.[0mtext> 2 == 1
+T* infer (2 == 1)
+T* infer 2
+T* infer 2 result = int
+T* infer 1
+T* infer 1 result = int
+T* infer_binary == int int
+T* unify int int
+T* infer (2 == 1) result = bool
+(2 == 1)
+evaluated> false : bool
+expected > false
+[32m.[0mtext> 2 != 1
+T* infer (2 != 1)
+T* infer 2
+T* infer 2 result = int
+T* infer 1
+T* infer 1 result = int
+T* infer_binary != int int
+T* unify int int
+T* infer (2 != 1) result = bool
+(2 != 1)
+evaluated> true : bool
+expected > true
+[32m.[0mtext> 2 != 2
+T* infer (2 != 2)
+T* infer 2
+T* infer 2 result = int
+T* infer 2
+T* infer 2 result = int
+T* infer_binary != int int
+T* unify int int
+T* infer (2 != 2) result = bool
+(2 != 2)
+evaluated> false : bool
+expected > false
+[32m.[0mtext> 'a' == 'a'
+T* infer ('a' == 'a')
+T* infer 'a'
+T* infer 'a' result = char
+T* infer 'a'
+T* infer 'a' result = char
+T* infer_binary == char char
+T* unify char char
+T* infer ('a' == 'a') result = bool
+('a' == 'a')
+evaluated> true : bool
+expected > true
+[32m.[0mtext> 'a' == 'b'
+T* infer ('a' == 'b')
+T* infer 'a'
+T* infer 'a' result = char
+T* infer 'b'
+T* infer 'b' result = char
+T* infer_binary == char char
+T* unify char char
+T* infer ('a' == 'b') result = bool
+('a' == 'b')
+evaluated> false : bool
+expected > false
+[32m.[0mtext> 'a' != 'a'
+T* infer ('a' != 'a')
+T* infer 'a'
+T* infer 'a' result = char
+T* infer 'a'
+T* infer 'a' result = char
+T* infer_binary != char char
+T* unify char char
+T* infer ('a' != 'a') result = bool
+('a' != 'a')
+evaluated> false : bool
+expected > false
+[32m.[0mtext> 'a' != 'b'
+T* infer ('a' != 'b')
+T* infer 'a'
+T* infer 'a' result = char
+T* infer 'b'
+T* infer 'b' result = char
+T* infer_binary != char char
+T* unify char char
+T* infer ('a' != 'b') result = bool
+('a' != 'b')
+evaluated> true : bool
+expected > true
+[32m.[0mtext> 'a' < 'b'
+T* infer ('a' < 'b')
+T* infer 'a'
+T* infer 'a' result = char
+T* infer 'b'
+T* infer 'b' result = char
+T* infer_binary < char char
+T* unify char char
+T* infer ('a' < 'b') result = bool
+('a' < 'b')
+evaluated> true : bool
+expected > true
+[32m.[0mtext> 'b' < 'a'
+T* infer ('b' < 'a')
+T* infer 'b'
+T* infer 'b' result = char
+T* infer 'a'
+T* infer 'a' result = char
+T* infer_binary < char char
+T* unify char char
+T* infer ('b' < 'a') result = bool
+('b' < 'a')
+evaluated> false : bool
+expected > false
+[32m.[0mtext> 'a' <= 'a'
+T* infer ('a' <= 'a')
+T* infer 'a'
+T* infer 'a' result = char
+T* infer 'a'
+T* infer 'a' result = char
+T* infer_binary <= char char
+T* unify char char
+T* infer ('a' <= 'a') result = bool
+('a' <= 'a')
+evaluated> true : bool
+expected > true
+[32m.[0mtext> 'b' <= 'a'
+T* infer ('b' <= 'a')
+T* infer 'b'
+T* infer 'b' result = char
+T* infer 'a'
+T* infer 'a' result = char
+T* infer_binary <= char char
+T* unify char char
+T* infer ('b' <= 'a') result = bool
+('b' <= 'a')
+evaluated> false : bool
+expected > false
+[32m.[0mtext> 'a' > 'b'
+T* infer ('a' > 'b')
+T* infer 'a'
+T* infer 'a' result = char
+T* infer 'b'
+T* infer 'b' result = char
+T* infer_binary > char char
+T* unify char char
+T* infer ('a' > 'b') result = bool
+('a' > 'b')
+evaluated> false : bool
+expected > false
+[32m.[0mtext> 'b' > 'a'
+T* infer ('b' > 'a')
+T* infer 'b'
+T* infer 'b' result = char
+T* infer 'a'
+T* infer 'a' result = char
+T* infer_binary > char char
+T* unify char char
+T* infer ('b' > 'a') result = bool
+('b' > 'a')
+evaluated> true : bool
+expected > true
+[32m.[0mtext> 'a' >= 'b'
+T* infer ('a' >= 'b')
+T* infer 'a'
+T* infer 'a' result = char
+T* infer 'b'
+T* infer 'b' result = char
+T* infer_binary >= char char
+T* unify char char
+T* infer ('a' >= 'b') result = bool
+('a' >= 'b')
+evaluated> false : bool
+expected > false
+[32m.[0mtext> 'a' >= 'a'
+T* infer ('a' >= 'a')
+T* infer 'a'
+T* infer 'a' result = char
+T* infer 'a'
+T* infer 'a' result = char
+T* infer_binary >= char char
+T* unify char char
+T* infer ('a' >= 'a') result = bool
+('a' >= 'a')
+evaluated> true : bool
+expected > true
+[32m.[0mtext> "abc" + "def"
+T* infer ("abc" + "def")
+T* infer "abc"
+T* infer "abc" result = string
+T* infer "def"
+T* infer "def" result = string
+T* infer_binary + string string
+T* unify string string
+T* after unify string string
+T* infer ("abc" + "def") result = string
+("abc" + "def")
+evaluated> abcdef : string
+expected > abcdef
+[32m.[0mtext> "abc" == "abc"
+T* infer ("abc" == "abc")
+T* infer "abc"
+T* infer "abc" result = string
+T* infer "abc"
+T* infer "abc" result = string
+T* infer_binary == string string
+T* unify string string
+T* infer ("abc" == "abc") result = bool
+("abc" == "abc")
+evaluated> true : bool
+expected > true
+[32m.[0mtext> "abc" == "def"
+T* infer ("abc" == "def")
+T* infer "abc"
+T* infer "abc" result = string
+T* infer "def"
+T* infer "def" result = string
+T* infer_binary == string string
+T* unify string string
+T* infer ("abc" == "def") result = bool
+("abc" == "def")
+evaluated> false : bool
+expected > false
+[32m.[0mtext> "abc" != "abc"
+T* infer ("abc" != "abc")
+T* infer "abc"
+T* infer "abc" result = string
+T* infer "abc"
+T* infer "abc" result = string
+T* infer_binary != string string
+T* unify string string
+T* infer ("abc" != "abc") result = bool
+("abc" != "abc")
+evaluated> false : bool
+expected > false
+[32m.[0mtext> "abc" != "def"
+T* infer ("abc" != "def")
+T* infer "abc"
+T* infer "abc" result = string
+T* infer "def"
+T* infer "def" result = string
+T* infer_binary != string string
+T* unify string string
+T* infer ("abc" != "def") result = bool
+("abc" != "def")
+evaluated> true : bool
+expected > true
+[32m.[0mtext> "abc" < "def"
+T* infer ("abc" < "def")
+T* infer "abc"
+T* infer "abc" result = string
+T* infer "def"
+T* infer "def" result = string
+T* infer_binary < string string
+T* unify string string
+T* infer ("abc" < "def") result = bool
+("abc" < "def")
+evaluated> true : bool
+expected > true
+[32m.[0mtext> "abc" > "def"
+T* infer ("abc" > "def")
+T* infer "abc"
+T* infer "abc" result = string
+T* infer "def"
+T* infer "def" result = string
+T* infer_binary > string string
+T* unify string string
+T* infer ("abc" > "def") result = bool
+("abc" > "def")
+evaluated> false : bool
+expected > false
+[32m.[0mtext> 1 > 2 || 2 > 1
+T* infer ((1 > 2) || (2 > 1))
+T* infer (1 > 2)
+T* infer 1
+T* infer 1 result = int
+T* infer 2
+T* infer 2 result = int
+T* infer_binary > int int
+T* unify int int
+T* infer (1 > 2) result = bool
+T* infer (2 > 1)
+T* infer 2
+T* infer 2 result = int
+T* infer 1
+T* infer 1 result = int
+T* infer_binary > int int
+T* unify int int
+T* infer (2 > 1) result = bool
+T* infer_binary || bool bool
+T* unify bool bool
+T* unify bool bool
+T* infer ((1 > 2) || (2 > 1)) result = bool
+((1 > 2) || (2 > 1))
+evaluated> true : bool
+expected > true
+[32m.[0mtext> 1 < 2 && 2 < 1
+T* infer ((1 < 2) && (2 < 1))
+T* infer (1 < 2)
+T* infer 1
+T* infer 1 result = int
+T* infer 2
+T* infer 2 result = int
+T* infer_binary < int int
+T* unify int int
+T* infer (1 < 2) result = bool
+T* infer (2 < 1)
+T* infer 2
+T* infer 2 result = int
+T* infer 1
+T* infer 1 result = int
+T* infer_binary < int int
+T* unify int int
+T* infer (2 < 1) result = bool
+T* infer_binary && bool bool
+T* unify bool bool
+T* unify bool bool
+T* infer ((1 < 2) && (2 < 1)) result = bool
+((1 < 2) && (2 < 1))
+evaluated> false : bool
+expected > false
+[32m.[0mtext> -5
+T* infer (-5)
+T* infer 5
+T* infer 5 result = int
+T* unify int int
+T* infer (-5) result = int
+(-5)
+evaluated> -5 : int
+expected > -5
+[32m.[0mtext> !true
+T* infer (!true)
+T* infer true
+T* infer true result = bool
+T* unify bool bool
+T* infer (!true) result = bool
+(!true)
+evaluated> false : bool
+expected > false
+[32m.[0mtext> !false
+T* infer (!false)
+T* infer false
+T* infer false result = bool
+T* unify bool bool
+T* infer (!false) result = bool
+(!false)
+evaluated> true : bool
+expected > true
+[32m.[0mtext> 1:[2,3]
+T* infer (1 : (2 : (3 : [])))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : (3 : []))
+T* infer 2
+T* infer 2 result = int
+T* infer (3 : [])
+T* infer 3
+T* infer 3 result = int
+T* infer []
+T* infer [] result = ['7]
+T* infer_binary : int ['a]
+T* unify [int] ['7]
+T* unify int '7
+T* unify result '7 ... 
+T* ... int!
+T* infer (3 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (2 : (3 : [])) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : (3 : []))) result = [int]
+(1 : (2 : (3 : [])))
+evaluated> [1, 2, 3] : [int]
+expected > [1, 2, 3]
+[32m.[0mtext> 1:2:[3]
+T* infer (1 : (2 : (3 : [])))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : (3 : []))
+T* infer 2
+T* infer 2 result = int
+T* infer (3 : [])
+T* infer 3
+T* infer 3 result = int
+T* infer []
+T* infer [] result = ['8]
+T* infer_binary : int ['a]
+T* unify [int] ['8]
+T* unify int '8
+T* unify result '8 ... 
+T* ... int!
+T* infer (3 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (2 : (3 : [])) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : (3 : []))) result = [int]
+(1 : (2 : (3 : [])))
+evaluated> [1, 2, 3] : [int]
+expected > [1, 2, 3]
+[32m.[0mtext> [1,2,3]
+T* infer (1 : (2 : (3 : [])))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : (3 : []))
+T* infer 2
+T* infer 2 result = int
+T* infer (3 : [])
+T* infer 3
+T* infer 3 result = int
+T* infer []
+T* infer [] result = ['9]
+T* infer_binary : int ['a]
+T* unify [int] ['9]
+T* unify int '9
+T* unify result '9 ... 
+T* ... int!
+T* infer (3 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (2 : (3 : [])) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : (3 : []))) result = [int]
+(1 : (2 : (3 : [])))
+evaluated> [1, 2, 3] : [int]
+expected > [1, 2, 3]
+[32m.[0mtext> [1,2,3] == 1:[2,3]
+T* infer ((1 : (2 : (3 : []))) == (1 : (2 : (3 : []))))
+T* infer (1 : (2 : (3 : [])))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : (3 : []))
+T* infer 2
+T* infer 2 result = int
+T* infer (3 : [])
+T* infer 3
+T* infer 3 result = int
+T* infer []
+T* infer [] result = ['10]
+T* infer_binary : int ['a]
+T* unify [int] ['10]
+T* unify int '10
+T* unify result '10 ... 
+T* ... int!
+T* infer (3 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (2 : (3 : [])) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : (3 : []))) result = [int]
+T* infer (1 : (2 : (3 : [])))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : (3 : []))
+T* infer 2
+T* infer 2 result = int
+T* infer (3 : [])
+T* infer 3
+T* infer 3 result = int
+T* infer []
+T* infer [] result = ['11]
+T* infer_binary : int ['a]
+T* unify [int] ['11]
+T* unify int '11
+T* unify result '11 ... 
+T* ... int!
+T* infer (3 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (2 : (3 : [])) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : (3 : []))) result = [int]
+T* infer_binary == [int] [int]
+T* unify [int] [int]
+T* unify int int
+T* infer ((1 : (2 : (3 : []))) == (1 : (2 : (3 : [])))) result = bool
+((1 : (2 : (3 : []))) == (1 : (2 : (3 : []))))
+evaluated> true : bool
+expected > true
+[32m.[0mtext> [1,2,3] == 1:[2,3,4]
+T* infer ((1 : (2 : (3 : []))) == (1 : (2 : (3 : (4 : [])))))
+T* infer (1 : (2 : (3 : [])))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : (3 : []))
+T* infer 2
+T* infer 2 result = int
+T* infer (3 : [])
+T* infer 3
+T* infer 3 result = int
+T* infer []
+T* infer [] result = ['12]
+T* infer_binary : int ['a]
+T* unify [int] ['12]
+T* unify int '12
+T* unify result '12 ... 
+T* ... int!
+T* infer (3 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (2 : (3 : [])) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : (3 : []))) result = [int]
+T* infer (1 : (2 : (3 : (4 : []))))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : (3 : (4 : [])))
+T* infer 2
+T* infer 2 result = int
+T* infer (3 : (4 : []))
+T* infer 3
+T* infer 3 result = int
+T* infer (4 : [])
+T* infer 4
+T* infer 4 result = int
+T* infer []
+T* infer [] result = ['13]
+T* infer_binary : int ['a]
+T* unify [int] ['13]
+T* unify int '13
+T* unify result '13 ... 
+T* ... int!
+T* infer (4 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (3 : (4 : [])) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (2 : (3 : (4 : []))) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : (3 : (4 : [])))) result = [int]
+T* infer_binary == [int] [int]
+T* unify [int] [int]
+T* unify int int
+T* infer ((1 : (2 : (3 : []))) == (1 : (2 : (3 : (4 : []))))) result = bool
+((1 : (2 : (3 : []))) == (1 : (2 : (3 : (4 : [])))))
+evaluated> false : bool
+expected > false
+[32m.[0mtext> let x = 1
+T* infer (let x = 1)
+T* infer let x = 1
+T* infer 1
+T* infer 1 result = int
+T* after infer int
+T* poly type = { vars:[] body:int}
+T* infer (let x = 1) result = unit
+(let x = 1)
+evaluated> () : unit
+expected > ()
+[32m.[0mtext> x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:int}
+T* infer Ident x ... ts alpha = { vars:[] body:int}
+T* infer x result = int
+x
+evaluated> 1 : int
+expected > 1
+[32m.[0mtext> let f = fn () -> 5
+T* infer (let f = (fn () -> 5))
+T* infer let f = (fn () -> 5)
+T* infer (fn () -> 5)
+T* infer 5
+T* infer 5 result = int
+T* infer (fn () -> 5) result = unit -> int
+T* after infer unit -> int
+T* poly type = { vars:[] body:unit -> int}
+T* infer (let f = (fn () -> 5)) result = unit
+(let f = (fn () -> 5))
+evaluated> () : unit
+expected > ()
+[32m.[0mtext> f ()
+T* infer (f ())
+T* infer f
+T* infer Ident f
+T* infer Ident f ... type schema is { vars:[] body:unit -> int}
+T* infer Ident f ... ts alpha = { vars:[] body:unit -> int}
+T* infer f result = unit -> int
+T* infer ()
+T* infer () result = unit
+T* unify unit -> int unit -> '14
+T* unify unit unit
+T* unify int '14
+T* unify result '14 ... 
+T* ... int!
+T* infer (f ()) result = int!
+(f ())
+evaluated> 5 : int
+expected > 5
+[32m.[0mtext> let g = fn _ -> 8
+T* infer (let g = (fn _ -> 8))
+T* infer let g = (fn _ -> 8)
+T* infer (fn _ -> 8)
+T* infer 8
+T* infer 8 result = int
+T* infer (fn _ -> 8) result = '15 -> int
+T* after infer '15 -> int
+T* poly type = { vars:[15] body:'15 -> int}
+T* infer (let g = (fn _ -> 8)) result = unit
+(let g = (fn _ -> 8))
+evaluated> () : unit
+expected > ()
+[32m.[0mtext> g 3
+T* infer (g 3)
+T* infer g
+T* infer Ident g
+T* infer Ident g ... type schema is { vars:[15] body:'15 -> int}
+T* infer Ident g ... ts alpha = { vars:[16] body:'16 -> int}
+T* infer g result = '16 -> int
+T* infer 3
+T* infer 3 result = int
+T* unify '16 -> int int -> '17
+T* unify '16 int
+T* unify result '16 ... 
+T* ... int!
+T* unify int '17
+T* unify result '17 ... 
+T* ... int!
+T* infer (g 3) result = int!
+(g 3)
+evaluated> 8 : int
+expected > 8
+[32m.[0mtext> let a = fn x -> x + 1
+T* infer (let a = (fn x -> (x + 1)))
+T* infer let a = (fn x -> (x + 1))
+T* infer (fn x -> (x + 1))
+T* infer Fn (x, (x + 1))
+T* infer x ... arg type = '18
+T* infer x ... arg ts = { vars:[] body:'18}
+T* infer (x + 1)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'18}
+T* infer Ident x ... ts alpha = { vars:[] body:'18}
+T* infer x result = '18
+T* infer 1
+T* infer 1 result = int
+T* infer_binary + 'a int
+T* unify '18 int
+T* unify result '18 ... 
+T* ... int!
+T* after unify int int
+T* infer (x + 1) result = int!
+T* after infer int!
+T* infer (fn x -> (x + 1)) result = int! -> int!
+T* after infer int! -> int!
+T* poly type = { vars:[] body:int -> int}
+T* infer (let a = (fn x -> (x + 1))) result = unit
+(let a = (fn x -> (x + 1)))
+evaluated> () : unit
+expected > ()
+[32m.[0mtext> a 4
+T* infer (a 4)
+T* infer a
+T* infer Ident a
+T* infer Ident a ... type schema is { vars:[] body:int -> int}
+T* infer Ident a ... ts alpha = { vars:[] body:int -> int}
+T* infer a result = int -> int
+T* infer 4
+T* infer 4 result = int
+T* unify int -> int int -> '19
+T* unify int int
+T* unify int '19
+T* unify result '19 ... 
+T* ... int!
+T* infer (a 4) result = int!
+(a 4)
+evaluated> 5 : int
+expected > 5
+[32m.[0mtext> let add = fn x -> fn y -> x + y
+T* infer (let add = (fn x -> (fn y -> (x + y))))
+T* infer let add = (fn x -> (fn y -> (x + y)))
+T* infer (fn x -> (fn y -> (x + y)))
+T* infer Fn (x, (fn y -> (x + y)))
+T* infer x ... arg type = '20
+T* infer x ... arg ts = { vars:[] body:'20}
+T* infer (fn y -> (x + y))
+T* infer Fn (y, (x + y))
+T* infer y ... arg type = '21
+T* infer y ... arg ts = { vars:[] body:'21}
+T* infer (x + y)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'20}
+T* infer Ident x ... ts alpha = { vars:[] body:'20}
+T* infer x result = '20
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'21}
+T* infer Ident y ... ts alpha = { vars:[] body:'21}
+T* infer y result = '21
+T* infer_binary + 'a 'a
+T* unify '20 '21
+T* unify result '20 ... 
+T* ... '21!
+T* after unify 'a 'a
+T* infer (x + y) result = '21!
+T* after infer '21!
+T* infer (fn y -> (x + y)) result = '21 -> '21!
+T* after infer '21 -> '21!
+T* infer (fn x -> (fn y -> (x + y))) result = '21! -> '21 -> '21!
+T* after infer '21! -> '21 -> '21!
+T* poly type = { vars:[21] body:'21 -> '21 -> '21}
+T* infer (let add = (fn x -> (fn y -> (x + y)))) result = unit
+(let add = (fn x -> (fn y -> (x + y))))
+evaluated> () : unit
+expected > ()
+[32m.[0mtext> add 1 2
+T* infer ((add 1) 2)
+T* infer (add 1)
+T* infer add
+T* infer Ident add
+T* infer Ident add ... type schema is { vars:[21] body:'21 -> '21 -> '21}
+T* infer Ident add ... ts alpha = { vars:[22] body:'22 -> '22 -> '22}
+T* infer add result = '22 -> '22 -> '22
+T* infer 1
+T* infer 1 result = int
+T* unify '22 -> '22 -> '22 int -> '23
+T* unify '22 int
+T* unify result '22 ... 
+T* ... int!
+T* unify int! -> int! '23
+T* unify result '23 ... 
+T* ... int! -> int!!
+T* infer (add 1) result = int! -> int!!
+T* infer 2
+T* infer 2 result = int
+T* unify int! -> int!! int -> '24
+T* unify int! -> int! int -> '24
+T* unify int! int
+T* unify int int
+T* unify int! '24
+T* unify int '24
+T* unify result '24 ... 
+T* ... int!
+T* infer ((add 1) 2) result = int!
+((add 1) 2)
+evaluated> 3 : int
+expected > 3
+[32m.[0mtext> let add5 = add 5
+T* infer (let add5 = (add 5))
+T* infer let add5 = (add 5)
+T* infer (add 5)
+T* infer add
+T* infer Ident add
+T* infer Ident add ... type schema is { vars:[21] body:'21 -> '21 -> '21}
+T* infer Ident add ... ts alpha = { vars:[25] body:'25 -> '25 -> '25}
+T* infer add result = '25 -> '25 -> '25
+T* infer 5
+T* infer 5 result = int
+T* unify '25 -> '25 -> '25 int -> '26
+T* unify '25 int
+T* unify result '25 ... 
+T* ... int!
+T* unify int! -> int! '26
+T* unify result '26 ... 
+T* ... int! -> int!!
+T* infer (add 5) result = int! -> int!!
+T* after infer int! -> int!!
+T* poly type = { vars:[] body:int -> int}
+T* infer (let add5 = (add 5)) result = unit
+(let add5 = (add 5))
+evaluated> () : unit
+expected > ()
+[32m.[0mtext> add5 3
+T* infer (add5 3)
+T* infer add5
+T* infer Ident add5
+T* infer Ident add5 ... type schema is { vars:[] body:int -> int}
+T* infer Ident add5 ... ts alpha = { vars:[] body:int -> int}
+T* infer add5 result = int -> int
+T* infer 3
+T* infer 3 result = int
+T* unify int -> int int -> '27
+T* unify int int
+T* unify int '27
+T* unify result '27 ... 
+T* ... int!
+T* infer (add5 3) result = int!
+(add5 3)
+evaluated> 8 : int
+expected > 8
+[32m.[0mtext> fun foo x = x + 2
+T* infer (letrec foo (fn x -> (x + 2)))
+T* infer letrec foo = (fn x -> (x + 2))
+T* infer foo type_schema = { vars:[] body:'28}
+T* infer (fn x -> (x + 2))
+T* infer Fn (x, (x + 2))
+T* infer x ... arg type = '29
+T* infer x ... arg ts = { vars:[] body:'29}
+T* infer (x + 2)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'29}
+T* infer Ident x ... ts alpha = { vars:[] body:'29}
+T* infer x result = '29
+T* infer 2
+T* infer 2 result = int
+T* infer_binary + 'a int
+T* unify '29 int
+T* unify result '29 ... 
+T* ... int!
+T* after unify int int
+T* infer (x + 2) result = int!
+T* after infer int!
+T* infer (fn x -> (x + 2)) result = int! -> int!
+T* after infer int! -> int!
+T* infer poly type = { vars:[] body:int -> int}
+T* infer (letrec foo (fn x -> (x + 2))) result = unit
+(letrec foo (fn x -> (x + 2)))
+evaluated> () : unit
+expected > ()
+[32m.[0mtext> foo 4
+T* infer (foo 4)
+T* infer foo
+T* infer Ident foo
+T* infer Ident foo ... type schema is { vars:[] body:int -> int}
+T* infer Ident foo ... ts alpha = { vars:[] body:int -> int}
+T* infer foo result = int -> int
+T* infer 4
+T* infer 4 result = int
+T* unify int -> int int -> '30
+T* unify int int
+T* unify int '30
+T* unify result '30 ... 
+T* ... int!
+T* infer (foo 4) result = int!
+(foo 4)
+evaluated> 6 : int
+expected > 6
+[32m.[0mtext> fun fact n = if n < 1 then 1 else n * fact (n-1)
+T* infer (letrec fact (fn n -> (if (n < 1) then 1 else (n * (fact (n - 1))))))
+T* infer letrec fact = (fn n -> (if (n < 1) then 1 else (n * (fact (n - 1)))))
+T* infer fact type_schema = { vars:[] body:'31}
+T* infer (fn n -> (if (n < 1) then 1 else (n * (fact (n - 1)))))
+T* infer Fn (n, (if (n < 1) then 1 else (n * (fact (n - 1)))))
+T* infer n ... arg type = '32
+T* infer n ... arg ts = { vars:[] body:'32}
+T* infer (if (n < 1) then 1 else (n * (fact (n - 1))))
+T* infer If (n < 1) then 1 else (n * (fact (n - 1)))
+T* infer (n < 1)
+T* infer n
+T* infer Ident n
+T* infer Ident n ... type schema is { vars:[] body:'32}
+T* infer Ident n ... ts alpha = { vars:[] body:'32}
+T* infer n result = '32
+T* infer 1
+T* infer 1 result = int
+T* infer_binary < 'a int
+T* unify '32 int
+T* unify result '32 ... 
+T* ... int!
+T* infer (n < 1) result = bool
+T* unify bool bool
+T* infer 1
+T* infer 1 result = int
+T* infer (n * (fact (n - 1)))
+T* infer n
+T* infer Ident n
+T* infer Ident n ... type schema is { vars:[] body:int!}
+T* infer Ident n ... ts alpha = { vars:[] body:int}
+T* infer n result = int
+T* infer (fact (n - 1))
+T* infer fact
+T* infer Ident fact
+T* infer Ident fact ... type schema is { vars:[] body:'31}
+T* infer Ident fact ... ts alpha = { vars:[] body:'31}
+T* infer fact result = '31
+T* infer (n - 1)
+T* infer n
+T* infer Ident n
+T* infer Ident n ... type schema is { vars:[] body:int!}
+T* infer Ident n ... ts alpha = { vars:[] body:int}
+T* infer n result = int
+T* infer 1
+T* infer 1 result = int
+T* infer_binary - int int
+T* unify int int
+T* infer (n - 1) result = int
+T* unify '31 int -> '33
+T* unify result '31 ... 
+T* ... int -> '33!
+T* infer (fact (n - 1)) result = '33
+T* infer_binary * int 'a
+T* unify int '33
+T* unify result '33 ... 
+T* ... int!
+T* infer (n * (fact (n - 1))) result = int
+T* unify int int
+T* infer (if (n < 1) then 1 else (n * (fact (n - 1)))) result = int
+T* after infer int
+T* infer (fn n -> (if (n < 1) then 1 else (n * (fact (n - 1))))) result = int! -> int
+T* after infer int! -> int
+T* infer poly type = { vars:[] body:int -> int}
+T* infer (letrec fact (fn n -> (if (n < 1) then 1 else (n * (fact (n - 1)))))) result = unit
+(letrec fact (fn n -> (if (n < 1) then 1 else (n * (fact (n - 1))))))
+evaluated> () : unit
+expected > ()
+[32m.[0mtext> fact 5
+T* infer (fact 5)
+T* infer fact
+T* infer Ident fact
+T* infer Ident fact ... type schema is { vars:[] body:int -> int}
+T* infer Ident fact ... ts alpha = { vars:[] body:int -> int}
+T* infer fact result = int -> int
+T* infer 5
+T* infer 5 result = int
+T* unify int -> int int -> '34
+T* unify int int
+T* unify int '34
+T* unify result '34 ... 
+T* ... int!
+T* infer (fact 5) result = int!
+(fact 5)
+evaluated> 120 : int
+expected > 120
+[32m.[0mtext> module A
+T* infer module A
+T* infer module A result = unit
+module A
+evaluated> () : unit
+expected > ()
+[32m.[0mtext> let x = 1
+T* infer (let x = 1)
+T* infer let x = 1
+T* infer 1
+T* infer 1 result = int
+T* after infer int
+T* poly type = { vars:[] body:int}
+T* infer (let x = 1) result = unit
+(let x = 1)
+evaluated> () : unit
+expected > ()
+[32m.[0mtext> module B
+T* infer module B
+T* infer module B result = unit
+module B
+evaluated> () : unit
+expected > ()
+[32m.[0mtext> let x = 2
+T* infer (let x = 2)
+T* infer let x = 2
+T* infer 2
+T* infer 2 result = int
+T* after infer int
+T* poly type = { vars:[] body:int}
+T* infer (let x = 2) result = unit
+(let x = 2)
+evaluated> () : unit
+expected > ()
+[32m.[0mtext> module Main
+T* infer module Main
+T* infer module Main result = unit
+module Main
+evaluated> () : unit
+expected > ()
+[32m.[0mtext> A.x
+T* infer A.x
+T* infer A.x result = int
+A.x
+evaluated> 1 : int
+expected > 1
+[32m.[0mtext> B.x
+T* infer B.x
+T* infer B.x result = int
+B.x
+evaluated> 2 : int
+expected > 2
+[32m.[0mtext> import List
+T* infer import List
+T* infer import List result = unit
+import List
+T* infer module List
+T* infer module List result = unit
+T* infer (letrec length (fn x -> (match x { | [] -> 0 | _::xs -> (1 + (length xs))})))
+T* infer letrec length = (fn x -> (match x { | [] -> 0 | _::xs -> (1 + (length xs))}))
+T* infer length type_schema = { vars:[] body:'35}
+T* infer (fn x -> (match x { | [] -> 0 | _::xs -> (1 + (length xs))}))
+T* infer Fn (x, (match x { | [] -> 0 | _::xs -> (1 + (length xs))}))
+T* infer x ... arg type = '36
+T* infer x ... arg ts = { vars:[] body:'36}
+T* infer (match x { | [] -> 0 | _::xs -> (1 + (length xs))})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'36}
+T* infer Ident x ... ts alpha = { vars:[] body:'36}
+T* infer x result = '36
+T* after infer 'a
+T* pat_list .. (pat,expr)::rest
+T* unify_pat ([], 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type []
+T* unify ['37] '36
+T* unify result '36 ... 
+T* ... ['37]!
+T* infer 0
+T* infer 0 result = int
+T* unify_pat (_::xs, ['a])
+T* unify_pat PatCons (_, xs)
+T* unify_pat (_, 'a)
+T* unify_pat (xs, ['a])
+T* infer (1 + (length xs))
+T* infer 1
+T* infer 1 result = int
+T* infer (length xs)
+T* infer length
+T* infer Ident length
+T* infer Ident length ... type schema is { vars:[] body:'35}
+T* infer Ident length ... ts alpha = { vars:[] body:'35}
+T* infer length result = '35
+T* infer xs
+T* infer Ident xs
+T* infer Ident xs ... type schema is { vars:[] body:['37]}
+T* infer Ident xs ... ts alpha = { vars:[] body:['37]}
+T* infer xs result = ['37]
+T* unify '35 ['37] -> '38
+T* unify result '35 ... 
+T* ... ['37] -> '38!
+T* infer (length xs) result = '38
+T* infer_binary + int 'a
+T* unify int '38
+T* unify result '38 ... 
+T* ... int!
+T* after unify int int
+T* infer (1 + (length xs)) result = int
+T* unify int int
+T* infer (match x { | [] -> 0 | _::xs -> (1 + (length xs))}) result = int
+T* after infer int
+T* infer (fn x -> (match x { | [] -> 0 | _::xs -> (1 + (length xs))})) result = ['37]! -> int
+T* after infer ['37]! -> int
+T* infer poly type = { vars:[37] body:['37] -> int}
+T* infer (letrec length (fn x -> (match x { | [] -> 0 | _::xs -> (1 + (length xs))}))) result = unit
+T* infer (letrec map (fn f -> (fn x -> (match x { | [] -> [] | x::xs -> ((f x) : ((map f) xs))}))))
+T* infer letrec map = (fn f -> (fn x -> (match x { | [] -> [] | x::xs -> ((f x) : ((map f) xs))})))
+T* infer map type_schema = { vars:[] body:'39}
+T* infer (fn f -> (fn x -> (match x { | [] -> [] | x::xs -> ((f x) : ((map f) xs))})))
+T* infer Fn (f, (fn x -> (match x { | [] -> [] | x::xs -> ((f x) : ((map f) xs))})))
+T* infer f ... arg type = '40
+T* infer f ... arg ts = { vars:[] body:'40}
+T* infer (fn x -> (match x { | [] -> [] | x::xs -> ((f x) : ((map f) xs))}))
+T* infer Fn (x, (match x { | [] -> [] | x::xs -> ((f x) : ((map f) xs))}))
+T* infer x ... arg type = '41
+T* infer x ... arg ts = { vars:[] body:'41}
+T* infer (match x { | [] -> [] | x::xs -> ((f x) : ((map f) xs))})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'41}
+T* infer Ident x ... ts alpha = { vars:[] body:'41}
+T* infer x result = '41
+T* after infer 'a
+T* pat_list .. (pat,expr)::rest
+T* unify_pat ([], 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type []
+T* unify ['42] '41
+T* unify result '41 ... 
+T* ... ['42]!
+T* infer []
+T* infer [] result = ['43]
+T* unify_pat (x::xs, ['a])
+T* unify_pat PatCons (x, xs)
+T* unify_pat (x, 'a)
+T* unify_pat (xs, ['a])
+T* infer ((f x) : ((map f) xs))
+T* infer (f x)
+T* infer f
+T* infer Ident f
+T* infer Ident f ... type schema is { vars:[] body:'40}
+T* infer Ident f ... ts alpha = { vars:[] body:'40}
+T* infer f result = '40
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'42}
+T* infer Ident x ... ts alpha = { vars:[] body:'42}
+T* infer x result = '42
+T* unify '40 '42 -> '44
+T* unify result '40 ... 
+T* ... '42 -> '44!
+T* infer (f x) result = '44
+T* infer ((map f) xs)
+T* infer (map f)
+T* infer map
+T* infer Ident map
+T* infer Ident map ... type schema is { vars:[] body:'39}
+T* infer Ident map ... ts alpha = { vars:[] body:'39}
+T* infer map result = '39
+T* infer f
+T* infer Ident f
+T* infer Ident f ... type schema is { vars:[] body:'42 -> '44!}
+T* infer Ident f ... ts alpha = { vars:[] body:'42 -> '44}
+T* infer f result = '42 -> '44
+T* unify '39 ('42 -> '44) -> '45
+T* unify result '39 ... 
+T* ... ('42 -> '44) -> '45!
+T* infer (map f) result = '45
+T* infer xs
+T* infer Ident xs
+T* infer Ident xs ... type schema is { vars:[] body:['42]}
+T* infer Ident xs ... ts alpha = { vars:[] body:['42]}
+T* infer xs result = ['42]
+T* unify '45 ['42] -> '46
+T* unify result '45 ... 
+T* ... ['42] -> '46!
+T* infer ((map f) xs) result = '46
+T* infer_binary : 'a 'a
+T* unify ['44] '46
+T* unify result '46 ... 
+T* ... ['44]!
+T* infer ((f x) : ((map f) xs)) result = ['44]
+T* unify ['43] ['44]
+T* unify '43 '44
+T* unify result '43 ... 
+T* ... '44!
+T* infer (match x { | [] -> [] | x::xs -> ((f x) : ((map f) xs))}) result = ['44!]
+T* after infer ['44!]
+T* infer (fn x -> (match x { | [] -> [] | x::xs -> ((f x) : ((map f) xs))})) result = ['42]! -> ['44!]
+T* after infer ['42]! -> ['44!]
+T* infer (fn f -> (fn x -> (match x { | [] -> [] | x::xs -> ((f x) : ((map f) xs))}))) result = ('42 -> '44)! -> ['42]! -> ['44!]
+T* after infer ('42 -> '44)! -> ['42]! -> ['44!]
+T* infer poly type = { vars:[44,42] body:('42 -> '44) -> ['42] -> ['44]}
+T* infer (letrec map (fn f -> (fn x -> (match x { | [] -> [] | x::xs -> ((f x) : ((map f) xs))})))) result = unit
+T* infer (letrec append (fn x -> (fn y -> (match x { | [] -> y | x::xs -> (x : ((append xs) y))}))))
+T* infer letrec append = (fn x -> (fn y -> (match x { | [] -> y | x::xs -> (x : ((append xs) y))})))
+T* infer append type_schema = { vars:[] body:'47}
+T* infer (fn x -> (fn y -> (match x { | [] -> y | x::xs -> (x : ((append xs) y))})))
+T* infer Fn (x, (fn y -> (match x { | [] -> y | x::xs -> (x : ((append xs) y))})))
+T* infer x ... arg type = '48
+T* infer x ... arg ts = { vars:[] body:'48}
+T* infer (fn y -> (match x { | [] -> y | x::xs -> (x : ((append xs) y))}))
+T* infer Fn (y, (match x { | [] -> y | x::xs -> (x : ((append xs) y))}))
+T* infer y ... arg type = '49
+T* infer y ... arg ts = { vars:[] body:'49}
+T* infer (match x { | [] -> y | x::xs -> (x : ((append xs) y))})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'48}
+T* infer Ident x ... ts alpha = { vars:[] body:'48}
+T* infer x result = '48
+T* after infer 'a
+T* pat_list .. (pat,expr)::rest
+T* unify_pat ([], 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type []
+T* unify ['50] '48
+T* unify result '48 ... 
+T* ... ['50]!
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'49}
+T* infer Ident y ... ts alpha = { vars:[] body:'49}
+T* infer y result = '49
+T* unify_pat (x::xs, ['a])
+T* unify_pat PatCons (x, xs)
+T* unify_pat (x, 'a)
+T* unify_pat (xs, ['a])
+T* infer (x : ((append xs) y))
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'50}
+T* infer Ident x ... ts alpha = { vars:[] body:'50}
+T* infer x result = '50
+T* infer ((append xs) y)
+T* infer (append xs)
+T* infer append
+T* infer Ident append
+T* infer Ident append ... type schema is { vars:[] body:'47}
+T* infer Ident append ... ts alpha = { vars:[] body:'47}
+T* infer append result = '47
+T* infer xs
+T* infer Ident xs
+T* infer Ident xs ... type schema is { vars:[] body:['50]}
+T* infer Ident xs ... ts alpha = { vars:[] body:['50]}
+T* infer xs result = ['50]
+T* unify '47 ['50] -> '51
+T* unify result '47 ... 
+T* ... ['50] -> '51!
+T* infer (append xs) result = '51
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'49}
+T* infer Ident y ... ts alpha = { vars:[] body:'49}
+T* infer y result = '49
+T* unify '51 '49 -> '52
+T* unify result '51 ... 
+T* ... '49 -> '52!
+T* infer ((append xs) y) result = '52
+T* infer_binary : 'a 'a
+T* unify ['50] '52
+T* unify result '52 ... 
+T* ... ['50]!
+T* infer (x : ((append xs) y)) result = ['50]
+T* unify '49 ['50]
+T* unify result '49 ... 
+T* ... ['50]!
+T* infer (match x { | [] -> y | x::xs -> (x : ((append xs) y))}) result = ['50]!
+T* after infer ['50]!
+T* infer (fn y -> (match x { | [] -> y | x::xs -> (x : ((append xs) y))})) result = ['50]! -> ['50]!
+T* after infer ['50]! -> ['50]!
+T* infer (fn x -> (fn y -> (match x { | [] -> y | x::xs -> (x : ((append xs) y))}))) result = ['50]! -> ['50]! -> ['50]!
+T* after infer ['50]! -> ['50]! -> ['50]!
+T* infer poly type = { vars:[50] body:['50] -> ['50] -> ['50]}
+T* infer (letrec append (fn x -> (fn y -> (match x { | [] -> y | x::xs -> (x : ((append xs) y))})))) result = unit
+T* infer (letrec reverse (fn x -> (match x { | [] -> [] | x::xs -> ((append (reverse xs)) (x : []))})))
+T* infer letrec reverse = (fn x -> (match x { | [] -> [] | x::xs -> ((append (reverse xs)) (x : []))}))
+T* infer reverse type_schema = { vars:[] body:'53}
+T* infer (fn x -> (match x { | [] -> [] | x::xs -> ((append (reverse xs)) (x : []))}))
+T* infer Fn (x, (match x { | [] -> [] | x::xs -> ((append (reverse xs)) (x : []))}))
+T* infer x ... arg type = '54
+T* infer x ... arg ts = { vars:[] body:'54}
+T* infer (match x { | [] -> [] | x::xs -> ((append (reverse xs)) (x : []))})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'54}
+T* infer Ident x ... ts alpha = { vars:[] body:'54}
+T* infer x result = '54
+T* after infer 'a
+T* pat_list .. (pat,expr)::rest
+T* unify_pat ([], 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type []
+T* unify ['55] '54
+T* unify result '54 ... 
+T* ... ['55]!
+T* infer []
+T* infer [] result = ['56]
+T* unify_pat (x::xs, ['a])
+T* unify_pat PatCons (x, xs)
+T* unify_pat (x, 'a)
+T* unify_pat (xs, ['a])
+T* infer ((append (reverse xs)) (x : []))
+T* infer (append (reverse xs))
+T* infer append
+T* infer Ident append
+T* infer Ident append ... type schema is { vars:[50] body:['50] -> ['50] -> ['50]}
+T* infer Ident append ... ts alpha = { vars:[57] body:['57] -> ['57] -> ['57]}
+T* infer append result = ['57] -> ['57] -> ['57]
+T* infer (reverse xs)
+T* infer reverse
+T* infer Ident reverse
+T* infer Ident reverse ... type schema is { vars:[] body:'53}
+T* infer Ident reverse ... ts alpha = { vars:[] body:'53}
+T* infer reverse result = '53
+T* infer xs
+T* infer Ident xs
+T* infer Ident xs ... type schema is { vars:[] body:['55]}
+T* infer Ident xs ... ts alpha = { vars:[] body:['55]}
+T* infer xs result = ['55]
+T* unify '53 ['55] -> '58
+T* unify result '53 ... 
+T* ... ['55] -> '58!
+T* infer (reverse xs) result = '58
+T* unify ['57] -> ['57] -> ['57] '58 -> '59
+T* unify ['57] '58
+T* unify result '58 ... 
+T* ... ['57]!
+T* unify ['57] -> ['57] '59
+T* unify result '59 ... 
+T* ... ['57] -> ['57]!
+T* infer (append (reverse xs)) result = ['57] -> ['57]!
+T* infer (x : [])
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'55}
+T* infer Ident x ... ts alpha = { vars:[] body:'55}
+T* infer x result = '55
+T* infer []
+T* infer [] result = ['60]
+T* infer_binary : 'a ['a]
+T* unify ['55] ['60]
+T* unify '55 '60
+T* unify result '55 ... 
+T* ... '60!
+T* infer (x : []) result = ['60!]
+T* unify ['57] -> ['57]! ['60!] -> '61
+T* unify ['57] -> ['57] ['60!] -> '61
+T* unify ['57] ['60!]
+T* unify '57 '60!
+T* unify '57 '60
+T* unify result '57 ... 
+T* ... '60!
+T* unify ['60!] '61
+T* unify result '61 ... 
+T* ... ['60!]!
+T* infer ((append (reverse xs)) (x : [])) result = ['60!]!
+T* unify ['56] ['60!]!
+T* unify ['56] ['60!]
+T* unify '56 '60!
+T* unify '56 '60
+T* unify result '56 ... 
+T* ... '60!
+T* infer (match x { | [] -> [] | x::xs -> ((append (reverse xs)) (x : []))}) result = ['60!]
+T* after infer ['60!]
+T* infer (fn x -> (match x { | [] -> [] | x::xs -> ((append (reverse xs)) (x : []))})) result = ['60!]! -> ['60!]
+T* after infer ['60!]! -> ['60!]
+T* infer poly type = { vars:[60] body:['60] -> ['60]}
+T* infer (letrec reverse (fn x -> (match x { | [] -> [] | x::xs -> ((append (reverse xs)) (x : []))}))) result = unit
+T* infer (letrec filter (fn p -> (fn x -> (match x { | [] -> [] | x::xs -> (if (p x) then (x : ((filter p) xs)) else ((filter p) xs))}))))
+T* infer letrec filter = (fn p -> (fn x -> (match x { | [] -> [] | x::xs -> (if (p x) then (x : ((filter p) xs)) else ((filter p) xs))})))
+T* infer filter type_schema = { vars:[] body:'62}
+T* infer (fn p -> (fn x -> (match x { | [] -> [] | x::xs -> (if (p x) then (x : ((filter p) xs)) else ((filter p) xs))})))
+T* infer Fn (p, (fn x -> (match x { | [] -> [] | x::xs -> (if (p x) then (x : ((filter p) xs)) else ((filter p) xs))})))
+T* infer p ... arg type = '63
+T* infer p ... arg ts = { vars:[] body:'63}
+T* infer (fn x -> (match x { | [] -> [] | x::xs -> (if (p x) then (x : ((filter p) xs)) else ((filter p) xs))}))
+T* infer Fn (x, (match x { | [] -> [] | x::xs -> (if (p x) then (x : ((filter p) xs)) else ((filter p) xs))}))
+T* infer x ... arg type = '64
+T* infer x ... arg ts = { vars:[] body:'64}
+T* infer (match x { | [] -> [] | x::xs -> (if (p x) then (x : ((filter p) xs)) else ((filter p) xs))})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'64}
+T* infer Ident x ... ts alpha = { vars:[] body:'64}
+T* infer x result = '64
+T* after infer 'a
+T* pat_list .. (pat,expr)::rest
+T* unify_pat ([], 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type []
+T* unify ['65] '64
+T* unify result '64 ... 
+T* ... ['65]!
+T* infer []
+T* infer [] result = ['66]
+T* unify_pat (x::xs, ['a])
+T* unify_pat PatCons (x, xs)
+T* unify_pat (x, 'a)
+T* unify_pat (xs, ['a])
+T* infer (if (p x) then (x : ((filter p) xs)) else ((filter p) xs))
+T* infer If (p x) then (x : ((filter p) xs)) else ((filter p) xs)
+T* infer (p x)
+T* infer p
+T* infer Ident p
+T* infer Ident p ... type schema is { vars:[] body:'63}
+T* infer Ident p ... ts alpha = { vars:[] body:'63}
+T* infer p result = '63
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'65}
+T* infer Ident x ... ts alpha = { vars:[] body:'65}
+T* infer x result = '65
+T* unify '63 '65 -> '67
+T* unify result '63 ... 
+T* ... '65 -> '67!
+T* infer (p x) result = '67
+T* unify bool '67
+T* unify result '67 ... 
+T* ... bool!
+T* infer (x : ((filter p) xs))
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'65}
+T* infer Ident x ... ts alpha = { vars:[] body:'65}
+T* infer x result = '65
+T* infer ((filter p) xs)
+T* infer (filter p)
+T* infer filter
+T* infer Ident filter
+T* infer Ident filter ... type schema is { vars:[] body:'62}
+T* infer Ident filter ... ts alpha = { vars:[] body:'62}
+T* infer filter result = '62
+T* infer p
+T* infer Ident p
+T* infer Ident p ... type schema is { vars:[] body:'65 -> bool!!}
+T* infer Ident p ... ts alpha = { vars:[] body:'65 -> bool}
+T* infer p result = '65 -> bool
+T* unify '62 ('65 -> bool) -> '68
+T* unify result '62 ... 
+T* ... ('65 -> bool) -> '68!
+T* infer (filter p) result = '68
+T* infer xs
+T* infer Ident xs
+T* infer Ident xs ... type schema is { vars:[] body:['65]}
+T* infer Ident xs ... ts alpha = { vars:[] body:['65]}
+T* infer xs result = ['65]
+T* unify '68 ['65] -> '69
+T* unify result '68 ... 
+T* ... ['65] -> '69!
+T* infer ((filter p) xs) result = '69
+T* infer_binary : 'a 'a
+T* unify ['65] '69
+T* unify result '69 ... 
+T* ... ['65]!
+T* infer (x : ((filter p) xs)) result = ['65]
+T* infer ((filter p) xs)
+T* infer (filter p)
+T* infer filter
+T* infer Ident filter
+T* infer Ident filter ... type schema is { vars:[] body:('65 -> bool) -> ['65] -> ['65]!!!}
+T* infer Ident filter ... ts alpha = { vars:[] body:('65 -> bool) -> ['65] -> ['65]}
+T* infer filter result = ('65 -> bool) -> ['65] -> ['65]
+T* infer p
+T* infer Ident p
+T* infer Ident p ... type schema is { vars:[] body:'65 -> bool!!}
+T* infer Ident p ... ts alpha = { vars:[] body:'65 -> bool}
+T* infer p result = '65 -> bool
+T* unify ('65 -> bool) -> ['65] -> ['65] ('65 -> bool) -> '70
+T* unify '65 -> bool '65 -> bool
+T* unify '65 '65
+T* unify bool bool
+T* unify ['65] -> ['65] '70
+T* unify result '70 ... 
+T* ... ['65] -> ['65]!
+T* infer (filter p) result = ['65] -> ['65]!
+T* infer xs
+T* infer Ident xs
+T* infer Ident xs ... type schema is { vars:[] body:['65]}
+T* infer Ident xs ... ts alpha = { vars:[] body:['65]}
+T* infer xs result = ['65]
+T* unify ['65] -> ['65]! ['65] -> '71
+T* unify ['65] -> ['65] ['65] -> '71
+T* unify ['65] ['65]
+T* unify '65 '65
+T* unify ['65] '71
+T* unify result '71 ... 
+T* ... ['65]!
+T* infer ((filter p) xs) result = ['65]!
+T* unify ['65] ['65]!
+T* unify ['65] ['65]
+T* unify '65 '65
+T* infer (if (p x) then (x : ((filter p) xs)) else ((filter p) xs)) result = ['65]
+T* unify ['66] ['65]
+T* unify '66 '65
+T* unify result '66 ... 
+T* ... '65!
+T* infer (match x { | [] -> [] | x::xs -> (if (p x) then (x : ((filter p) xs)) else ((filter p) xs))}) result = ['65!]
+T* after infer ['65!]
+T* infer (fn x -> (match x { | [] -> [] | x::xs -> (if (p x) then (x : ((filter p) xs)) else ((filter p) xs))})) result = ['65]! -> ['65!]
+T* after infer ['65]! -> ['65!]
+T* infer (fn p -> (fn x -> (match x { | [] -> [] | x::xs -> (if (p x) then (x : ((filter p) xs)) else ((filter p) xs))}))) result = ('65 -> bool!)! -> ['65]! -> ['65!]
+T* after infer ('65 -> bool!)! -> ['65]! -> ['65!]
+T* infer poly type = { vars:[65] body:('65 -> bool) -> ['65] -> ['65]}
+T* infer (letrec filter (fn p -> (fn x -> (match x { | [] -> [] | x::xs -> (if (p x) then (x : ((filter p) xs)) else ((filter p) xs))})))) result = unit
+evaluated> () : unit
+expected > ()
+[32m.[0mtext> List.length [1,2,3]
+T* infer (List.length (1 : (2 : (3 : []))))
+T* infer List.length
+T* infer List.length result = ['72] -> int
+T* infer (1 : (2 : (3 : [])))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : (3 : []))
+T* infer 2
+T* infer 2 result = int
+T* infer (3 : [])
+T* infer 3
+T* infer 3 result = int
+T* infer []
+T* infer [] result = ['73]
+T* infer_binary : int ['a]
+T* unify [int] ['73]
+T* unify int '73
+T* unify result '73 ... 
+T* ... int!
+T* infer (3 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (2 : (3 : [])) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : (3 : []))) result = [int]
+T* unify ['72] -> int [int] -> '74
+T* unify ['72] [int]
+T* unify '72 int
+T* unify result '72 ... 
+T* ... int!
+T* unify int '74
+T* unify result '74 ... 
+T* ... int!
+T* infer (List.length (1 : (2 : (3 : [])))) result = int!
+(List.length (1 : (2 : (3 : []))))
+evaluated> 3 : int
+expected > 3
+[32m.[0mtext> import List as L
+T* infer import List as L
+T* infer import List as L result = unit
+import List as L
+evaluated> () : unit
+expected > ()
+[32m.[0mtext> L.length [1,2,3,4]
+T* infer (L.length (1 : (2 : (3 : (4 : [])))))
+T* infer L.length
+T* infer L.length result = ['75] -> int
+T* infer (1 : (2 : (3 : (4 : []))))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : (3 : (4 : [])))
+T* infer 2
+T* infer 2 result = int
+T* infer (3 : (4 : []))
+T* infer 3
+T* infer 3 result = int
+T* infer (4 : [])
+T* infer 4
+T* infer 4 result = int
+T* infer []
+T* infer [] result = ['76]
+T* infer_binary : int ['a]
+T* unify [int] ['76]
+T* unify int '76
+T* unify result '76 ... 
+T* ... int!
+T* infer (4 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (3 : (4 : [])) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (2 : (3 : (4 : []))) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : (3 : (4 : [])))) result = [int]
+T* unify ['75] -> int [int] -> '77
+T* unify ['75] [int]
+T* unify '75 int
+T* unify result '75 ... 
+T* ... int!
+T* unify int '77
+T* unify result '77 ... 
+T* ... int!
+T* infer (L.length (1 : (2 : (3 : (4 : []))))) result = int!
+(L.length (1 : (2 : (3 : (4 : [])))))
+evaluated> 4 : int
+expected > 4
+[32m.[0mtext> fst (1,2)
+T* infer (fst (1, 2))
+T* infer fst
+T* infer Ident fst
+T* infer Ident fst ... type schema is { vars:[3,2] body:('2, '3) -> '2}
+T* infer Ident fst ... ts alpha = { vars:[78,79] body:('79, '78) -> '79}
+T* infer fst result = ('79, '78) -> '79
+T* infer (1, 2)
+T* infer 1
+T* infer 1 result = int
+T* infer 2
+T* infer 2 result = int
+T* infer (1, 2) result = (int, int)
+T* unify ('79, '78) -> '79 (int, int) -> '80
+T* unify ('79, '78) (int, int)
+T* unify '79 int
+T* unify result '79 ... 
+T* ... int!
+T* unify '78 int
+T* unify result '78 ... 
+T* ... int!
+T* unify int! '80
+T* unify int '80
+T* unify result '80 ... 
+T* ... int!
+T* infer (fst (1, 2)) result = int!
+(fst (1, 2))
+evaluated> 1 : int
+expected > 1
+[32m.[0mtext> snd (1,2)
+T* infer (snd (1, 2))
+T* infer snd
+T* infer Ident snd
+T* infer Ident snd ... type schema is { vars:[4,5] body:('5, '4) -> '4}
+T* infer Ident snd ... ts alpha = { vars:[81,82] body:('82, '81) -> '81}
+T* infer snd result = ('82, '81) -> '81
+T* infer (1, 2)
+T* infer 1
+T* infer 1 result = int
+T* infer 2
+T* infer 2 result = int
+T* infer (1, 2) result = (int, int)
+T* unify ('82, '81) -> '81 (int, int) -> '83
+T* unify ('82, '81) (int, int)
+T* unify '82 int
+T* unify result '82 ... 
+T* ... int!
+T* unify '81 int
+T* unify result '81 ... 
+T* ... int!
+T* unify int! '83
+T* unify int '83
+T* unify result '83 ... 
+T* ... int!
+T* infer (snd (1, 2)) result = int!
+(snd (1, 2))
+evaluated> 2 : int
+expected > 2
+[32m.[0mtext> (fn n -> match n { 0 -> 'a' | 1 -> 'b' | 2 -> 'c' }) 1
+T* infer ((fn n -> (match n { | 0 -> 'a' | 1 -> 'b' | 2 -> 'c'})) 1)
+T* infer (fn n -> (match n { | 0 -> 'a' | 1 -> 'b' | 2 -> 'c'}))
+T* infer Fn (n, (match n { | 0 -> 'a' | 1 -> 'b' | 2 -> 'c'}))
+T* infer n ... arg type = '84
+T* infer n ... arg ts = { vars:[] body:'84}
+T* infer (match n { | 0 -> 'a' | 1 -> 'b' | 2 -> 'c'})
+T* infer_match n
+T* infer n
+T* infer Ident n
+T* infer Ident n ... type schema is { vars:[] body:'84}
+T* infer Ident n ... ts alpha = { vars:[] body:'84}
+T* infer n result = '84
+T* after infer 'a
+T* pat_list .. (pat,expr)::rest
+T* unify_pat (0, 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type 0
+T* unify int '84
+T* unify result '84 ... 
+T* ... int!
+T* infer 'a'
+T* infer 'a' result = char
+T* unify_pat (1, int)
+T* infer 'b'
+T* infer 'b' result = char
+T* unify char char
+T* unify_pat (2, int)
+T* infer 'c'
+T* infer 'c' result = char
+T* unify char char
+T* infer (match n { | 0 -> 'a' | 1 -> 'b' | 2 -> 'c'}) result = char
+T* after infer char
+T* infer (fn n -> (match n { | 0 -> 'a' | 1 -> 'b' | 2 -> 'c'})) result = int! -> char
+T* infer 1
+T* infer 1 result = int
+T* unify int! -> char int -> '85
+T* unify int! int
+T* unify int int
+T* unify char '85
+T* unify result '85 ... 
+T* ... char!
+T* infer ((fn n -> (match n { | 0 -> 'a' | 1 -> 'b' | 2 -> 'c'})) 1) result = char!
+((fn n -> (match n { | 0 -> 'a' | 1 -> 'b' | 2 -> 'c'})) 1)
+evaluated> b : char
+expected > b
+[32m.[0mtext> (fn n -> match n { (_,_,x) -> x }) (1,2,3)
+T* infer ((fn n -> (match n { | (_, _, x) -> x})) (1, 2, 3))
+T* infer (fn n -> (match n { | (_, _, x) -> x}))
+T* infer Fn (n, (match n { | (_, _, x) -> x}))
+T* infer n ... arg type = '86
+T* infer n ... arg ts = { vars:[] body:'86}
+T* infer (match n { | (_, _, x) -> x})
+T* infer_match n
+T* infer n
+T* infer Ident n
+T* infer Ident n ... type schema is { vars:[] body:'86}
+T* infer Ident n ... ts alpha = { vars:[] body:'86}
+T* infer n result = '86
+T* after infer 'a
+T* pat_list .. [(pat,expr)]
+T* unify_pat ((_, _, x), 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type (_, _, x)
+T* pattern_to_type _
+T* pattern_to_type _
+T* pattern_to_type x
+T* unify ('87, '88, '89) '86
+T* unify result '86 ... 
+T* ... ('87, '88, '89)!
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'89}
+T* infer Ident x ... ts alpha = { vars:[] body:'89}
+T* infer x result = '89
+T* infer (match n { | (_, _, x) -> x}) result = '89
+T* after infer '89
+T* infer (fn n -> (match n { | (_, _, x) -> x})) result = ('87, '88, '89)! -> '89
+T* infer (1, 2, 3)
+T* infer 1
+T* infer 1 result = int
+T* infer 2
+T* infer 2 result = int
+T* infer 3
+T* infer 3 result = int
+T* infer (1, 2, 3) result = (int, int, int)
+T* unify ('87, '88, '89)! -> '89 (int, int, int) -> '90
+T* unify ('87, '88, '89)! (int, int, int)
+T* unify ('87, '88, '89) (int, int, int)
+T* unify '87 int
+T* unify result '87 ... 
+T* ... int!
+T* unify '88 int
+T* unify result '88 ... 
+T* ... int!
+T* unify '89 int
+T* unify result '89 ... 
+T* ... int!
+T* unify int! '90
+T* unify int '90
+T* unify result '90 ... 
+T* ... int!
+T* infer ((fn n -> (match n { | (_, _, x) -> x})) (1, 2, 3)) result = int!
+((fn n -> (match n { | (_, _, x) -> x})) (1, 2, 3))
+evaluated> 3 : int
+expected > 3
+[32m.[0mtext> (fn n -> match n { 0 | 1 | 2 -> 'a' | 3 -> 'b' }) 1
+T* infer ((fn n -> (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'})) 1)
+T* infer (fn n -> (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'}))
+T* infer Fn (n, (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'}))
+T* infer n ... arg type = '91
+T* infer n ... arg ts = { vars:[] body:'91}
+T* infer (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'})
+T* infer_match n
+T* infer n
+T* infer Ident n
+T* infer Ident n ... type schema is { vars:[] body:'91}
+T* infer Ident n ... ts alpha = { vars:[] body:'91}
+T* infer n result = '91
+T* after infer 'a
+T* pat_list .. (pat,expr)::rest
+T* unify_pat (0 | 1 | 2, 'a)
+T* unify_pat (0, 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type 0
+T* unify int '91
+T* unify result '91 ... 
+T* ... int!
+T* unify_pat (1 | 2, int)
+T* unify_pat (1, int)
+T* unify_pat (2, int)
+T* infer 'a'
+T* infer 'a' result = char
+T* unify_pat (3, int)
+T* infer 'b'
+T* infer 'b' result = char
+T* unify char char
+T* infer (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'}) result = char
+T* after infer char
+T* infer (fn n -> (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'})) result = int! -> char
+T* infer 1
+T* infer 1 result = int
+T* unify int! -> char int -> '92
+T* unify int! int
+T* unify int int
+T* unify char '92
+T* unify result '92 ... 
+T* ... char!
+T* infer ((fn n -> (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'})) 1) result = char!
+((fn n -> (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'})) 1)
+evaluated> a : char
+expected > a
+[32m.[0mtext> (fn n -> match n { 0 | 1 | 2 -> 'a' | 3 -> 'b' }) 2
+T* infer ((fn n -> (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'})) 2)
+T* infer (fn n -> (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'}))
+T* infer Fn (n, (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'}))
+T* infer n ... arg type = '93
+T* infer n ... arg ts = { vars:[] body:'93}
+T* infer (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'})
+T* infer_match n
+T* infer n
+T* infer Ident n
+T* infer Ident n ... type schema is { vars:[] body:'93}
+T* infer Ident n ... ts alpha = { vars:[] body:'93}
+T* infer n result = '93
+T* after infer 'a
+T* pat_list .. (pat,expr)::rest
+T* unify_pat (0 | 1 | 2, 'a)
+T* unify_pat (0, 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type 0
+T* unify int '93
+T* unify result '93 ... 
+T* ... int!
+T* unify_pat (1 | 2, int)
+T* unify_pat (1, int)
+T* unify_pat (2, int)
+T* infer 'a'
+T* infer 'a' result = char
+T* unify_pat (3, int)
+T* infer 'b'
+T* infer 'b' result = char
+T* unify char char
+T* infer (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'}) result = char
+T* after infer char
+T* infer (fn n -> (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'})) result = int! -> char
+T* infer 2
+T* infer 2 result = int
+T* unify int! -> char int -> '94
+T* unify int! int
+T* unify int int
+T* unify char '94
+T* unify result '94 ... 
+T* ... char!
+T* infer ((fn n -> (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'})) 2) result = char!
+((fn n -> (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'})) 2)
+evaluated> a : char
+expected > a
+[32m.[0mtext> (fn n -> match n { 0 | 1 | 2 -> 'a' | 3 -> 'b' }) 3
+T* infer ((fn n -> (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'})) 3)
+T* infer (fn n -> (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'}))
+T* infer Fn (n, (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'}))
+T* infer n ... arg type = '95
+T* infer n ... arg ts = { vars:[] body:'95}
+T* infer (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'})
+T* infer_match n
+T* infer n
+T* infer Ident n
+T* infer Ident n ... type schema is { vars:[] body:'95}
+T* infer Ident n ... ts alpha = { vars:[] body:'95}
+T* infer n result = '95
+T* after infer 'a
+T* pat_list .. (pat,expr)::rest
+T* unify_pat (0 | 1 | 2, 'a)
+T* unify_pat (0, 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type 0
+T* unify int '95
+T* unify result '95 ... 
+T* ... int!
+T* unify_pat (1 | 2, int)
+T* unify_pat (1, int)
+T* unify_pat (2, int)
+T* infer 'a'
+T* infer 'a' result = char
+T* unify_pat (3, int)
+T* infer 'b'
+T* infer 'b' result = char
+T* unify char char
+T* infer (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'}) result = char
+T* after infer char
+T* infer (fn n -> (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'})) result = int! -> char
+T* infer 3
+T* infer 3 result = int
+T* unify int! -> char int -> '96
+T* unify int! int
+T* unify int int
+T* unify char '96
+T* unify result '96 ... 
+T* ... char!
+T* infer ((fn n -> (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'})) 3) result = char!
+((fn n -> (match n { | 0 | 1 | 2 -> 'a' | 3 -> 'b'})) 3)
+evaluated> b : char
+expected > b
+[32m.[0mtext> match [1,2,3] { [a,b,c] -> a }
+[31m![0mmissing token ']' at ','
+text> match [1,2,3] { [a,b,c] as d -> a }
+[31m![0mmissing token ']' at ','
+text> match [1,2,3] { [a,b,c] as d -> b }
+[31m![0mmissing token ']' at ','
+text> match [1,2,3] { [a,b,c] as d -> c }
+[31m![0mmissing token ']' at ','
+text> match [1,2,3] { [a,b,c] as d -> d }
+[31m![0mmissing token ']' at ','
+text> match [1,2,3] { x:xs -> x }
+T* infer (match (1 : (2 : (3 : []))) { | x::xs -> x})
+T* infer_match (1 : (2 : (3 : [])))
+T* infer (1 : (2 : (3 : [])))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : (3 : []))
+T* infer 2
+T* infer 2 result = int
+T* infer (3 : [])
+T* infer 3
+T* infer 3 result = int
+T* infer []
+T* infer [] result = ['97]
+T* infer_binary : int ['a]
+T* unify [int] ['97]
+T* unify int '97
+T* unify result '97 ... 
+T* ... int!
+T* infer (3 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (2 : (3 : [])) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : (3 : []))) result = [int]
+T* after infer [int]
+T* pat_list .. [(pat,expr)]
+T* unify_pat (x::xs, [int])
+T* unify_pat PatCons (x, xs)
+T* unify_pat (x, int)
+T* unify_pat (xs, [int])
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:int}
+T* infer Ident x ... ts alpha = { vars:[] body:int}
+T* infer x result = int
+T* infer (match (1 : (2 : (3 : []))) { | x::xs -> x}) result = int
+(match (1 : (2 : (3 : []))) { | x::xs -> x})
+evaluated> 1 : int
+expected > 1
+[32m.[0mtext> match [1,2,3] { x:y:xs -> y }
+T* infer (match (1 : (2 : (3 : []))) { | x::y::xs -> y})
+T* infer_match (1 : (2 : (3 : [])))
+T* infer (1 : (2 : (3 : [])))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : (3 : []))
+T* infer 2
+T* infer 2 result = int
+T* infer (3 : [])
+T* infer 3
+T* infer 3 result = int
+T* infer []
+T* infer [] result = ['98]
+T* infer_binary : int ['a]
+T* unify [int] ['98]
+T* unify int '98
+T* unify result '98 ... 
+T* ... int!
+T* infer (3 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (2 : (3 : [])) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : (3 : []))) result = [int]
+T* after infer [int]
+T* pat_list .. [(pat,expr)]
+T* unify_pat (x::y::xs, [int])
+T* unify_pat PatCons (x, y::xs)
+T* unify_pat (x, int)
+T* unify_pat (y::xs, [int])
+T* unify_pat PatCons (y, xs)
+T* unify_pat (y, int)
+T* unify_pat (xs, [int])
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:int}
+T* infer Ident y ... ts alpha = { vars:[] body:int}
+T* infer y result = int
+T* infer (match (1 : (2 : (3 : []))) { | x::y::xs -> y}) result = int
+(match (1 : (2 : (3 : []))) { | x::y::xs -> y})
+evaluated> 2 : int
+expected > 2
+[32m.[0mtext> match [1,2,3] { x:xs -> xs }
+T* infer (match (1 : (2 : (3 : []))) { | x::xs -> xs})
+T* infer_match (1 : (2 : (3 : [])))
+T* infer (1 : (2 : (3 : [])))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : (3 : []))
+T* infer 2
+T* infer 2 result = int
+T* infer (3 : [])
+T* infer 3
+T* infer 3 result = int
+T* infer []
+T* infer [] result = ['99]
+T* infer_binary : int ['a]
+T* unify [int] ['99]
+T* unify int '99
+T* unify result '99 ... 
+T* ... int!
+T* infer (3 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (2 : (3 : [])) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : (3 : []))) result = [int]
+T* after infer [int]
+T* pat_list .. [(pat,expr)]
+T* unify_pat (x::xs, [int])
+T* unify_pat PatCons (x, xs)
+T* unify_pat (x, int)
+T* unify_pat (xs, [int])
+T* infer xs
+T* infer Ident xs
+T* infer Ident xs ... type schema is { vars:[] body:[int]}
+T* infer Ident xs ... ts alpha = { vars:[] body:[int]}
+T* infer xs result = [int]
+T* infer (match (1 : (2 : (3 : []))) { | x::xs -> xs}) result = [int]
+(match (1 : (2 : (3 : []))) { | x::xs -> xs})
+evaluated> [2, 3] : [int]
+expected > [2, 3]
+[32m.[0m
+Type Print 
+result: (int, int)
+expect: (int, int)
+[32m.[0mresult: (int, int, int)
+expect: (int, int, int)
+[32m.[0mresult: ((int, int), int)
+expect: ((int, int), int)
+[32m.[0mresult: (int, (int, int))
+expect: (int, (int, int))
+[32m.[0mresult: ((int, int), (int, int))
+expect: ((int, int), (int, int))
+[32m.[0mresult: int -> int
+expect: int -> int
+[32m.[0mresult: int -> int -> int
+expect: int -> int -> int
+[32m.[0mresult: (int -> int) -> int
+expect: (int -> int) -> int
+[32m.[0mresult: int -> (int, int)
+expect: int -> (int, int)
+[32m.[0mresult: (int, int) -> int
+expect: (int, int) -> int
+[32m.[0mresult: [int]
+expect: [int]
+[32m.[0mresult: [(int, int, int)]
+expect: [(int, int, int)]
+[32m.[0mresult: [int -> int]
+expect: [int -> int]
+[32m.[0mresult: [(int -> int) -> int]
+expect: [(int -> int) -> int]
+[32m.[0m
+Type text> 'c'
+T* infer 'c'
+T* infer 'c' result = char
+infer    > char
+expected > char
+[32m.[0mtext> "abc"
+T* infer "abc"
+T* infer "abc" result = string
+infer    > string
+expected > string
+[32m.[0mtext> 12
+T* infer 12
+T* infer 12 result = int
+infer    > int
+expected > int
+[32m.[0mtext> 300+12
+T* infer (300 + 12)
+T* infer 300
+T* infer 300 result = int
+T* infer 12
+T* infer 12 result = int
+T* infer_binary + int int
+T* unify int int
+T* after unify int int
+T* infer (300 + 12) result = int
+infer    > int
+expected > int
+[32m.[0mtext> 300*12+3
+T* infer ((300 * 12) + 3)
+T* infer (300 * 12)
+T* infer 300
+T* infer 300 result = int
+T* infer 12
+T* infer 12 result = int
+T* infer_binary * int int
+T* unify int int
+T* infer (300 * 12) result = int
+T* infer 3
+T* infer 3 result = int
+T* infer_binary + int int
+T* unify int int
+T* after unify int int
+T* infer ((300 * 12) + 3) result = int
+infer    > int
+expected > int
+[32m.[0mtext> 300*(12+3)
+T* infer (300 * (12 + 3))
+T* infer 300
+T* infer 300 result = int
+T* infer (12 + 3)
+T* infer 12
+T* infer 12 result = int
+T* infer 3
+T* infer 3 result = int
+T* infer_binary + int int
+T* unify int int
+T* after unify int int
+T* infer (12 + 3) result = int
+T* infer_binary * int int
+T* unify int int
+T* infer (300 * (12 + 3)) result = int
+infer    > int
+expected > int
+[32m.[0mtext> fn x -> x + 1
+T* infer (fn x -> (x + 1))
+T* infer Fn (x, (x + 1))
+T* infer x ... arg type = '100
+T* infer x ... arg ts = { vars:[] body:'100}
+T* infer (x + 1)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'100}
+T* infer Ident x ... ts alpha = { vars:[] body:'100}
+T* infer x result = '100
+T* infer 1
+T* infer 1 result = int
+T* infer_binary + 'a int
+T* unify '100 int
+T* unify result '100 ... 
+T* ... int!
+T* after unify int int
+T* infer (x + 1) result = int!
+T* after infer int!
+T* infer (fn x -> (x + 1)) result = int! -> int!
+infer    > int -> int
+expected > int -> int
+[32m.[0mtext> fn _ -> ()
+T* infer (fn _ -> ())
+T* infer ()
+T* infer () result = unit
+T* infer (fn _ -> ()) result = '101 -> unit
+infer    > 'a -> unit
+expected > 'a -> unit
+[32m.[0mtext> (fn x -> x + 1) (300 * (12 + 3))
+T* infer ((fn x -> (x + 1)) (300 * (12 + 3)))
+T* infer (fn x -> (x + 1))
+T* infer Fn (x, (x + 1))
+T* infer x ... arg type = '102
+T* infer x ... arg ts = { vars:[] body:'102}
+T* infer (x + 1)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'102}
+T* infer Ident x ... ts alpha = { vars:[] body:'102}
+T* infer x result = '102
+T* infer 1
+T* infer 1 result = int
+T* infer_binary + 'a int
+T* unify '102 int
+T* unify result '102 ... 
+T* ... int!
+T* after unify int int
+T* infer (x + 1) result = int!
+T* after infer int!
+T* infer (fn x -> (x + 1)) result = int! -> int!
+T* infer (300 * (12 + 3))
+T* infer 300
+T* infer 300 result = int
+T* infer (12 + 3)
+T* infer 12
+T* infer 12 result = int
+T* infer 3
+T* infer 3 result = int
+T* infer_binary + int int
+T* unify int int
+T* after unify int int
+T* infer (12 + 3) result = int
+T* infer_binary * int int
+T* unify int int
+T* infer (300 * (12 + 3)) result = int
+T* unify int! -> int! int -> '103
+T* unify int! int
+T* unify int int
+T* unify int! '103
+T* unify int '103
+T* unify result '103 ... 
+T* ... int!
+T* infer ((fn x -> (x + 1)) (300 * (12 + 3))) result = int!
+infer    > int
+expected > int
+[32m.[0mtext> 1+2 < 3*4
+T* infer ((1 + 2) < (3 * 4))
+T* infer (1 + 2)
+T* infer 1
+T* infer 1 result = int
+T* infer 2
+T* infer 2 result = int
+T* infer_binary + int int
+T* unify int int
+T* after unify int int
+T* infer (1 + 2) result = int
+T* infer (3 * 4)
+T* infer 3
+T* infer 3 result = int
+T* infer 4
+T* infer 4 result = int
+T* infer_binary * int int
+T* unify int int
+T* infer (3 * 4) result = int
+T* infer_binary < int int
+T* unify int int
+T* infer ((1 + 2) < (3 * 4)) result = bool
+infer    > bool
+expected > bool
+[32m.[0mtext> 2 * -(1+2)
+T* infer (2 * (-(1 + 2)))
+T* infer 2
+T* infer 2 result = int
+T* infer (-(1 + 2))
+T* infer (1 + 2)
+T* infer 1
+T* infer 1 result = int
+T* infer 2
+T* infer 2 result = int
+T* infer_binary + int int
+T* unify int int
+T* after unify int int
+T* infer (1 + 2) result = int
+T* unify int int
+T* infer (-(1 + 2)) result = int
+T* infer_binary * int int
+T* unify int int
+T* infer (2 * (-(1 + 2))) result = int
+infer    > int
+expected > int
+[32m.[0mtext> fn x -> fn y -> x + y
+T* infer (fn x -> (fn y -> (x + y)))
+T* infer Fn (x, (fn y -> (x + y)))
+T* infer x ... arg type = '104
+T* infer x ... arg ts = { vars:[] body:'104}
+T* infer (fn y -> (x + y))
+T* infer Fn (y, (x + y))
+T* infer y ... arg type = '105
+T* infer y ... arg ts = { vars:[] body:'105}
+T* infer (x + y)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'104}
+T* infer Ident x ... ts alpha = { vars:[] body:'104}
+T* infer x result = '104
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'105}
+T* infer Ident y ... ts alpha = { vars:[] body:'105}
+T* infer y result = '105
+T* infer_binary + 'a 'a
+T* unify '104 '105
+T* unify result '104 ... 
+T* ... '105!
+T* after unify 'a 'a
+T* infer (x + y) result = '105!
+T* after infer '105!
+T* infer (fn y -> (x + y)) result = '105 -> '105!
+T* after infer '105 -> '105!
+T* infer (fn x -> (fn y -> (x + y))) result = '105! -> '105 -> '105!
+infer    > 'a -> 'a -> 'a
+expected > 'a -> 'a -> 'a
+[32m.[0mtext> (fn x -> x) 1
+T* infer ((fn x -> x) 1)
+T* infer (fn x -> x)
+T* infer Fn (x, x)
+T* infer x ... arg type = '106
+T* infer x ... arg ts = { vars:[] body:'106}
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'106}
+T* infer Ident x ... ts alpha = { vars:[] body:'106}
+T* infer x result = '106
+T* after infer '106
+T* infer (fn x -> x) result = '106 -> '106
+T* infer 1
+T* infer 1 result = int
+T* unify '106 -> '106 int -> '107
+T* unify '106 int
+T* unify result '106 ... 
+T* ... int!
+T* unify int! '107
+T* unify int '107
+T* unify result '107 ... 
+T* ... int!
+T* infer ((fn x -> x) 1) result = int!
+infer    > int
+expected > int
+[32m.[0mtext> (fn x -> x) 1==1
+T* infer (((fn x -> x) 1) == 1)
+T* infer ((fn x -> x) 1)
+T* infer (fn x -> x)
+T* infer Fn (x, x)
+T* infer x ... arg type = '108
+T* infer x ... arg ts = { vars:[] body:'108}
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'108}
+T* infer Ident x ... ts alpha = { vars:[] body:'108}
+T* infer x result = '108
+T* after infer '108
+T* infer (fn x -> x) result = '108 -> '108
+T* infer 1
+T* infer 1 result = int
+T* unify '108 -> '108 int -> '109
+T* unify '108 int
+T* unify result '108 ... 
+T* ... int!
+T* unify int! '109
+T* unify int '109
+T* unify result '109 ... 
+T* ... int!
+T* infer ((fn x -> x) 1) result = int!
+T* infer 1
+T* infer 1 result = int
+T* infer_binary == int int
+T* unify int! int
+T* unify int int
+T* infer (((fn x -> x) 1) == 1) result = bool
+infer    > bool
+expected > bool
+[32m.[0mtext> (fn _ -> 1) 'a'
+T* infer ((fn _ -> 1) 'a')
+T* infer (fn _ -> 1)
+T* infer 1
+T* infer 1 result = int
+T* infer (fn _ -> 1) result = '110 -> int
+T* infer 'a'
+T* infer 'a' result = char
+T* unify '110 -> int char -> '111
+T* unify '110 char
+T* unify result '110 ... 
+T* ... char!
+T* unify int '111
+T* unify result '111 ... 
+T* ... int!
+T* infer ((fn _ -> 1) 'a') result = int!
+infer    > int
+expected > int
+[32m.[0mtext> (fn _ -> 2) 3
+T* infer ((fn _ -> 2) 3)
+T* infer (fn _ -> 2)
+T* infer 2
+T* infer 2 result = int
+T* infer (fn _ -> 2) result = '112 -> int
+T* infer 3
+T* infer 3 result = int
+T* unify '112 -> int int -> '113
+T* unify '112 int
+T* unify result '112 ... 
+T* ... int!
+T* unify int '113
+T* unify result '113 ... 
+T* ... int!
+T* infer ((fn _ -> 2) 3) result = int!
+infer    > int
+expected > int
+[32m.[0mtext> []
+T* infer []
+T* infer [] result = ['114]
+infer    > ['a]
+expected > ['a]
+[32m.[0mtext> [1,2,3]
+T* infer (1 : (2 : (3 : [])))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : (3 : []))
+T* infer 2
+T* infer 2 result = int
+T* infer (3 : [])
+T* infer 3
+T* infer 3 result = int
+T* infer []
+T* infer [] result = ['115]
+T* infer_binary : int ['a]
+T* unify [int] ['115]
+T* unify int '115
+T* unify result '115 ... 
+T* ... int!
+T* infer (3 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (2 : (3 : [])) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : (3 : []))) result = [int]
+infer    > [int]
+expected > [int]
+[32m.[0mtext> 1:2:[]
+T* infer (1 : (2 : []))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : [])
+T* infer 2
+T* infer 2 result = int
+T* infer []
+T* infer [] result = ['116]
+T* infer_binary : int ['a]
+T* unify [int] ['116]
+T* unify int '116
+T* unify result '116 ... 
+T* ... int!
+T* infer (2 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : [])) result = [int]
+infer    > [int]
+expected > [int]
+[32m.[0mtext> ['a','b']
+T* infer ('a' : ('b' : []))
+T* infer 'a'
+T* infer 'a' result = char
+T* infer ('b' : [])
+T* infer 'b'
+T* infer 'b' result = char
+T* infer []
+T* infer [] result = ['117]
+T* infer_binary : char ['a]
+T* unify [char] ['117]
+T* unify char '117
+T* unify result '117 ... 
+T* ... char!
+T* infer ('b' : []) result = [char]
+T* infer_binary : char [char]
+T* unify [char] [char]
+T* unify char char
+T* infer ('a' : ('b' : [])) result = [char]
+infer    > [char]
+expected > [char]
+[32m.[0mtext> (fn x -> x)
+T* infer (fn x -> x)
+T* infer Fn (x, x)
+T* infer x ... arg type = '118
+T* infer x ... arg ts = { vars:[] body:'118}
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'118}
+T* infer Ident x ... ts alpha = { vars:[] body:'118}
+T* infer x result = '118
+T* after infer '118
+T* infer (fn x -> x) result = '118 -> '118
+infer    > 'a -> 'a
+expected > 'a -> 'a
+[32m.[0mtext> fn x -> fn y -> x
+T* infer (fn x -> (fn y -> x))
+T* infer Fn (x, (fn y -> x))
+T* infer x ... arg type = '119
+T* infer x ... arg ts = { vars:[] body:'119}
+T* infer (fn y -> x)
+T* infer Fn (y, x)
+T* infer y ... arg type = '120
+T* infer y ... arg ts = { vars:[] body:'120}
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'119}
+T* infer Ident x ... ts alpha = { vars:[] body:'119}
+T* infer x result = '119
+T* after infer '119
+T* infer (fn y -> x) result = '120 -> '119
+T* after infer '120 -> '119
+T* infer (fn x -> (fn y -> x)) result = '119 -> '120 -> '119
+infer    > 'a -> 'b -> 'a
+expected > 'a -> 'b -> 'a
+[32m.[0mtext> fn x -> fn y -> y
+T* infer (fn x -> (fn y -> y))
+T* infer Fn (x, (fn y -> y))
+T* infer x ... arg type = '121
+T* infer x ... arg ts = { vars:[] body:'121}
+T* infer (fn y -> y)
+T* infer Fn (y, y)
+T* infer y ... arg type = '122
+T* infer y ... arg ts = { vars:[] body:'122}
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'122}
+T* infer Ident y ... ts alpha = { vars:[] body:'122}
+T* infer y result = '122
+T* after infer '122
+T* infer (fn y -> y) result = '122 -> '122
+T* after infer '122 -> '122
+T* infer (fn x -> (fn y -> y)) result = '121 -> '122 -> '122
+infer    > 'a -> 'b -> 'b
+expected > 'a -> 'b -> 'b
+[32m.[0mtext> (fn x -> x + 1) 2 + (fn x -> x + -1) 3
+T* infer (((fn x -> (x + 1)) 2) + ((fn x -> (x + (-1))) 3))
+T* infer ((fn x -> (x + 1)) 2)
+T* infer (fn x -> (x + 1))
+T* infer Fn (x, (x + 1))
+T* infer x ... arg type = '123
+T* infer x ... arg ts = { vars:[] body:'123}
+T* infer (x + 1)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'123}
+T* infer Ident x ... ts alpha = { vars:[] body:'123}
+T* infer x result = '123
+T* infer 1
+T* infer 1 result = int
+T* infer_binary + 'a int
+T* unify '123 int
+T* unify result '123 ... 
+T* ... int!
+T* after unify int int
+T* infer (x + 1) result = int!
+T* after infer int!
+T* infer (fn x -> (x + 1)) result = int! -> int!
+T* infer 2
+T* infer 2 result = int
+T* unify int! -> int! int -> '124
+T* unify int! int
+T* unify int int
+T* unify int! '124
+T* unify int '124
+T* unify result '124 ... 
+T* ... int!
+T* infer ((fn x -> (x + 1)) 2) result = int!
+T* infer ((fn x -> (x + (-1))) 3)
+T* infer (fn x -> (x + (-1)))
+T* infer Fn (x, (x + (-1)))
+T* infer x ... arg type = '125
+T* infer x ... arg ts = { vars:[] body:'125}
+T* infer (x + (-1))
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'125}
+T* infer Ident x ... ts alpha = { vars:[] body:'125}
+T* infer x result = '125
+T* infer (-1)
+T* infer 1
+T* infer 1 result = int
+T* unify int int
+T* infer (-1) result = int
+T* infer_binary + 'a int
+T* unify '125 int
+T* unify result '125 ... 
+T* ... int!
+T* after unify int int
+T* infer (x + (-1)) result = int!
+T* after infer int!
+T* infer (fn x -> (x + (-1))) result = int! -> int!
+T* infer 3
+T* infer 3 result = int
+T* unify int! -> int! int -> '126
+T* unify int! int
+T* unify int int
+T* unify int! '126
+T* unify int '126
+T* unify result '126 ... 
+T* ... int!
+T* infer ((fn x -> (x + (-1))) 3) result = int!
+T* infer_binary + int int
+T* unify int! int!
+T* unify int int!
+T* unify int int
+T* after unify int int
+T* infer (((fn x -> (x + 1)) 2) + ((fn x -> (x + (-1))) 3)) result = int!
+infer    > int
+expected > int
+[32m.[0mtext> fn f -> fn g -> fn x -> g (f x)
+T* infer (fn f -> (fn g -> (fn x -> (g (f x)))))
+T* infer Fn (f, (fn g -> (fn x -> (g (f x)))))
+T* infer f ... arg type = '127
+T* infer f ... arg ts = { vars:[] body:'127}
+T* infer (fn g -> (fn x -> (g (f x))))
+T* infer Fn (g, (fn x -> (g (f x))))
+T* infer g ... arg type = '128
+T* infer g ... arg ts = { vars:[] body:'128}
+T* infer (fn x -> (g (f x)))
+T* infer Fn (x, (g (f x)))
+T* infer x ... arg type = '129
+T* infer x ... arg ts = { vars:[] body:'129}
+T* infer (g (f x))
+T* infer g
+T* infer Ident g
+T* infer Ident g ... type schema is { vars:[] body:'128}
+T* infer Ident g ... ts alpha = { vars:[] body:'128}
+T* infer g result = '128
+T* infer (f x)
+T* infer f
+T* infer Ident f
+T* infer Ident f ... type schema is { vars:[] body:'127}
+T* infer Ident f ... ts alpha = { vars:[] body:'127}
+T* infer f result = '127
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'129}
+T* infer Ident x ... ts alpha = { vars:[] body:'129}
+T* infer x result = '129
+T* unify '127 '129 -> '130
+T* unify result '127 ... 
+T* ... '129 -> '130!
+T* infer (f x) result = '130
+T* unify '128 '130 -> '131
+T* unify result '128 ... 
+T* ... '130 -> '131!
+T* infer (g (f x)) result = '131
+T* after infer '131
+T* infer (fn x -> (g (f x))) result = '129 -> '131
+T* after infer '129 -> '131
+T* infer (fn g -> (fn x -> (g (f x)))) result = ('130 -> '131)! -> '129 -> '131
+T* after infer ('130 -> '131)! -> '129 -> '131
+T* infer (fn f -> (fn g -> (fn x -> (g (f x))))) result = ('129 -> '130)! -> ('130 -> '131)! -> '129 -> '131
+infer    > ('a -> 'b) -> ('b -> 'c) -> 'a -> 'c
+expected > ('a -> 'b) -> ('b -> 'c) -> 'a -> 'c
+[32m.[0mtext> fn x -> fn y -> fn z -> x z (y z)
+T* infer (fn x -> (fn y -> (fn z -> ((x z) (y z)))))
+T* infer Fn (x, (fn y -> (fn z -> ((x z) (y z)))))
+T* infer x ... arg type = '132
+T* infer x ... arg ts = { vars:[] body:'132}
+T* infer (fn y -> (fn z -> ((x z) (y z))))
+T* infer Fn (y, (fn z -> ((x z) (y z))))
+T* infer y ... arg type = '133
+T* infer y ... arg ts = { vars:[] body:'133}
+T* infer (fn z -> ((x z) (y z)))
+T* infer Fn (z, ((x z) (y z)))
+T* infer z ... arg type = '134
+T* infer z ... arg ts = { vars:[] body:'134}
+T* infer ((x z) (y z))
+T* infer (x z)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'132}
+T* infer Ident x ... ts alpha = { vars:[] body:'132}
+T* infer x result = '132
+T* infer z
+T* infer Ident z
+T* infer Ident z ... type schema is { vars:[] body:'134}
+T* infer Ident z ... ts alpha = { vars:[] body:'134}
+T* infer z result = '134
+T* unify '132 '134 -> '135
+T* unify result '132 ... 
+T* ... '134 -> '135!
+T* infer (x z) result = '135
+T* infer (y z)
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'133}
+T* infer Ident y ... ts alpha = { vars:[] body:'133}
+T* infer y result = '133
+T* infer z
+T* infer Ident z
+T* infer Ident z ... type schema is { vars:[] body:'134}
+T* infer Ident z ... ts alpha = { vars:[] body:'134}
+T* infer z result = '134
+T* unify '133 '134 -> '136
+T* unify result '133 ... 
+T* ... '134 -> '136!
+T* infer (y z) result = '136
+T* unify '135 '136 -> '137
+T* unify result '135 ... 
+T* ... '136 -> '137!
+T* infer ((x z) (y z)) result = '137
+T* after infer '137
+T* infer (fn z -> ((x z) (y z))) result = '134 -> '137
+T* after infer '134 -> '137
+T* infer (fn y -> (fn z -> ((x z) (y z)))) result = ('134 -> '136)! -> '134 -> '137
+T* after infer ('134 -> '136)! -> '134 -> '137
+T* infer (fn x -> (fn y -> (fn z -> ((x z) (y z))))) result = ('134 -> '136 -> '137!)! -> ('134 -> '136)! -> '134 -> '137
+infer    > ('a -> 'b -> 'c) -> ('a -> 'b) -> 'a -> 'c
+expected > ('a -> 'b -> 'c) -> ('a -> 'b) -> 'a -> 'c
+[32m.[0mtext> fn x -> {let y = x + 1; x}
+T* infer (fn x -> {(let y = (x + 1)); x; })
+T* infer Fn (x, {(let y = (x + 1)); x; })
+T* infer x ... arg type = '138
+T* infer x ... arg ts = { vars:[] body:'138}
+T* infer {(let y = (x + 1)); x; }
+T* infer (let y = (x + 1))
+T* infer let y = (x + 1)
+T* infer (x + 1)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'138}
+T* infer Ident x ... ts alpha = { vars:[] body:'138}
+T* infer x result = '138
+T* infer 1
+T* infer 1 result = int
+T* infer_binary + 'a int
+T* unify '138 int
+T* unify result '138 ... 
+T* ... int!
+T* after unify int int
+T* infer (x + 1) result = int!
+T* after infer int!
+T* poly type = { vars:[] body:int}
+T* infer (let y = (x + 1)) result = unit
+T* unify unit unit
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:int!}
+T* infer Ident x ... ts alpha = { vars:[] body:int}
+T* infer x result = int
+T* infer {(let y = (x + 1)); x; } result = int
+T* after infer int
+T* infer (fn x -> {(let y = (x + 1)); x; }) result = int! -> int
+infer    > int -> int
+expected > int -> int
+[32m.[0mtext> fn x -> {let y = x + 1; y}
+T* infer (fn x -> {(let y = (x + 1)); y; })
+T* infer Fn (x, {(let y = (x + 1)); y; })
+T* infer x ... arg type = '139
+T* infer x ... arg ts = { vars:[] body:'139}
+T* infer {(let y = (x + 1)); y; }
+T* infer (let y = (x + 1))
+T* infer let y = (x + 1)
+T* infer (x + 1)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'139}
+T* infer Ident x ... ts alpha = { vars:[] body:'139}
+T* infer x result = '139
+T* infer 1
+T* infer 1 result = int
+T* infer_binary + 'a int
+T* unify '139 int
+T* unify result '139 ... 
+T* ... int!
+T* after unify int int
+T* infer (x + 1) result = int!
+T* after infer int!
+T* poly type = { vars:[] body:int}
+T* infer (let y = (x + 1)) result = unit
+T* unify unit unit
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:int}
+T* infer Ident y ... ts alpha = { vars:[] body:int}
+T* infer y result = int
+T* infer {(let y = (x + 1)); y; } result = int
+T* after infer int
+T* infer (fn x -> {(let y = (x + 1)); y; }) result = int! -> int
+infer    > int -> int
+expected > int -> int
+[32m.[0mtext> fn b -> fn x -> if x b then x else (fn x -> b)
+T* infer (fn b -> (fn x -> (if (x b) then x else (fn x -> b))))
+T* infer Fn (b, (fn x -> (if (x b) then x else (fn x -> b))))
+T* infer b ... arg type = '140
+T* infer b ... arg ts = { vars:[] body:'140}
+T* infer (fn x -> (if (x b) then x else (fn x -> b)))
+T* infer Fn (x, (if (x b) then x else (fn x -> b)))
+T* infer x ... arg type = '141
+T* infer x ... arg ts = { vars:[] body:'141}
+T* infer (if (x b) then x else (fn x -> b))
+T* infer If (x b) then x else (fn x -> b)
+T* infer (x b)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'141}
+T* infer Ident x ... ts alpha = { vars:[] body:'141}
+T* infer x result = '141
+T* infer b
+T* infer Ident b
+T* infer Ident b ... type schema is { vars:[] body:'140}
+T* infer Ident b ... ts alpha = { vars:[] body:'140}
+T* infer b result = '140
+T* unify '141 '140 -> '142
+T* unify result '141 ... 
+T* ... '140 -> '142!
+T* infer (x b) result = '142
+T* unify bool '142
+T* unify result '142 ... 
+T* ... bool!
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'140 -> bool!!}
+T* infer Ident x ... ts alpha = { vars:[] body:'140 -> bool}
+T* infer x result = '140 -> bool
+T* infer (fn x -> b)
+T* infer Fn (x, b)
+T* infer x ... arg type = '143
+T* infer x ... arg ts = { vars:[] body:'143}
+T* infer b
+T* infer Ident b
+T* infer Ident b ... type schema is { vars:[] body:'140}
+T* infer Ident b ... ts alpha = { vars:[] body:'140}
+T* infer b result = '140
+T* after infer '140
+T* infer (fn x -> b) result = '143 -> '140
+T* unify '140 -> bool '143 -> '140
+T* unify '140 '143
+T* unify result '140 ... 
+T* ... '143!
+T* unify bool '143!
+T* unify bool '143
+T* unify result '143 ... 
+T* ... bool!
+T* infer (if (x b) then x else (fn x -> b)) result = bool!! -> bool
+T* after infer bool!! -> bool
+T* infer (fn x -> (if (x b) then x else (fn x -> b))) result = (bool!! -> bool!)! -> bool!! -> bool
+T* after infer (bool!! -> bool!)! -> bool!! -> bool
+T* infer (fn b -> (fn x -> (if (x b) then x else (fn x -> b)))) result = bool!! -> (bool!! -> bool!)! -> bool!! -> bool
+infer    > bool -> (bool -> bool) -> bool -> bool
+expected > bool -> (bool -> bool) -> bool -> bool
+[32m.[0mtext> fn x -> if true then x else (if x then true else false)
+T* infer (fn x -> (if true then x else (if x then true else false)))
+T* infer Fn (x, (if true then x else (if x then true else false)))
+T* infer x ... arg type = '144
+T* infer x ... arg ts = { vars:[] body:'144}
+T* infer (if true then x else (if x then true else false))
+T* infer If true then x else (if x then true else false)
+T* infer true
+T* infer true result = bool
+T* unify bool bool
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'144}
+T* infer Ident x ... ts alpha = { vars:[] body:'144}
+T* infer x result = '144
+T* infer (if x then true else false)
+T* infer If x then true else false
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'144}
+T* infer Ident x ... ts alpha = { vars:[] body:'144}
+T* infer x result = '144
+T* unify bool '144
+T* unify result '144 ... 
+T* ... bool!
+T* infer true
+T* infer true result = bool
+T* infer false
+T* infer false result = bool
+T* unify bool bool
+T* infer (if x then true else false) result = bool
+T* unify bool! bool
+T* unify bool bool
+T* infer (if true then x else (if x then true else false)) result = bool!
+T* after infer bool!
+T* infer (fn x -> (if true then x else (if x then true else false))) result = bool! -> bool!
+infer    > bool -> bool
+expected > bool -> bool
+[32m.[0mtext> fn x -> fn y -> if x then x else y
+T* infer (fn x -> (fn y -> (if x then x else y)))
+T* infer Fn (x, (fn y -> (if x then x else y)))
+T* infer x ... arg type = '145
+T* infer x ... arg ts = { vars:[] body:'145}
+T* infer (fn y -> (if x then x else y))
+T* infer Fn (y, (if x then x else y))
+T* infer y ... arg type = '146
+T* infer y ... arg ts = { vars:[] body:'146}
+T* infer (if x then x else y)
+T* infer If x then x else y
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'145}
+T* infer Ident x ... ts alpha = { vars:[] body:'145}
+T* infer x result = '145
+T* unify bool '145
+T* unify result '145 ... 
+T* ... bool!
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:bool!}
+T* infer Ident x ... ts alpha = { vars:[] body:bool}
+T* infer x result = bool
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'146}
+T* infer Ident y ... ts alpha = { vars:[] body:'146}
+T* infer y result = '146
+T* unify bool '146
+T* unify result '146 ... 
+T* ... bool!
+T* infer (if x then x else y) result = bool
+T* after infer bool
+T* infer (fn y -> (if x then x else y)) result = bool! -> bool
+T* after infer bool! -> bool
+T* infer (fn x -> (fn y -> (if x then x else y))) result = bool! -> bool! -> bool
+infer    > bool -> bool -> bool
+expected > bool -> bool -> bool
+[32m.[0mtext> fn n -> (fn x -> x (fn y -> y)) (fn f -> f n)
+T* infer (fn n -> ((fn x -> (x (fn y -> y))) (fn f -> (f n))))
+T* infer Fn (n, ((fn x -> (x (fn y -> y))) (fn f -> (f n))))
+T* infer n ... arg type = '147
+T* infer n ... arg ts = { vars:[] body:'147}
+T* infer ((fn x -> (x (fn y -> y))) (fn f -> (f n)))
+T* infer (fn x -> (x (fn y -> y)))
+T* infer Fn (x, (x (fn y -> y)))
+T* infer x ... arg type = '148
+T* infer x ... arg ts = { vars:[] body:'148}
+T* infer (x (fn y -> y))
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'148}
+T* infer Ident x ... ts alpha = { vars:[] body:'148}
+T* infer x result = '148
+T* infer (fn y -> y)
+T* infer Fn (y, y)
+T* infer y ... arg type = '149
+T* infer y ... arg ts = { vars:[] body:'149}
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'149}
+T* infer Ident y ... ts alpha = { vars:[] body:'149}
+T* infer y result = '149
+T* after infer '149
+T* infer (fn y -> y) result = '149 -> '149
+T* unify '148 ('149 -> '149) -> '150
+T* unify result '148 ... 
+T* ... ('149 -> '149) -> '150!
+T* infer (x (fn y -> y)) result = '150
+T* after infer '150
+T* infer (fn x -> (x (fn y -> y))) result = (('149 -> '149) -> '150)! -> '150
+T* infer (fn f -> (f n))
+T* infer Fn (f, (f n))
+T* infer f ... arg type = '151
+T* infer f ... arg ts = { vars:[] body:'151}
+T* infer (f n)
+T* infer f
+T* infer Ident f
+T* infer Ident f ... type schema is { vars:[] body:'151}
+T* infer Ident f ... ts alpha = { vars:[] body:'151}
+T* infer f result = '151
+T* infer n
+T* infer Ident n
+T* infer Ident n ... type schema is { vars:[] body:'147}
+T* infer Ident n ... ts alpha = { vars:[] body:'147}
+T* infer n result = '147
+T* unify '151 '147 -> '152
+T* unify result '151 ... 
+T* ... '147 -> '152!
+T* infer (f n) result = '152
+T* after infer '152
+T* infer (fn f -> (f n)) result = ('147 -> '152)! -> '152
+T* unify (('149 -> '149) -> '150)! -> '150 (('147 -> '152)! -> '152) -> '153
+T* unify ('149 -> '149) -> '150! ('147 -> '152)! -> '152
+T* unify ('149 -> '149) -> '150 ('147 -> '152)! -> '152
+T* unify '149 -> '149 '147 -> '152!
+T* unify '149 -> '149 '147 -> '152
+T* unify '149 '147
+T* unify result '149 ... 
+T* ... '147!
+T* unify '147! '152
+T* unify '147 '152
+T* unify result '147 ... 
+T* ... '152!
+T* unify '150 '152
+T* unify result '150 ... 
+T* ... '152!
+T* unify '152! '153
+T* unify '152 '153
+T* unify result '152 ... 
+T* ... '153!
+T* infer ((fn x -> (x (fn y -> y))) (fn f -> (f n))) result = '153
+T* after infer '153
+T* infer (fn n -> ((fn x -> (x (fn y -> y))) (fn f -> (f n)))) result = '153!! -> '153
+infer    > 'a -> 'a
+expected > 'a -> 'a
+[32m.[0mtext> fn x -> fn y -> x y
+T* infer (fn x -> (fn y -> (x y)))
+T* infer Fn (x, (fn y -> (x y)))
+T* infer x ... arg type = '154
+T* infer x ... arg ts = { vars:[] body:'154}
+T* infer (fn y -> (x y))
+T* infer Fn (y, (x y))
+T* infer y ... arg type = '155
+T* infer y ... arg ts = { vars:[] body:'155}
+T* infer (x y)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'154}
+T* infer Ident x ... ts alpha = { vars:[] body:'154}
+T* infer x result = '154
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'155}
+T* infer Ident y ... ts alpha = { vars:[] body:'155}
+T* infer y result = '155
+T* unify '154 '155 -> '156
+T* unify result '154 ... 
+T* ... '155 -> '156!
+T* infer (x y) result = '156
+T* after infer '156
+T* infer (fn y -> (x y)) result = '155 -> '156
+T* after infer '155 -> '156
+T* infer (fn x -> (fn y -> (x y))) result = ('155 -> '156)! -> '155 -> '156
+infer    > ('a -> 'b) -> 'a -> 'b
+expected > ('a -> 'b) -> 'a -> 'b
+[32m.[0mtext> fn x -> fn y -> x (y x)
+T* infer (fn x -> (fn y -> (x (y x))))
+T* infer Fn (x, (fn y -> (x (y x))))
+T* infer x ... arg type = '157
+T* infer x ... arg ts = { vars:[] body:'157}
+T* infer (fn y -> (x (y x)))
+T* infer Fn (y, (x (y x)))
+T* infer y ... arg type = '158
+T* infer y ... arg ts = { vars:[] body:'158}
+T* infer (x (y x))
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'157}
+T* infer Ident x ... ts alpha = { vars:[] body:'157}
+T* infer x result = '157
+T* infer (y x)
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'158}
+T* infer Ident y ... ts alpha = { vars:[] body:'158}
+T* infer y result = '158
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'157}
+T* infer Ident x ... ts alpha = { vars:[] body:'157}
+T* infer x result = '157
+T* unify '158 '157 -> '159
+T* unify result '158 ... 
+T* ... '157 -> '159!
+T* infer (y x) result = '159
+T* unify '157 '159 -> '160
+T* unify result '157 ... 
+T* ... '159 -> '160!
+T* infer (x (y x)) result = '160
+T* after infer '160
+T* infer (fn y -> (x (y x))) result = (('159 -> '160)! -> '159)! -> '160
+T* after infer (('159 -> '160)! -> '159)! -> '160
+T* infer (fn x -> (fn y -> (x (y x)))) result = ('159 -> '160)! -> (('159 -> '160)! -> '159)! -> '160
+infer    > ('a -> 'b) -> (('a -> 'b) -> 'a) -> 'b
+expected > ('a -> 'b) -> (('a -> 'b) -> 'a) -> 'b
+[32m.[0mtext> fn x -> fn y -> x (y x) (y x)
+T* infer (fn x -> (fn y -> ((x (y x)) (y x))))
+T* infer Fn (x, (fn y -> ((x (y x)) (y x))))
+T* infer x ... arg type = '161
+T* infer x ... arg ts = { vars:[] body:'161}
+T* infer (fn y -> ((x (y x)) (y x)))
+T* infer Fn (y, ((x (y x)) (y x)))
+T* infer y ... arg type = '162
+T* infer y ... arg ts = { vars:[] body:'162}
+T* infer ((x (y x)) (y x))
+T* infer (x (y x))
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'161}
+T* infer Ident x ... ts alpha = { vars:[] body:'161}
+T* infer x result = '161
+T* infer (y x)
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'162}
+T* infer Ident y ... ts alpha = { vars:[] body:'162}
+T* infer y result = '162
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'161}
+T* infer Ident x ... ts alpha = { vars:[] body:'161}
+T* infer x result = '161
+T* unify '162 '161 -> '163
+T* unify result '162 ... 
+T* ... '161 -> '163!
+T* infer (y x) result = '163
+T* unify '161 '163 -> '164
+T* unify result '161 ... 
+T* ... '163 -> '164!
+T* infer (x (y x)) result = '164
+T* infer (y x)
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:('163 -> '164)! -> '163!}
+T* infer Ident y ... ts alpha = { vars:[] body:('163 -> '164) -> '163}
+T* infer y result = ('163 -> '164) -> '163
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'163 -> '164!}
+T* infer Ident x ... ts alpha = { vars:[] body:'163 -> '164}
+T* infer x result = '163 -> '164
+T* unify ('163 -> '164) -> '163 ('163 -> '164) -> '165
+T* unify '163 -> '164 '163 -> '164
+T* unify '163 '163
+T* unify '164 '164
+T* unify '163 '165
+T* unify result '163 ... 
+T* ... '165!
+T* infer (y x) result = '165
+T* unify '164 '165 -> '166
+T* unify result '164 ... 
+T* ... '165 -> '166!
+T* infer ((x (y x)) (y x)) result = '166
+T* after infer '166
+T* infer (fn y -> ((x (y x)) (y x))) result = (('165! -> '165 -> '166!)! -> '165!)! -> '166
+T* after infer (('165! -> '165 -> '166!)! -> '165!)! -> '166
+T* infer (fn x -> (fn y -> ((x (y x)) (y x)))) result = ('165! -> '165 -> '166!)! -> (('165! -> '165 -> '166!)! -> '165!)! -> '166
+infer    > ('a -> 'a -> 'b) -> (('a -> 'a -> 'b) -> 'a) -> 'b
+expected > ('a -> 'a -> 'b) -> (('a -> 'a -> 'b) -> 'a) -> 'b
+[32m.[0mtext> fn x -> fn y -> fn z -> x (z x) (y (z x y))
+T* infer (fn x -> (fn y -> (fn z -> ((x (z x)) (y ((z x) y))))))
+T* infer Fn (x, (fn y -> (fn z -> ((x (z x)) (y ((z x) y))))))
+T* infer x ... arg type = '167
+T* infer x ... arg ts = { vars:[] body:'167}
+T* infer (fn y -> (fn z -> ((x (z x)) (y ((z x) y)))))
+T* infer Fn (y, (fn z -> ((x (z x)) (y ((z x) y)))))
+T* infer y ... arg type = '168
+T* infer y ... arg ts = { vars:[] body:'168}
+T* infer (fn z -> ((x (z x)) (y ((z x) y))))
+T* infer Fn (z, ((x (z x)) (y ((z x) y))))
+T* infer z ... arg type = '169
+T* infer z ... arg ts = { vars:[] body:'169}
+T* infer ((x (z x)) (y ((z x) y)))
+T* infer (x (z x))
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'167}
+T* infer Ident x ... ts alpha = { vars:[] body:'167}
+T* infer x result = '167
+T* infer (z x)
+T* infer z
+T* infer Ident z
+T* infer Ident z ... type schema is { vars:[] body:'169}
+T* infer Ident z ... ts alpha = { vars:[] body:'169}
+T* infer z result = '169
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'167}
+T* infer Ident x ... ts alpha = { vars:[] body:'167}
+T* infer x result = '167
+T* unify '169 '167 -> '170
+T* unify result '169 ... 
+T* ... '167 -> '170!
+T* infer (z x) result = '170
+T* unify '167 '170 -> '171
+T* unify result '167 ... 
+T* ... '170 -> '171!
+T* infer (x (z x)) result = '171
+T* infer (y ((z x) y))
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'168}
+T* infer Ident y ... ts alpha = { vars:[] body:'168}
+T* infer y result = '168
+T* infer ((z x) y)
+T* infer (z x)
+T* infer z
+T* infer Ident z
+T* infer Ident z ... type schema is { vars:[] body:('170 -> '171)! -> '170!}
+T* infer Ident z ... ts alpha = { vars:[] body:('170 -> '171) -> '170}
+T* infer z result = ('170 -> '171) -> '170
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'170 -> '171!}
+T* infer Ident x ... ts alpha = { vars:[] body:'170 -> '171}
+T* infer x result = '170 -> '171
+T* unify ('170 -> '171) -> '170 ('170 -> '171) -> '172
+T* unify '170 -> '171 '170 -> '171
+T* unify '170 '170
+T* unify '171 '171
+T* unify '170 '172
+T* unify result '170 ... 
+T* ... '172!
+T* infer (z x) result = '172
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'168}
+T* infer Ident y ... ts alpha = { vars:[] body:'168}
+T* infer y result = '168
+T* unify '172 '168 -> '173
+T* unify result '172 ... 
+T* ... '168 -> '173!
+T* infer ((z x) y) result = '173
+T* unify '168 '173 -> '174
+T* unify result '168 ... 
+T* ... '173 -> '174!
+T* infer (y ((z x) y)) result = '174
+T* unify '171 '174 -> '175
+T* unify result '171 ... 
+T* ... '174 -> '175!
+T* infer ((x (z x)) (y ((z x) y))) result = '175
+T* after infer '175
+T* infer (fn z -> ((x (z x)) (y ((z x) y)))) result = (((('173 -> '174)! -> '173)!! -> '174 -> '175!)! -> ('173 -> '174)! -> '173!!)! -> '175
+T* after infer (((('173 -> '174)! -> '173)!! -> '174 -> '175!)! -> ('173 -> '174)! -> '173!!)! -> '175
+T* infer (fn y -> (fn z -> ((x (z x)) (y ((z x) y))))) result = ('173 -> '174)! -> (((('173 -> '174)! -> '173)!! -> '174 -> '175!)! -> ('173 -> '174)! -> '173!!)! -> '175
+T* after infer ('173 -> '174)! -> (((('173 -> '174)! -> '173)!! -> '174 -> '175!)! -> ('173 -> '174)! -> '173!!)! -> '175
+T* infer (fn x -> (fn y -> (fn z -> ((x (z x)) (y ((z x) y)))))) result = ((('173 -> '174)! -> '173)!! -> '174 -> '175!)! -> ('173 -> '174)! -> (((('173 -> '174)! -> '173)!! -> '174 -> '175!)! -> ('173 -> '174)! -> '173!!)! -> '175
+infer    > ((('a -> 'b) -> 'a) -> 'b -> 'c) -> ('a -> 'b) -> (((('a -> 'b) -> 'a) -> 'b -> 'c) -> ('a -> 'b) -> 'a) -> 'c
+expected > ((('a -> 'b) -> 'a) -> 'b -> 'c) -> ('a -> 'b) -> (((('a -> 'b) -> 'a) -> 'b -> 'c) -> ('a -> 'b) -> 'a) -> 'c
+[32m.[0mtext> { let id = fn x -> x; let f = fn y -> id (y id); f}
+T* infer {(let id = (fn x -> x)); (let f = (fn y -> (id (y id)))); f; }
+T* infer (let id = (fn x -> x))
+T* infer let id = (fn x -> x)
+T* infer (fn x -> x)
+T* infer Fn (x, x)
+T* infer x ... arg type = '176
+T* infer x ... arg ts = { vars:[] body:'176}
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'176}
+T* infer Ident x ... ts alpha = { vars:[] body:'176}
+T* infer x result = '176
+T* after infer '176
+T* infer (fn x -> x) result = '176 -> '176
+T* after infer '176 -> '176
+T* poly type = { vars:[176] body:'176 -> '176}
+T* infer (let id = (fn x -> x)) result = unit
+T* unify unit unit
+T* infer (let f = (fn y -> (id (y id))))
+T* infer let f = (fn y -> (id (y id)))
+T* infer (fn y -> (id (y id)))
+T* infer Fn (y, (id (y id)))
+T* infer y ... arg type = '177
+T* infer y ... arg ts = { vars:[] body:'177}
+T* infer (id (y id))
+T* infer id
+T* infer Ident id
+T* infer Ident id ... type schema is { vars:[176] body:'176 -> '176}
+T* infer Ident id ... ts alpha = { vars:[178] body:'178 -> '178}
+T* infer id result = '178 -> '178
+T* infer (y id)
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'177}
+T* infer Ident y ... ts alpha = { vars:[] body:'177}
+T* infer y result = '177
+T* infer id
+T* infer Ident id
+T* infer Ident id ... type schema is { vars:[176] body:'176 -> '176}
+T* infer Ident id ... ts alpha = { vars:[179] body:'179 -> '179}
+T* infer id result = '179 -> '179
+T* unify '177 ('179 -> '179) -> '180
+T* unify result '177 ... 
+T* ... ('179 -> '179) -> '180!
+T* infer (y id) result = '180
+T* unify '178 -> '178 '180 -> '181
+T* unify '178 '180
+T* unify result '178 ... 
+T* ... '180!
+T* unify '180! '181
+T* unify '180 '181
+T* unify result '180 ... 
+T* ... '181!
+T* infer (id (y id)) result = '181
+T* after infer '181
+T* infer (fn y -> (id (y id))) result = (('179 -> '179) -> '181!)! -> '181
+T* after infer (('179 -> '179) -> '181!)! -> '181
+T* poly type = { vars:[181,179] body:(('179 -> '179) -> '181) -> '181}
+T* infer (let f = (fn y -> (id (y id)))) result = unit
+T* unify unit unit
+T* infer f
+T* infer Ident f
+T* infer Ident f ... type schema is { vars:[181,179] body:(('179 -> '179) -> '181) -> '181}
+T* infer Ident f ... ts alpha = { vars:[182,183] body:(('183 -> '183) -> '182) -> '182}
+T* infer f result = (('183 -> '183) -> '182) -> '182
+T* infer {(let id = (fn x -> x)); (let f = (fn y -> (id (y id)))); f; } result = (('183 -> '183) -> '182) -> '182
+infer    > (('a -> 'a) -> 'b) -> 'b
+expected > (('a -> 'a) -> 'b) -> 'b
+[32m.[0mtext> { let k = fn x -> fn y -> x; let k1 = fn x -> fn y -> k (x k); k1 }
+T* infer {(let k = (fn x -> (fn y -> x))); (let k1 = (fn x -> (fn y -> (k (x k))))); k1; }
+T* infer (let k = (fn x -> (fn y -> x)))
+T* infer let k = (fn x -> (fn y -> x))
+T* infer (fn x -> (fn y -> x))
+T* infer Fn (x, (fn y -> x))
+T* infer x ... arg type = '184
+T* infer x ... arg ts = { vars:[] body:'184}
+T* infer (fn y -> x)
+T* infer Fn (y, x)
+T* infer y ... arg type = '185
+T* infer y ... arg ts = { vars:[] body:'185}
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'184}
+T* infer Ident x ... ts alpha = { vars:[] body:'184}
+T* infer x result = '184
+T* after infer '184
+T* infer (fn y -> x) result = '185 -> '184
+T* after infer '185 -> '184
+T* infer (fn x -> (fn y -> x)) result = '184 -> '185 -> '184
+T* after infer '184 -> '185 -> '184
+T* poly type = { vars:[185,184] body:'184 -> '185 -> '184}
+T* infer (let k = (fn x -> (fn y -> x))) result = unit
+T* unify unit unit
+T* infer (let k1 = (fn x -> (fn y -> (k (x k)))))
+T* infer let k1 = (fn x -> (fn y -> (k (x k))))
+T* infer (fn x -> (fn y -> (k (x k))))
+T* infer Fn (x, (fn y -> (k (x k))))
+T* infer x ... arg type = '186
+T* infer x ... arg ts = { vars:[] body:'186}
+T* infer (fn y -> (k (x k)))
+T* infer Fn (y, (k (x k)))
+T* infer y ... arg type = '187
+T* infer y ... arg ts = { vars:[] body:'187}
+T* infer (k (x k))
+T* infer k
+T* infer Ident k
+T* infer Ident k ... type schema is { vars:[185,184] body:'184 -> '185 -> '184}
+T* infer Ident k ... ts alpha = { vars:[188,189] body:'189 -> '188 -> '189}
+T* infer k result = '189 -> '188 -> '189
+T* infer (x k)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'186}
+T* infer Ident x ... ts alpha = { vars:[] body:'186}
+T* infer x result = '186
+T* infer k
+T* infer Ident k
+T* infer Ident k ... type schema is { vars:[185,184] body:'184 -> '185 -> '184}
+T* infer Ident k ... ts alpha = { vars:[190,191] body:'191 -> '190 -> '191}
+T* infer k result = '191 -> '190 -> '191
+T* unify '186 ('191 -> '190 -> '191) -> '192
+T* unify result '186 ... 
+T* ... ('191 -> '190 -> '191) -> '192!
+T* infer (x k) result = '192
+T* unify '189 -> '188 -> '189 '192 -> '193
+T* unify '189 '192
+T* unify result '189 ... 
+T* ... '192!
+T* unify '188 -> '192! '193
+T* unify result '193 ... 
+T* ... '188 -> '192!!
+T* infer (k (x k)) result = '188 -> '192!!
+T* after infer '188 -> '192!!
+T* infer (fn y -> (k (x k))) result = '187 -> '188 -> '192!!
+T* after infer '187 -> '188 -> '192!!
+T* infer (fn x -> (fn y -> (k (x k)))) result = (('191 -> '190 -> '191) -> '192)! -> '187 -> '188 -> '192!!
+T* after infer (('191 -> '190 -> '191) -> '192)! -> '187 -> '188 -> '192!!
+T* poly type = { vars:[188,187,192,190,191] body:(('191 -> '190 -> '191) -> '192) -> '187 -> '188 -> '192}
+T* infer (let k1 = (fn x -> (fn y -> (k (x k))))) result = unit
+T* unify unit unit
+T* infer k1
+T* infer Ident k1
+T* infer Ident k1 ... type schema is { vars:[188,187,192,190,191] body:(('191 -> '190 -> '191) -> '192) -> '187 -> '188 -> '192}
+T* infer Ident k1 ... ts alpha = { vars:[194,195,196,197,198] body:(('198 -> '197 -> '198) -> '196) -> '195 -> '194 -> '196}
+T* infer k1 result = (('198 -> '197 -> '198) -> '196) -> '195 -> '194 -> '196
+T* infer {(let k = (fn x -> (fn y -> x))); (let k1 = (fn x -> (fn y -> (k (x k))))); k1; } result = (('198 -> '197 -> '198) -> '196) -> '195 -> '194 -> '196
+infer    > (('a -> 'b -> 'a) -> 'c) -> 'd -> 'e -> 'c
+expected > (('a -> 'b -> 'a) -> 'c) -> 'd -> 'e -> 'c
+[32m.[0mtext> { let s = fn x -> fn y -> fn z -> x z (y z); let s1 = fn x -> fn y -> fn z -> x s (z s) (y s (z s)); s1 }
+T* infer {(let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))); (let s1 = (fn x -> (fn y -> (fn z -> (((x s) (z s)) ((y s) (z s))))))); s1; }
+T* infer (let s = (fn x -> (fn y -> (fn z -> ((x z) (y z))))))
+T* infer let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))
+T* infer (fn x -> (fn y -> (fn z -> ((x z) (y z)))))
+T* infer Fn (x, (fn y -> (fn z -> ((x z) (y z)))))
+T* infer x ... arg type = '199
+T* infer x ... arg ts = { vars:[] body:'199}
+T* infer (fn y -> (fn z -> ((x z) (y z))))
+T* infer Fn (y, (fn z -> ((x z) (y z))))
+T* infer y ... arg type = '200
+T* infer y ... arg ts = { vars:[] body:'200}
+T* infer (fn z -> ((x z) (y z)))
+T* infer Fn (z, ((x z) (y z)))
+T* infer z ... arg type = '201
+T* infer z ... arg ts = { vars:[] body:'201}
+T* infer ((x z) (y z))
+T* infer (x z)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'199}
+T* infer Ident x ... ts alpha = { vars:[] body:'199}
+T* infer x result = '199
+T* infer z
+T* infer Ident z
+T* infer Ident z ... type schema is { vars:[] body:'201}
+T* infer Ident z ... ts alpha = { vars:[] body:'201}
+T* infer z result = '201
+T* unify '199 '201 -> '202
+T* unify result '199 ... 
+T* ... '201 -> '202!
+T* infer (x z) result = '202
+T* infer (y z)
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'200}
+T* infer Ident y ... ts alpha = { vars:[] body:'200}
+T* infer y result = '200
+T* infer z
+T* infer Ident z
+T* infer Ident z ... type schema is { vars:[] body:'201}
+T* infer Ident z ... ts alpha = { vars:[] body:'201}
+T* infer z result = '201
+T* unify '200 '201 -> '203
+T* unify result '200 ... 
+T* ... '201 -> '203!
+T* infer (y z) result = '203
+T* unify '202 '203 -> '204
+T* unify result '202 ... 
+T* ... '203 -> '204!
+T* infer ((x z) (y z)) result = '204
+T* after infer '204
+T* infer (fn z -> ((x z) (y z))) result = '201 -> '204
+T* after infer '201 -> '204
+T* infer (fn y -> (fn z -> ((x z) (y z)))) result = ('201 -> '203)! -> '201 -> '204
+T* after infer ('201 -> '203)! -> '201 -> '204
+T* infer (fn x -> (fn y -> (fn z -> ((x z) (y z))))) result = ('201 -> '203 -> '204!)! -> ('201 -> '203)! -> '201 -> '204
+T* after infer ('201 -> '203 -> '204!)! -> ('201 -> '203)! -> '201 -> '204
+T* poly type = { vars:[204,203,201] body:('201 -> '203 -> '204) -> ('201 -> '203) -> '201 -> '204}
+T* infer (let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))) result = unit
+T* unify unit unit
+T* infer (let s1 = (fn x -> (fn y -> (fn z -> (((x s) (z s)) ((y s) (z s)))))))
+T* infer let s1 = (fn x -> (fn y -> (fn z -> (((x s) (z s)) ((y s) (z s))))))
+T* infer (fn x -> (fn y -> (fn z -> (((x s) (z s)) ((y s) (z s))))))
+T* infer Fn (x, (fn y -> (fn z -> (((x s) (z s)) ((y s) (z s))))))
+T* infer x ... arg type = '205
+T* infer x ... arg ts = { vars:[] body:'205}
+T* infer (fn y -> (fn z -> (((x s) (z s)) ((y s) (z s)))))
+T* infer Fn (y, (fn z -> (((x s) (z s)) ((y s) (z s)))))
+T* infer y ... arg type = '206
+T* infer y ... arg ts = { vars:[] body:'206}
+T* infer (fn z -> (((x s) (z s)) ((y s) (z s))))
+T* infer Fn (z, (((x s) (z s)) ((y s) (z s))))
+T* infer z ... arg type = '207
+T* infer z ... arg ts = { vars:[] body:'207}
+T* infer (((x s) (z s)) ((y s) (z s)))
+T* infer ((x s) (z s))
+T* infer (x s)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'205}
+T* infer Ident x ... ts alpha = { vars:[] body:'205}
+T* infer x result = '205
+T* infer s
+T* infer Ident s
+T* infer Ident s ... type schema is { vars:[204,203,201] body:('201 -> '203 -> '204) -> ('201 -> '203) -> '201 -> '204}
+T* infer Ident s ... ts alpha = { vars:[208,209,210] body:('210 -> '209 -> '208) -> ('210 -> '209) -> '210 -> '208}
+T* infer s result = ('210 -> '209 -> '208) -> ('210 -> '209) -> '210 -> '208
+T* unify '205 (('210 -> '209 -> '208) -> ('210 -> '209) -> '210 -> '208) -> '211
+T* unify result '205 ... 
+T* ... (('210 -> '209 -> '208) -> ('210 -> '209) -> '210 -> '208) -> '211!
+T* infer (x s) result = '211
+T* infer (z s)
+T* infer z
+T* infer Ident z
+T* infer Ident z ... type schema is { vars:[] body:'207}
+T* infer Ident z ... ts alpha = { vars:[] body:'207}
+T* infer z result = '207
+T* infer s
+T* infer Ident s
+T* infer Ident s ... type schema is { vars:[204,203,201] body:('201 -> '203 -> '204) -> ('201 -> '203) -> '201 -> '204}
+T* infer Ident s ... ts alpha = { vars:[212,213,214] body:('214 -> '213 -> '212) -> ('214 -> '213) -> '214 -> '212}
+T* infer s result = ('214 -> '213 -> '212) -> ('214 -> '213) -> '214 -> '212
+T* unify '207 (('214 -> '213 -> '212) -> ('214 -> '213) -> '214 -> '212) -> '215
+T* unify result '207 ... 
+T* ... (('214 -> '213 -> '212) -> ('214 -> '213) -> '214 -> '212) -> '215!
+T* infer (z s) result = '215
+T* unify '211 '215 -> '216
+T* unify result '211 ... 
+T* ... '215 -> '216!
+T* infer ((x s) (z s)) result = '216
+T* infer ((y s) (z s))
+T* infer (y s)
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'206}
+T* infer Ident y ... ts alpha = { vars:[] body:'206}
+T* infer y result = '206
+T* infer s
+T* infer Ident s
+T* infer Ident s ... type schema is { vars:[204,203,201] body:('201 -> '203 -> '204) -> ('201 -> '203) -> '201 -> '204}
+T* infer Ident s ... ts alpha = { vars:[217,218,219] body:('219 -> '218 -> '217) -> ('219 -> '218) -> '219 -> '217}
+T* infer s result = ('219 -> '218 -> '217) -> ('219 -> '218) -> '219 -> '217
+T* unify '206 (('219 -> '218 -> '217) -> ('219 -> '218) -> '219 -> '217) -> '220
+T* unify result '206 ... 
+T* ... (('219 -> '218 -> '217) -> ('219 -> '218) -> '219 -> '217) -> '220!
+T* infer (y s) result = '220
+T* infer (z s)
+T* infer z
+T* infer Ident z
+T* infer Ident z ... type schema is { vars:[] body:(('214 -> '213 -> '212) -> ('214 -> '213) -> '214 -> '212) -> '215!}
+T* infer Ident z ... ts alpha = { vars:[] body:(('214 -> '213 -> '212) -> ('214 -> '213) -> '214 -> '212) -> '215}
+T* infer z result = (('214 -> '213 -> '212) -> ('214 -> '213) -> '214 -> '212) -> '215
+T* infer s
+T* infer Ident s
+T* infer Ident s ... type schema is { vars:[204,203,201] body:('201 -> '203 -> '204) -> ('201 -> '203) -> '201 -> '204}
+T* infer Ident s ... ts alpha = { vars:[221,222,223] body:('223 -> '222 -> '221) -> ('223 -> '222) -> '223 -> '221}
+T* infer s result = ('223 -> '222 -> '221) -> ('223 -> '222) -> '223 -> '221
+T* unify (('214 -> '213 -> '212) -> ('214 -> '213) -> '214 -> '212) -> '215 (('223 -> '222 -> '221) -> ('223 -> '222) -> '223 -> '221) -> '224
+T* unify ('214 -> '213 -> '212) -> ('214 -> '213) -> '214 -> '212 ('223 -> '222 -> '221) -> ('223 -> '222) -> '223 -> '221
+T* unify '214 -> '213 -> '212 '223 -> '222 -> '221
+T* unify '214 '223
+T* unify result '214 ... 
+T* ... '223!
+T* unify '213 -> '212 '222 -> '221
+T* unify '213 '222
+T* unify result '213 ... 
+T* ... '222!
+T* unify '212 '221
+T* unify result '212 ... 
+T* ... '221!
+T* unify ('223! -> '222!) -> '223! -> '221! ('223 -> '222) -> '223 -> '221
+T* unify '223! -> '222! '223 -> '222
+T* unify '223! '223
+T* unify '223 '223
+T* unify '222! '222
+T* unify '222 '222
+T* unify '223! -> '221! '223 -> '221
+T* unify '223! '223
+T* unify '223 '223
+T* unify '221! '221
+T* unify '221 '221
+T* unify '215 '224
+T* unify result '215 ... 
+T* ... '224!
+T* infer (z s) result = '224
+T* unify '220 '224 -> '225
+T* unify result '220 ... 
+T* ... '224 -> '225!
+T* infer ((y s) (z s)) result = '225
+T* unify '216 '225 -> '226
+T* unify result '216 ... 
+T* ... '225 -> '226!
+T* infer (((x s) (z s)) ((y s) (z s))) result = '226
+T* after infer '226
+T* infer (fn z -> (((x s) (z s)) ((y s) (z s)))) result = ((('223! -> '222! -> '221!) -> ('223! -> '222!) -> '223! -> '221!) -> '224!)! -> '226
+T* after infer ((('223! -> '222! -> '221!) -> ('223! -> '222!) -> '223! -> '221!) -> '224!)! -> '226
+T* infer (fn y -> (fn z -> (((x s) (z s)) ((y s) (z s))))) result = ((('219 -> '218 -> '217) -> ('219 -> '218) -> '219 -> '217) -> '224 -> '225!)! -> ((('223! -> '222! -> '221!) -> ('223! -> '222!) -> '223! -> '221!) -> '224!)! -> '226
+T* after infer ((('219 -> '218 -> '217) -> ('219 -> '218) -> '219 -> '217) -> '224 -> '225!)! -> ((('223! -> '222! -> '221!) -> ('223! -> '222!) -> '223! -> '221!) -> '224!)! -> '226
+T* infer (fn x -> (fn y -> (fn z -> (((x s) (z s)) ((y s) (z s)))))) result = ((('210 -> '209 -> '208) -> ('210 -> '209) -> '210 -> '208) -> '224! -> '225 -> '226!!)! -> ((('219 -> '218 -> '217) -> ('219 -> '218) -> '219 -> '217) -> '224 -> '225!)! -> ((('223! -> '222! -> '221!) -> ('223! -> '222!) -> '223! -> '221!) -> '224!)! -> '226
+T* after infer ((('210 -> '209 -> '208) -> ('210 -> '209) -> '210 -> '208) -> '224! -> '225 -> '226!!)! -> ((('219 -> '218 -> '217) -> ('219 -> '218) -> '219 -> '217) -> '224 -> '225!)! -> ((('223! -> '222! -> '221!) -> ('223! -> '222!) -> '223! -> '221!) -> '224!)! -> '226
+T* poly type = { vars:[221,222,223,217,218,219,226,225,224,208,209,210] body:((('210 -> '209 -> '208) -> ('210 -> '209) -> '210 -> '208) -> '224 -> '225 -> '226) -> ((('219 -> '218 -> '217) -> ('219 -> '218) -> '219 -> '217) -> '224 -> '225) -> ((('223 -> '222 -> '221) -> ('223 -> '222) -> '223 -> '221) -> '224) -> '226}
+T* infer (let s1 = (fn x -> (fn y -> (fn z -> (((x s) (z s)) ((y s) (z s))))))) result = unit
+T* unify unit unit
+T* infer s1
+T* infer Ident s1
+T* infer Ident s1 ... type schema is { vars:[221,222,223,217,218,219,226,225,224,208,209,210] body:((('210 -> '209 -> '208) -> ('210 -> '209) -> '210 -> '208) -> '224 -> '225 -> '226) -> ((('219 -> '218 -> '217) -> ('219 -> '218) -> '219 -> '217) -> '224 -> '225) -> ((('223 -> '222 -> '221) -> ('223 -> '222) -> '223 -> '221) -> '224) -> '226}
+T* infer Ident s1 ... ts alpha = { vars:[227,228,229,230,231,232,233,234,235,236,237,238] body:((('238 -> '237 -> '236) -> ('238 -> '237) -> '238 -> '236) -> '235 -> '234 -> '233) -> ((('232 -> '231 -> '230) -> ('232 -> '231) -> '232 -> '230) -> '235 -> '234) -> ((('229 -> '228 -> '227) -> ('229 -> '228) -> '229 -> '227) -> '235) -> '233}
+T* infer s1 result = ((('238 -> '237 -> '236) -> ('238 -> '237) -> '238 -> '236) -> '235 -> '234 -> '233) -> ((('232 -> '231 -> '230) -> ('232 -> '231) -> '232 -> '230) -> '235 -> '234) -> ((('229 -> '228 -> '227) -> ('229 -> '228) -> '229 -> '227) -> '235) -> '233
+T* infer {(let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))); (let s1 = (fn x -> (fn y -> (fn z -> (((x s) (z s)) ((y s) (z s))))))); s1; } result = ((('238 -> '237 -> '236) -> ('238 -> '237) -> '238 -> '236) -> '235 -> '234 -> '233) -> ((('232 -> '231 -> '230) -> ('232 -> '231) -> '232 -> '230) -> '235 -> '234) -> ((('229 -> '228 -> '227) -> ('229 -> '228) -> '229 -> '227) -> '235) -> '233
+infer    > ((('a -> 'b -> 'c) -> ('a -> 'b) -> 'a -> 'c) -> 'd -> 'e -> 'f) -> ((('g -> 'h -> 'i) -> ('g -> 'h) -> 'g -> 'i) -> 'd -> 'e) -> ((('j -> 'k -> 'l) -> ('j -> 'k) -> 'j -> 'l) -> 'd) -> 'f
+expected > ((('a -> 'b -> 'c) -> ('a -> 'b) -> 'a -> 'c) -> 'd -> 'e -> 'f) -> ((('g -> 'h -> 'i) -> ('g -> 'h) -> 'g -> 'i) -> 'd -> 'e) -> ((('j -> 'k -> 'l) -> ('j -> 'k) -> 'j -> 'l) -> 'd) -> 'f
+[32m.[0mtext> { let g = fn h -> fn t -> fn f -> fn x -> f h (t f x); g }
+T* infer {(let g = (fn h -> (fn t -> (fn f -> (fn x -> ((f h) ((t f) x))))))); g; }
+T* infer (let g = (fn h -> (fn t -> (fn f -> (fn x -> ((f h) ((t f) x)))))))
+T* infer let g = (fn h -> (fn t -> (fn f -> (fn x -> ((f h) ((t f) x))))))
+T* infer (fn h -> (fn t -> (fn f -> (fn x -> ((f h) ((t f) x))))))
+T* infer Fn (h, (fn t -> (fn f -> (fn x -> ((f h) ((t f) x))))))
+T* infer h ... arg type = '239
+T* infer h ... arg ts = { vars:[] body:'239}
+T* infer (fn t -> (fn f -> (fn x -> ((f h) ((t f) x)))))
+T* infer Fn (t, (fn f -> (fn x -> ((f h) ((t f) x)))))
+T* infer t ... arg type = '240
+T* infer t ... arg ts = { vars:[] body:'240}
+T* infer (fn f -> (fn x -> ((f h) ((t f) x))))
+T* infer Fn (f, (fn x -> ((f h) ((t f) x))))
+T* infer f ... arg type = '241
+T* infer f ... arg ts = { vars:[] body:'241}
+T* infer (fn x -> ((f h) ((t f) x)))
+T* infer Fn (x, ((f h) ((t f) x)))
+T* infer x ... arg type = '242
+T* infer x ... arg ts = { vars:[] body:'242}
+T* infer ((f h) ((t f) x))
+T* infer (f h)
+T* infer f
+T* infer Ident f
+T* infer Ident f ... type schema is { vars:[] body:'241}
+T* infer Ident f ... ts alpha = { vars:[] body:'241}
+T* infer f result = '241
+T* infer h
+T* infer Ident h
+T* infer Ident h ... type schema is { vars:[] body:'239}
+T* infer Ident h ... ts alpha = { vars:[] body:'239}
+T* infer h result = '239
+T* unify '241 '239 -> '243
+T* unify result '241 ... 
+T* ... '239 -> '243!
+T* infer (f h) result = '243
+T* infer ((t f) x)
+T* infer (t f)
+T* infer t
+T* infer Ident t
+T* infer Ident t ... type schema is { vars:[] body:'240}
+T* infer Ident t ... ts alpha = { vars:[] body:'240}
+T* infer t result = '240
+T* infer f
+T* infer Ident f
+T* infer Ident f ... type schema is { vars:[] body:'239 -> '243!}
+T* infer Ident f ... ts alpha = { vars:[] body:'239 -> '243}
+T* infer f result = '239 -> '243
+T* unify '240 ('239 -> '243) -> '244
+T* unify result '240 ... 
+T* ... ('239 -> '243) -> '244!
+T* infer (t f) result = '244
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'242}
+T* infer Ident x ... ts alpha = { vars:[] body:'242}
+T* infer x result = '242
+T* unify '244 '242 -> '245
+T* unify result '244 ... 
+T* ... '242 -> '245!
+T* infer ((t f) x) result = '245
+T* unify '243 '245 -> '246
+T* unify result '243 ... 
+T* ... '245 -> '246!
+T* infer ((f h) ((t f) x)) result = '246
+T* after infer '246
+T* infer (fn x -> ((f h) ((t f) x))) result = '242 -> '246
+T* after infer '242 -> '246
+T* infer (fn f -> (fn x -> ((f h) ((t f) x)))) result = ('239 -> '245 -> '246!)! -> '242 -> '246
+T* after infer ('239 -> '245 -> '246!)! -> '242 -> '246
+T* infer (fn t -> (fn f -> (fn x -> ((f h) ((t f) x))))) result = (('239 -> '245 -> '246!) -> '242 -> '245!)! -> ('239 -> '245 -> '246!)! -> '242 -> '246
+T* after infer (('239 -> '245 -> '246!) -> '242 -> '245!)! -> ('239 -> '245 -> '246!)! -> '242 -> '246
+T* infer (fn h -> (fn t -> (fn f -> (fn x -> ((f h) ((t f) x)))))) result = '239 -> (('239 -> '245 -> '246!) -> '242 -> '245!)! -> ('239 -> '245 -> '246!)! -> '242 -> '246
+T* after infer '239 -> (('239 -> '245 -> '246!) -> '242 -> '245!)! -> ('239 -> '245 -> '246!)! -> '242 -> '246
+T* poly type = { vars:[242,246,245,239] body:'239 -> (('239 -> '245 -> '246) -> '242 -> '245) -> ('239 -> '245 -> '246) -> '242 -> '246}
+T* infer (let g = (fn h -> (fn t -> (fn f -> (fn x -> ((f h) ((t f) x))))))) result = unit
+T* unify unit unit
+T* infer g
+T* infer Ident g
+T* infer Ident g ... type schema is { vars:[242,246,245,239] body:'239 -> (('239 -> '245 -> '246) -> '242 -> '245) -> ('239 -> '245 -> '246) -> '242 -> '246}
+T* infer Ident g ... ts alpha = { vars:[247,248,249,250] body:'250 -> (('250 -> '249 -> '248) -> '247 -> '249) -> ('250 -> '249 -> '248) -> '247 -> '248}
+T* infer g result = '250 -> (('250 -> '249 -> '248) -> '247 -> '249) -> ('250 -> '249 -> '248) -> '247 -> '248
+T* infer {(let g = (fn h -> (fn t -> (fn f -> (fn x -> ((f h) ((t f) x))))))); g; } result = '250 -> (('250 -> '249 -> '248) -> '247 -> '249) -> ('250 -> '249 -> '248) -> '247 -> '248
+infer    > 'a -> (('a -> 'b -> 'c) -> 'd -> 'b) -> ('a -> 'b -> 'c) -> 'd -> 'c
+expected > 'a -> (('a -> 'b -> 'c) -> 'd -> 'b) -> ('a -> 'b -> 'c) -> 'd -> 'c
+[32m.[0mtext> { let s = fn x -> fn y -> fn z -> x z (y z); let k = fn x -> fn y -> x; let kk = fn x -> fn y -> x; s k kk }
+T* infer {(let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))); (let k = (fn x -> (fn y -> x))); (let kk = (fn x -> (fn y -> x))); ((s k) kk); }
+T* infer (let s = (fn x -> (fn y -> (fn z -> ((x z) (y z))))))
+T* infer let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))
+T* infer (fn x -> (fn y -> (fn z -> ((x z) (y z)))))
+T* infer Fn (x, (fn y -> (fn z -> ((x z) (y z)))))
+T* infer x ... arg type = '251
+T* infer x ... arg ts = { vars:[] body:'251}
+T* infer (fn y -> (fn z -> ((x z) (y z))))
+T* infer Fn (y, (fn z -> ((x z) (y z))))
+T* infer y ... arg type = '252
+T* infer y ... arg ts = { vars:[] body:'252}
+T* infer (fn z -> ((x z) (y z)))
+T* infer Fn (z, ((x z) (y z)))
+T* infer z ... arg type = '253
+T* infer z ... arg ts = { vars:[] body:'253}
+T* infer ((x z) (y z))
+T* infer (x z)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'251}
+T* infer Ident x ... ts alpha = { vars:[] body:'251}
+T* infer x result = '251
+T* infer z
+T* infer Ident z
+T* infer Ident z ... type schema is { vars:[] body:'253}
+T* infer Ident z ... ts alpha = { vars:[] body:'253}
+T* infer z result = '253
+T* unify '251 '253 -> '254
+T* unify result '251 ... 
+T* ... '253 -> '254!
+T* infer (x z) result = '254
+T* infer (y z)
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'252}
+T* infer Ident y ... ts alpha = { vars:[] body:'252}
+T* infer y result = '252
+T* infer z
+T* infer Ident z
+T* infer Ident z ... type schema is { vars:[] body:'253}
+T* infer Ident z ... ts alpha = { vars:[] body:'253}
+T* infer z result = '253
+T* unify '252 '253 -> '255
+T* unify result '252 ... 
+T* ... '253 -> '255!
+T* infer (y z) result = '255
+T* unify '254 '255 -> '256
+T* unify result '254 ... 
+T* ... '255 -> '256!
+T* infer ((x z) (y z)) result = '256
+T* after infer '256
+T* infer (fn z -> ((x z) (y z))) result = '253 -> '256
+T* after infer '253 -> '256
+T* infer (fn y -> (fn z -> ((x z) (y z)))) result = ('253 -> '255)! -> '253 -> '256
+T* after infer ('253 -> '255)! -> '253 -> '256
+T* infer (fn x -> (fn y -> (fn z -> ((x z) (y z))))) result = ('253 -> '255 -> '256!)! -> ('253 -> '255)! -> '253 -> '256
+T* after infer ('253 -> '255 -> '256!)! -> ('253 -> '255)! -> '253 -> '256
+T* poly type = { vars:[256,255,253] body:('253 -> '255 -> '256) -> ('253 -> '255) -> '253 -> '256}
+T* infer (let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))) result = unit
+T* unify unit unit
+T* infer (let k = (fn x -> (fn y -> x)))
+T* infer let k = (fn x -> (fn y -> x))
+T* infer (fn x -> (fn y -> x))
+T* infer Fn (x, (fn y -> x))
+T* infer x ... arg type = '257
+T* infer x ... arg ts = { vars:[] body:'257}
+T* infer (fn y -> x)
+T* infer Fn (y, x)
+T* infer y ... arg type = '258
+T* infer y ... arg ts = { vars:[] body:'258}
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'257}
+T* infer Ident x ... ts alpha = { vars:[] body:'257}
+T* infer x result = '257
+T* after infer '257
+T* infer (fn y -> x) result = '258 -> '257
+T* after infer '258 -> '257
+T* infer (fn x -> (fn y -> x)) result = '257 -> '258 -> '257
+T* after infer '257 -> '258 -> '257
+T* poly type = { vars:[258,257] body:'257 -> '258 -> '257}
+T* infer (let k = (fn x -> (fn y -> x))) result = unit
+T* unify unit unit
+T* infer (let kk = (fn x -> (fn y -> x)))
+T* infer let kk = (fn x -> (fn y -> x))
+T* infer (fn x -> (fn y -> x))
+T* infer Fn (x, (fn y -> x))
+T* infer x ... arg type = '259
+T* infer x ... arg ts = { vars:[] body:'259}
+T* infer (fn y -> x)
+T* infer Fn (y, x)
+T* infer y ... arg type = '260
+T* infer y ... arg ts = { vars:[] body:'260}
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'259}
+T* infer Ident x ... ts alpha = { vars:[] body:'259}
+T* infer x result = '259
+T* after infer '259
+T* infer (fn y -> x) result = '260 -> '259
+T* after infer '260 -> '259
+T* infer (fn x -> (fn y -> x)) result = '259 -> '260 -> '259
+T* after infer '259 -> '260 -> '259
+T* poly type = { vars:[260,259] body:'259 -> '260 -> '259}
+T* infer (let kk = (fn x -> (fn y -> x))) result = unit
+T* unify unit unit
+T* infer ((s k) kk)
+T* infer (s k)
+T* infer s
+T* infer Ident s
+T* infer Ident s ... type schema is { vars:[256,255,253] body:('253 -> '255 -> '256) -> ('253 -> '255) -> '253 -> '256}
+T* infer Ident s ... ts alpha = { vars:[261,262,263] body:('263 -> '262 -> '261) -> ('263 -> '262) -> '263 -> '261}
+T* infer s result = ('263 -> '262 -> '261) -> ('263 -> '262) -> '263 -> '261
+T* infer k
+T* infer Ident k
+T* infer Ident k ... type schema is { vars:[258,257] body:'257 -> '258 -> '257}
+T* infer Ident k ... ts alpha = { vars:[264,265] body:'265 -> '264 -> '265}
+T* infer k result = '265 -> '264 -> '265
+T* unify ('263 -> '262 -> '261) -> ('263 -> '262) -> '263 -> '261 ('265 -> '264 -> '265) -> '266
+T* unify '263 -> '262 -> '261 '265 -> '264 -> '265
+T* unify '263 '265
+T* unify result '263 ... 
+T* ... '265!
+T* unify '262 -> '261 '264 -> '265
+T* unify '262 '264
+T* unify result '262 ... 
+T* ... '264!
+T* unify '261 '265
+T* unify result '261 ... 
+T* ... '265!
+T* unify ('265! -> '264!) -> '265! -> '265! '266
+T* unify result '266 ... 
+T* ... ('265! -> '264!) -> '265! -> '265!!
+T* infer (s k) result = ('265! -> '264!) -> '265! -> '265!!
+T* infer kk
+T* infer Ident kk
+T* infer Ident kk ... type schema is { vars:[260,259] body:'259 -> '260 -> '259}
+T* infer Ident kk ... ts alpha = { vars:[267,268] body:'268 -> '267 -> '268}
+T* infer kk result = '268 -> '267 -> '268
+T* unify ('265! -> '264!) -> '265! -> '265!! ('268 -> '267 -> '268) -> '269
+T* unify ('265! -> '264!) -> '265! -> '265! ('268 -> '267 -> '268) -> '269
+T* unify '265! -> '264! '268 -> '267 -> '268
+T* unify '265! '268
+T* unify '265 '268
+T* unify result '265 ... 
+T* ... '268!
+T* unify '264! '267 -> '268
+T* unify '264 '267 -> '268
+T* unify result '264 ... 
+T* ... '267 -> '268!
+T* unify '268!! -> '268!! '269
+T* unify result '269 ... 
+T* ... '268! -> '268!!
+T* infer ((s k) kk) result = '268! -> '268!!
+T* infer {(let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))); (let k = (fn x -> (fn y -> x))); (let kk = (fn x -> (fn y -> x))); ((s k) kk); } result = '268! -> '268!!
+infer    > 'a -> 'a
+expected > 'a -> 'a
+[32m.[0mtext> { let s = fn x -> fn y -> fn z -> x z (y z); let k = fn x -> fn y -> x; s k k }
+T* infer {(let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))); (let k = (fn x -> (fn y -> x))); ((s k) k); }
+T* infer (let s = (fn x -> (fn y -> (fn z -> ((x z) (y z))))))
+T* infer let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))
+T* infer (fn x -> (fn y -> (fn z -> ((x z) (y z)))))
+T* infer Fn (x, (fn y -> (fn z -> ((x z) (y z)))))
+T* infer x ... arg type = '270
+T* infer x ... arg ts = { vars:[] body:'270}
+T* infer (fn y -> (fn z -> ((x z) (y z))))
+T* infer Fn (y, (fn z -> ((x z) (y z))))
+T* infer y ... arg type = '271
+T* infer y ... arg ts = { vars:[] body:'271}
+T* infer (fn z -> ((x z) (y z)))
+T* infer Fn (z, ((x z) (y z)))
+T* infer z ... arg type = '272
+T* infer z ... arg ts = { vars:[] body:'272}
+T* infer ((x z) (y z))
+T* infer (x z)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'270}
+T* infer Ident x ... ts alpha = { vars:[] body:'270}
+T* infer x result = '270
+T* infer z
+T* infer Ident z
+T* infer Ident z ... type schema is { vars:[] body:'272}
+T* infer Ident z ... ts alpha = { vars:[] body:'272}
+T* infer z result = '272
+T* unify '270 '272 -> '273
+T* unify result '270 ... 
+T* ... '272 -> '273!
+T* infer (x z) result = '273
+T* infer (y z)
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'271}
+T* infer Ident y ... ts alpha = { vars:[] body:'271}
+T* infer y result = '271
+T* infer z
+T* infer Ident z
+T* infer Ident z ... type schema is { vars:[] body:'272}
+T* infer Ident z ... ts alpha = { vars:[] body:'272}
+T* infer z result = '272
+T* unify '271 '272 -> '274
+T* unify result '271 ... 
+T* ... '272 -> '274!
+T* infer (y z) result = '274
+T* unify '273 '274 -> '275
+T* unify result '273 ... 
+T* ... '274 -> '275!
+T* infer ((x z) (y z)) result = '275
+T* after infer '275
+T* infer (fn z -> ((x z) (y z))) result = '272 -> '275
+T* after infer '272 -> '275
+T* infer (fn y -> (fn z -> ((x z) (y z)))) result = ('272 -> '274)! -> '272 -> '275
+T* after infer ('272 -> '274)! -> '272 -> '275
+T* infer (fn x -> (fn y -> (fn z -> ((x z) (y z))))) result = ('272 -> '274 -> '275!)! -> ('272 -> '274)! -> '272 -> '275
+T* after infer ('272 -> '274 -> '275!)! -> ('272 -> '274)! -> '272 -> '275
+T* poly type = { vars:[275,274,272] body:('272 -> '274 -> '275) -> ('272 -> '274) -> '272 -> '275}
+T* infer (let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))) result = unit
+T* unify unit unit
+T* infer (let k = (fn x -> (fn y -> x)))
+T* infer let k = (fn x -> (fn y -> x))
+T* infer (fn x -> (fn y -> x))
+T* infer Fn (x, (fn y -> x))
+T* infer x ... arg type = '276
+T* infer x ... arg ts = { vars:[] body:'276}
+T* infer (fn y -> x)
+T* infer Fn (y, x)
+T* infer y ... arg type = '277
+T* infer y ... arg ts = { vars:[] body:'277}
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'276}
+T* infer Ident x ... ts alpha = { vars:[] body:'276}
+T* infer x result = '276
+T* after infer '276
+T* infer (fn y -> x) result = '277 -> '276
+T* after infer '277 -> '276
+T* infer (fn x -> (fn y -> x)) result = '276 -> '277 -> '276
+T* after infer '276 -> '277 -> '276
+T* poly type = { vars:[277,276] body:'276 -> '277 -> '276}
+T* infer (let k = (fn x -> (fn y -> x))) result = unit
+T* unify unit unit
+T* infer ((s k) k)
+T* infer (s k)
+T* infer s
+T* infer Ident s
+T* infer Ident s ... type schema is { vars:[275,274,272] body:('272 -> '274 -> '275) -> ('272 -> '274) -> '272 -> '275}
+T* infer Ident s ... ts alpha = { vars:[278,279,280] body:('280 -> '279 -> '278) -> ('280 -> '279) -> '280 -> '278}
+T* infer s result = ('280 -> '279 -> '278) -> ('280 -> '279) -> '280 -> '278
+T* infer k
+T* infer Ident k
+T* infer Ident k ... type schema is { vars:[277,276] body:'276 -> '277 -> '276}
+T* infer Ident k ... ts alpha = { vars:[281,282] body:'282 -> '281 -> '282}
+T* infer k result = '282 -> '281 -> '282
+T* unify ('280 -> '279 -> '278) -> ('280 -> '279) -> '280 -> '278 ('282 -> '281 -> '282) -> '283
+T* unify '280 -> '279 -> '278 '282 -> '281 -> '282
+T* unify '280 '282
+T* unify result '280 ... 
+T* ... '282!
+T* unify '279 -> '278 '281 -> '282
+T* unify '279 '281
+T* unify result '279 ... 
+T* ... '281!
+T* unify '278 '282
+T* unify result '278 ... 
+T* ... '282!
+T* unify ('282! -> '281!) -> '282! -> '282! '283
+T* unify result '283 ... 
+T* ... ('282! -> '281!) -> '282! -> '282!!
+T* infer (s k) result = ('282! -> '281!) -> '282! -> '282!!
+T* infer k
+T* infer Ident k
+T* infer Ident k ... type schema is { vars:[277,276] body:'276 -> '277 -> '276}
+T* infer Ident k ... ts alpha = { vars:[284,285] body:'285 -> '284 -> '285}
+T* infer k result = '285 -> '284 -> '285
+T* unify ('282! -> '281!) -> '282! -> '282!! ('285 -> '284 -> '285) -> '286
+T* unify ('282! -> '281!) -> '282! -> '282! ('285 -> '284 -> '285) -> '286
+T* unify '282! -> '281! '285 -> '284 -> '285
+T* unify '282! '285
+T* unify '282 '285
+T* unify result '282 ... 
+T* ... '285!
+T* unify '281! '284 -> '285
+T* unify '281 '284 -> '285
+T* unify result '281 ... 
+T* ... '284 -> '285!
+T* unify '285!! -> '285!! '286
+T* unify result '286 ... 
+T* ... '285! -> '285!!
+T* infer ((s k) k) result = '285! -> '285!!
+T* infer {(let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))); (let k = (fn x -> (fn y -> x))); ((s k) k); } result = '285! -> '285!!
+infer    > 'a -> 'a
+expected > 'a -> 'a
+[32m.[0mtext> { let s = fn x -> fn y -> fn z -> x z (y z); let kk = fn x -> fn y -> y; s kk kk }
+T* infer {(let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))); (let kk = (fn x -> (fn y -> y))); ((s kk) kk); }
+T* infer (let s = (fn x -> (fn y -> (fn z -> ((x z) (y z))))))
+T* infer let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))
+T* infer (fn x -> (fn y -> (fn z -> ((x z) (y z)))))
+T* infer Fn (x, (fn y -> (fn z -> ((x z) (y z)))))
+T* infer x ... arg type = '287
+T* infer x ... arg ts = { vars:[] body:'287}
+T* infer (fn y -> (fn z -> ((x z) (y z))))
+T* infer Fn (y, (fn z -> ((x z) (y z))))
+T* infer y ... arg type = '288
+T* infer y ... arg ts = { vars:[] body:'288}
+T* infer (fn z -> ((x z) (y z)))
+T* infer Fn (z, ((x z) (y z)))
+T* infer z ... arg type = '289
+T* infer z ... arg ts = { vars:[] body:'289}
+T* infer ((x z) (y z))
+T* infer (x z)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'287}
+T* infer Ident x ... ts alpha = { vars:[] body:'287}
+T* infer x result = '287
+T* infer z
+T* infer Ident z
+T* infer Ident z ... type schema is { vars:[] body:'289}
+T* infer Ident z ... ts alpha = { vars:[] body:'289}
+T* infer z result = '289
+T* unify '287 '289 -> '290
+T* unify result '287 ... 
+T* ... '289 -> '290!
+T* infer (x z) result = '290
+T* infer (y z)
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'288}
+T* infer Ident y ... ts alpha = { vars:[] body:'288}
+T* infer y result = '288
+T* infer z
+T* infer Ident z
+T* infer Ident z ... type schema is { vars:[] body:'289}
+T* infer Ident z ... ts alpha = { vars:[] body:'289}
+T* infer z result = '289
+T* unify '288 '289 -> '291
+T* unify result '288 ... 
+T* ... '289 -> '291!
+T* infer (y z) result = '291
+T* unify '290 '291 -> '292
+T* unify result '290 ... 
+T* ... '291 -> '292!
+T* infer ((x z) (y z)) result = '292
+T* after infer '292
+T* infer (fn z -> ((x z) (y z))) result = '289 -> '292
+T* after infer '289 -> '292
+T* infer (fn y -> (fn z -> ((x z) (y z)))) result = ('289 -> '291)! -> '289 -> '292
+T* after infer ('289 -> '291)! -> '289 -> '292
+T* infer (fn x -> (fn y -> (fn z -> ((x z) (y z))))) result = ('289 -> '291 -> '292!)! -> ('289 -> '291)! -> '289 -> '292
+T* after infer ('289 -> '291 -> '292!)! -> ('289 -> '291)! -> '289 -> '292
+T* poly type = { vars:[292,291,289] body:('289 -> '291 -> '292) -> ('289 -> '291) -> '289 -> '292}
+T* infer (let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))) result = unit
+T* unify unit unit
+T* infer (let kk = (fn x -> (fn y -> y)))
+T* infer let kk = (fn x -> (fn y -> y))
+T* infer (fn x -> (fn y -> y))
+T* infer Fn (x, (fn y -> y))
+T* infer x ... arg type = '293
+T* infer x ... arg ts = { vars:[] body:'293}
+T* infer (fn y -> y)
+T* infer Fn (y, y)
+T* infer y ... arg type = '294
+T* infer y ... arg ts = { vars:[] body:'294}
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'294}
+T* infer Ident y ... ts alpha = { vars:[] body:'294}
+T* infer y result = '294
+T* after infer '294
+T* infer (fn y -> y) result = '294 -> '294
+T* after infer '294 -> '294
+T* infer (fn x -> (fn y -> y)) result = '293 -> '294 -> '294
+T* after infer '293 -> '294 -> '294
+T* poly type = { vars:[294,293] body:'293 -> '294 -> '294}
+T* infer (let kk = (fn x -> (fn y -> y))) result = unit
+T* unify unit unit
+T* infer ((s kk) kk)
+T* infer (s kk)
+T* infer s
+T* infer Ident s
+T* infer Ident s ... type schema is { vars:[292,291,289] body:('289 -> '291 -> '292) -> ('289 -> '291) -> '289 -> '292}
+T* infer Ident s ... ts alpha = { vars:[295,296,297] body:('297 -> '296 -> '295) -> ('297 -> '296) -> '297 -> '295}
+T* infer s result = ('297 -> '296 -> '295) -> ('297 -> '296) -> '297 -> '295
+T* infer kk
+T* infer Ident kk
+T* infer Ident kk ... type schema is { vars:[294,293] body:'293 -> '294 -> '294}
+T* infer Ident kk ... ts alpha = { vars:[298,299] body:'299 -> '298 -> '298}
+T* infer kk result = '299 -> '298 -> '298
+T* unify ('297 -> '296 -> '295) -> ('297 -> '296) -> '297 -> '295 ('299 -> '298 -> '298) -> '300
+T* unify '297 -> '296 -> '295 '299 -> '298 -> '298
+T* unify '297 '299
+T* unify result '297 ... 
+T* ... '299!
+T* unify '296 -> '295 '298 -> '298
+T* unify '296 '298
+T* unify result '296 ... 
+T* ... '298!
+T* unify '295 '298
+T* unify result '295 ... 
+T* ... '298!
+T* unify ('299! -> '298!) -> '299! -> '298! '300
+T* unify result '300 ... 
+T* ... ('299! -> '298!) -> '299! -> '298!!
+T* infer (s kk) result = ('299! -> '298!) -> '299! -> '298!!
+T* infer kk
+T* infer Ident kk
+T* infer Ident kk ... type schema is { vars:[294,293] body:'293 -> '294 -> '294}
+T* infer Ident kk ... ts alpha = { vars:[301,302] body:'302 -> '301 -> '301}
+T* infer kk result = '302 -> '301 -> '301
+T* unify ('299! -> '298!) -> '299! -> '298!! ('302 -> '301 -> '301) -> '303
+T* unify ('299! -> '298!) -> '299! -> '298! ('302 -> '301 -> '301) -> '303
+T* unify '299! -> '298! '302 -> '301 -> '301
+T* unify '299! '302
+T* unify '299 '302
+T* unify result '299 ... 
+T* ... '302!
+T* unify '298! '301 -> '301
+T* unify '298 '301 -> '301
+T* unify result '298 ... 
+T* ... '301 -> '301!
+T* unify '302!! -> '301 -> '301!! '303
+T* unify result '303 ... 
+T* ... '302! -> '301 -> '301!!
+T* infer ((s kk) kk) result = '302! -> '301 -> '301!!
+T* infer {(let s = (fn x -> (fn y -> (fn z -> ((x z) (y z)))))); (let kk = (fn x -> (fn y -> y))); ((s kk) kk); } result = '302! -> '301 -> '301!!
+infer    > 'a -> 'b -> 'b
+expected > 'a -> 'b -> 'b
+[32m.[0mtext> {let pair = fn x1 -> fn x2 -> fn y -> y x1 x2; let proj1 = fn p -> p (fn x1 -> fn x2 -> x1); let proj2 = fn p -> p (fn x1 -> fn x2 -> x2); proj1 (pair 1 100)}
+T* infer {(let pair = (fn x1 -> (fn x2 -> (fn y -> ((y x1) x2))))); (let proj1 = (fn p -> (p (fn x1 -> (fn x2 -> x1))))); (let proj2 = (fn p -> (p (fn x1 -> (fn x2 -> x2))))); (proj1 ((pair 1) 100)); }
+T* infer (let pair = (fn x1 -> (fn x2 -> (fn y -> ((y x1) x2)))))
+T* infer let pair = (fn x1 -> (fn x2 -> (fn y -> ((y x1) x2))))
+T* infer (fn x1 -> (fn x2 -> (fn y -> ((y x1) x2))))
+T* infer Fn (x1, (fn x2 -> (fn y -> ((y x1) x2))))
+T* infer x1 ... arg type = '304
+T* infer x1 ... arg ts = { vars:[] body:'304}
+T* infer (fn x2 -> (fn y -> ((y x1) x2)))
+T* infer Fn (x2, (fn y -> ((y x1) x2)))
+T* infer x2 ... arg type = '305
+T* infer x2 ... arg ts = { vars:[] body:'305}
+T* infer (fn y -> ((y x1) x2))
+T* infer Fn (y, ((y x1) x2))
+T* infer y ... arg type = '306
+T* infer y ... arg ts = { vars:[] body:'306}
+T* infer ((y x1) x2)
+T* infer (y x1)
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'306}
+T* infer Ident y ... ts alpha = { vars:[] body:'306}
+T* infer y result = '306
+T* infer x1
+T* infer Ident x1
+T* infer Ident x1 ... type schema is { vars:[] body:'304}
+T* infer Ident x1 ... ts alpha = { vars:[] body:'304}
+T* infer x1 result = '304
+T* unify '306 '304 -> '307
+T* unify result '306 ... 
+T* ... '304 -> '307!
+T* infer (y x1) result = '307
+T* infer x2
+T* infer Ident x2
+T* infer Ident x2 ... type schema is { vars:[] body:'305}
+T* infer Ident x2 ... ts alpha = { vars:[] body:'305}
+T* infer x2 result = '305
+T* unify '307 '305 -> '308
+T* unify result '307 ... 
+T* ... '305 -> '308!
+T* infer ((y x1) x2) result = '308
+T* after infer '308
+T* infer (fn y -> ((y x1) x2)) result = ('304 -> '305 -> '308!)! -> '308
+T* after infer ('304 -> '305 -> '308!)! -> '308
+T* infer (fn x2 -> (fn y -> ((y x1) x2))) result = '305 -> ('304 -> '305 -> '308!)! -> '308
+T* after infer '305 -> ('304 -> '305 -> '308!)! -> '308
+T* infer (fn x1 -> (fn x2 -> (fn y -> ((y x1) x2)))) result = '304 -> '305 -> ('304 -> '305 -> '308!)! -> '308
+T* after infer '304 -> '305 -> ('304 -> '305 -> '308!)! -> '308
+T* poly type = { vars:[308,305,304] body:'304 -> '305 -> ('304 -> '305 -> '308) -> '308}
+T* infer (let pair = (fn x1 -> (fn x2 -> (fn y -> ((y x1) x2))))) result = unit
+T* unify unit unit
+T* infer (let proj1 = (fn p -> (p (fn x1 -> (fn x2 -> x1)))))
+T* infer let proj1 = (fn p -> (p (fn x1 -> (fn x2 -> x1))))
+T* infer (fn p -> (p (fn x1 -> (fn x2 -> x1))))
+T* infer Fn (p, (p (fn x1 -> (fn x2 -> x1))))
+T* infer p ... arg type = '309
+T* infer p ... arg ts = { vars:[] body:'309}
+T* infer (p (fn x1 -> (fn x2 -> x1)))
+T* infer p
+T* infer Ident p
+T* infer Ident p ... type schema is { vars:[] body:'309}
+T* infer Ident p ... ts alpha = { vars:[] body:'309}
+T* infer p result = '309
+T* infer (fn x1 -> (fn x2 -> x1))
+T* infer Fn (x1, (fn x2 -> x1))
+T* infer x1 ... arg type = '310
+T* infer x1 ... arg ts = { vars:[] body:'310}
+T* infer (fn x2 -> x1)
+T* infer Fn (x2, x1)
+T* infer x2 ... arg type = '311
+T* infer x2 ... arg ts = { vars:[] body:'311}
+T* infer x1
+T* infer Ident x1
+T* infer Ident x1 ... type schema is { vars:[] body:'310}
+T* infer Ident x1 ... ts alpha = { vars:[] body:'310}
+T* infer x1 result = '310
+T* after infer '310
+T* infer (fn x2 -> x1) result = '311 -> '310
+T* after infer '311 -> '310
+T* infer (fn x1 -> (fn x2 -> x1)) result = '310 -> '311 -> '310
+T* unify '309 ('310 -> '311 -> '310) -> '312
+T* unify result '309 ... 
+T* ... ('310 -> '311 -> '310) -> '312!
+T* infer (p (fn x1 -> (fn x2 -> x1))) result = '312
+T* after infer '312
+T* infer (fn p -> (p (fn x1 -> (fn x2 -> x1)))) result = (('310 -> '311 -> '310) -> '312)! -> '312
+T* after infer (('310 -> '311 -> '310) -> '312)! -> '312
+T* poly type = { vars:[312,311,310] body:(('310 -> '311 -> '310) -> '312) -> '312}
+T* infer (let proj1 = (fn p -> (p (fn x1 -> (fn x2 -> x1))))) result = unit
+T* unify unit unit
+T* infer (let proj2 = (fn p -> (p (fn x1 -> (fn x2 -> x2)))))
+T* infer let proj2 = (fn p -> (p (fn x1 -> (fn x2 -> x2))))
+T* infer (fn p -> (p (fn x1 -> (fn x2 -> x2))))
+T* infer Fn (p, (p (fn x1 -> (fn x2 -> x2))))
+T* infer p ... arg type = '313
+T* infer p ... arg ts = { vars:[] body:'313}
+T* infer (p (fn x1 -> (fn x2 -> x2)))
+T* infer p
+T* infer Ident p
+T* infer Ident p ... type schema is { vars:[] body:'313}
+T* infer Ident p ... ts alpha = { vars:[] body:'313}
+T* infer p result = '313
+T* infer (fn x1 -> (fn x2 -> x2))
+T* infer Fn (x1, (fn x2 -> x2))
+T* infer x1 ... arg type = '314
+T* infer x1 ... arg ts = { vars:[] body:'314}
+T* infer (fn x2 -> x2)
+T* infer Fn (x2, x2)
+T* infer x2 ... arg type = '315
+T* infer x2 ... arg ts = { vars:[] body:'315}
+T* infer x2
+T* infer Ident x2
+T* infer Ident x2 ... type schema is { vars:[] body:'315}
+T* infer Ident x2 ... ts alpha = { vars:[] body:'315}
+T* infer x2 result = '315
+T* after infer '315
+T* infer (fn x2 -> x2) result = '315 -> '315
+T* after infer '315 -> '315
+T* infer (fn x1 -> (fn x2 -> x2)) result = '314 -> '315 -> '315
+T* unify '313 ('314 -> '315 -> '315) -> '316
+T* unify result '313 ... 
+T* ... ('314 -> '315 -> '315) -> '316!
+T* infer (p (fn x1 -> (fn x2 -> x2))) result = '316
+T* after infer '316
+T* infer (fn p -> (p (fn x1 -> (fn x2 -> x2)))) result = (('314 -> '315 -> '315) -> '316)! -> '316
+T* after infer (('314 -> '315 -> '315) -> '316)! -> '316
+T* poly type = { vars:[316,315,314] body:(('314 -> '315 -> '315) -> '316) -> '316}
+T* infer (let proj2 = (fn p -> (p (fn x1 -> (fn x2 -> x2))))) result = unit
+T* unify unit unit
+T* infer (proj1 ((pair 1) 100))
+T* infer proj1
+T* infer Ident proj1
+T* infer Ident proj1 ... type schema is { vars:[312,311,310] body:(('310 -> '311 -> '310) -> '312) -> '312}
+T* infer Ident proj1 ... ts alpha = { vars:[317,318,319] body:(('319 -> '318 -> '319) -> '317) -> '317}
+T* infer proj1 result = (('319 -> '318 -> '319) -> '317) -> '317
+T* infer ((pair 1) 100)
+T* infer (pair 1)
+T* infer pair
+T* infer Ident pair
+T* infer Ident pair ... type schema is { vars:[308,305,304] body:'304 -> '305 -> ('304 -> '305 -> '308) -> '308}
+T* infer Ident pair ... ts alpha = { vars:[320,321,322] body:'322 -> '321 -> ('322 -> '321 -> '320) -> '320}
+T* infer pair result = '322 -> '321 -> ('322 -> '321 -> '320) -> '320
+T* infer 1
+T* infer 1 result = int
+T* unify '322 -> '321 -> ('322 -> '321 -> '320) -> '320 int -> '323
+T* unify '322 int
+T* unify result '322 ... 
+T* ... int!
+T* unify '321 -> (int! -> '321 -> '320) -> '320 '323
+T* unify result '323 ... 
+T* ... '321 -> (int! -> '321 -> '320) -> '320!
+T* infer (pair 1) result = '321 -> (int! -> '321 -> '320) -> '320!
+T* infer 100
+T* infer 100 result = int
+T* unify '321 -> (int! -> '321 -> '320) -> '320! int -> '324
+T* unify '321 -> (int! -> '321 -> '320) -> '320 int -> '324
+T* unify '321 int
+T* unify result '321 ... 
+T* ... int!
+T* unify (int! -> int! -> '320) -> '320 '324
+T* unify result '324 ... 
+T* ... (int! -> int! -> '320) -> '320!
+T* infer ((pair 1) 100) result = (int! -> int! -> '320) -> '320!
+T* unify (('319 -> '318 -> '319) -> '317) -> '317 ((int! -> int! -> '320) -> '320)! -> '325
+T* unify ('319 -> '318 -> '319) -> '317 (int! -> int! -> '320) -> '320!
+T* unify ('319 -> '318 -> '319) -> '317 (int! -> int! -> '320) -> '320
+T* unify '319 -> '318 -> '319 int! -> int! -> '320
+T* unify '319 int!
+T* unify '319 int
+T* unify result '319 ... 
+T* ... int!
+T* unify '318 -> int! int! -> '320
+T* unify '318 int!
+T* unify '318 int
+T* unify result '318 ... 
+T* ... int!
+T* unify int! '320
+T* unify int '320
+T* unify result '320 ... 
+T* ... int!
+T* unify '317 int!
+T* unify '317 int
+T* unify result '317 ... 
+T* ... int!
+T* unify int! '325
+T* unify int '325
+T* unify result '325 ... 
+T* ... int!
+T* infer (proj1 ((pair 1) 100)) result = int!
+T* infer {(let pair = (fn x1 -> (fn x2 -> (fn y -> ((y x1) x2))))); (let proj1 = (fn p -> (p (fn x1 -> (fn x2 -> x1))))); (let proj2 = (fn p -> (p (fn x1 -> (fn x2 -> x2))))); (proj1 ((pair 1) 100)); } result = int!
+infer    > int
+expected > int
+[32m.[0mtext> {let pair = fn x1 -> fn x2 -> fn y -> y x1 x2; let proj1 = fn p -> p (fn x1 -> fn x2 -> x1); let proj2 = fn p -> p (fn x1 -> fn x2 -> x2); proj1 (proj2 (pair 10 (pair 20 30)))}
+T* infer {(let pair = (fn x1 -> (fn x2 -> (fn y -> ((y x1) x2))))); (let proj1 = (fn p -> (p (fn x1 -> (fn x2 -> x1))))); (let proj2 = (fn p -> (p (fn x1 -> (fn x2 -> x2))))); (proj1 (proj2 ((pair 10) ((pair 20) 30)))); }
+T* infer (let pair = (fn x1 -> (fn x2 -> (fn y -> ((y x1) x2)))))
+T* infer let pair = (fn x1 -> (fn x2 -> (fn y -> ((y x1) x2))))
+T* infer (fn x1 -> (fn x2 -> (fn y -> ((y x1) x2))))
+T* infer Fn (x1, (fn x2 -> (fn y -> ((y x1) x2))))
+T* infer x1 ... arg type = '326
+T* infer x1 ... arg ts = { vars:[] body:'326}
+T* infer (fn x2 -> (fn y -> ((y x1) x2)))
+T* infer Fn (x2, (fn y -> ((y x1) x2)))
+T* infer x2 ... arg type = '327
+T* infer x2 ... arg ts = { vars:[] body:'327}
+T* infer (fn y -> ((y x1) x2))
+T* infer Fn (y, ((y x1) x2))
+T* infer y ... arg type = '328
+T* infer y ... arg ts = { vars:[] body:'328}
+T* infer ((y x1) x2)
+T* infer (y x1)
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'328}
+T* infer Ident y ... ts alpha = { vars:[] body:'328}
+T* infer y result = '328
+T* infer x1
+T* infer Ident x1
+T* infer Ident x1 ... type schema is { vars:[] body:'326}
+T* infer Ident x1 ... ts alpha = { vars:[] body:'326}
+T* infer x1 result = '326
+T* unify '328 '326 -> '329
+T* unify result '328 ... 
+T* ... '326 -> '329!
+T* infer (y x1) result = '329
+T* infer x2
+T* infer Ident x2
+T* infer Ident x2 ... type schema is { vars:[] body:'327}
+T* infer Ident x2 ... ts alpha = { vars:[] body:'327}
+T* infer x2 result = '327
+T* unify '329 '327 -> '330
+T* unify result '329 ... 
+T* ... '327 -> '330!
+T* infer ((y x1) x2) result = '330
+T* after infer '330
+T* infer (fn y -> ((y x1) x2)) result = ('326 -> '327 -> '330!)! -> '330
+T* after infer ('326 -> '327 -> '330!)! -> '330
+T* infer (fn x2 -> (fn y -> ((y x1) x2))) result = '327 -> ('326 -> '327 -> '330!)! -> '330
+T* after infer '327 -> ('326 -> '327 -> '330!)! -> '330
+T* infer (fn x1 -> (fn x2 -> (fn y -> ((y x1) x2)))) result = '326 -> '327 -> ('326 -> '327 -> '330!)! -> '330
+T* after infer '326 -> '327 -> ('326 -> '327 -> '330!)! -> '330
+T* poly type = { vars:[330,327,326] body:'326 -> '327 -> ('326 -> '327 -> '330) -> '330}
+T* infer (let pair = (fn x1 -> (fn x2 -> (fn y -> ((y x1) x2))))) result = unit
+T* unify unit unit
+T* infer (let proj1 = (fn p -> (p (fn x1 -> (fn x2 -> x1)))))
+T* infer let proj1 = (fn p -> (p (fn x1 -> (fn x2 -> x1))))
+T* infer (fn p -> (p (fn x1 -> (fn x2 -> x1))))
+T* infer Fn (p, (p (fn x1 -> (fn x2 -> x1))))
+T* infer p ... arg type = '331
+T* infer p ... arg ts = { vars:[] body:'331}
+T* infer (p (fn x1 -> (fn x2 -> x1)))
+T* infer p
+T* infer Ident p
+T* infer Ident p ... type schema is { vars:[] body:'331}
+T* infer Ident p ... ts alpha = { vars:[] body:'331}
+T* infer p result = '331
+T* infer (fn x1 -> (fn x2 -> x1))
+T* infer Fn (x1, (fn x2 -> x1))
+T* infer x1 ... arg type = '332
+T* infer x1 ... arg ts = { vars:[] body:'332}
+T* infer (fn x2 -> x1)
+T* infer Fn (x2, x1)
+T* infer x2 ... arg type = '333
+T* infer x2 ... arg ts = { vars:[] body:'333}
+T* infer x1
+T* infer Ident x1
+T* infer Ident x1 ... type schema is { vars:[] body:'332}
+T* infer Ident x1 ... ts alpha = { vars:[] body:'332}
+T* infer x1 result = '332
+T* after infer '332
+T* infer (fn x2 -> x1) result = '333 -> '332
+T* after infer '333 -> '332
+T* infer (fn x1 -> (fn x2 -> x1)) result = '332 -> '333 -> '332
+T* unify '331 ('332 -> '333 -> '332) -> '334
+T* unify result '331 ... 
+T* ... ('332 -> '333 -> '332) -> '334!
+T* infer (p (fn x1 -> (fn x2 -> x1))) result = '334
+T* after infer '334
+T* infer (fn p -> (p (fn x1 -> (fn x2 -> x1)))) result = (('332 -> '333 -> '332) -> '334)! -> '334
+T* after infer (('332 -> '333 -> '332) -> '334)! -> '334
+T* poly type = { vars:[334,333,332] body:(('332 -> '333 -> '332) -> '334) -> '334}
+T* infer (let proj1 = (fn p -> (p (fn x1 -> (fn x2 -> x1))))) result = unit
+T* unify unit unit
+T* infer (let proj2 = (fn p -> (p (fn x1 -> (fn x2 -> x2)))))
+T* infer let proj2 = (fn p -> (p (fn x1 -> (fn x2 -> x2))))
+T* infer (fn p -> (p (fn x1 -> (fn x2 -> x2))))
+T* infer Fn (p, (p (fn x1 -> (fn x2 -> x2))))
+T* infer p ... arg type = '335
+T* infer p ... arg ts = { vars:[] body:'335}
+T* infer (p (fn x1 -> (fn x2 -> x2)))
+T* infer p
+T* infer Ident p
+T* infer Ident p ... type schema is { vars:[] body:'335}
+T* infer Ident p ... ts alpha = { vars:[] body:'335}
+T* infer p result = '335
+T* infer (fn x1 -> (fn x2 -> x2))
+T* infer Fn (x1, (fn x2 -> x2))
+T* infer x1 ... arg type = '336
+T* infer x1 ... arg ts = { vars:[] body:'336}
+T* infer (fn x2 -> x2)
+T* infer Fn (x2, x2)
+T* infer x2 ... arg type = '337
+T* infer x2 ... arg ts = { vars:[] body:'337}
+T* infer x2
+T* infer Ident x2
+T* infer Ident x2 ... type schema is { vars:[] body:'337}
+T* infer Ident x2 ... ts alpha = { vars:[] body:'337}
+T* infer x2 result = '337
+T* after infer '337
+T* infer (fn x2 -> x2) result = '337 -> '337
+T* after infer '337 -> '337
+T* infer (fn x1 -> (fn x2 -> x2)) result = '336 -> '337 -> '337
+T* unify '335 ('336 -> '337 -> '337) -> '338
+T* unify result '335 ... 
+T* ... ('336 -> '337 -> '337) -> '338!
+T* infer (p (fn x1 -> (fn x2 -> x2))) result = '338
+T* after infer '338
+T* infer (fn p -> (p (fn x1 -> (fn x2 -> x2)))) result = (('336 -> '337 -> '337) -> '338)! -> '338
+T* after infer (('336 -> '337 -> '337) -> '338)! -> '338
+T* poly type = { vars:[338,337,336] body:(('336 -> '337 -> '337) -> '338) -> '338}
+T* infer (let proj2 = (fn p -> (p (fn x1 -> (fn x2 -> x2))))) result = unit
+T* unify unit unit
+T* infer (proj1 (proj2 ((pair 10) ((pair 20) 30))))
+T* infer proj1
+T* infer Ident proj1
+T* infer Ident proj1 ... type schema is { vars:[334,333,332] body:(('332 -> '333 -> '332) -> '334) -> '334}
+T* infer Ident proj1 ... ts alpha = { vars:[339,340,341] body:(('341 -> '340 -> '341) -> '339) -> '339}
+T* infer proj1 result = (('341 -> '340 -> '341) -> '339) -> '339
+T* infer (proj2 ((pair 10) ((pair 20) 30)))
+T* infer proj2
+T* infer Ident proj2
+T* infer Ident proj2 ... type schema is { vars:[338,337,336] body:(('336 -> '337 -> '337) -> '338) -> '338}
+T* infer Ident proj2 ... ts alpha = { vars:[342,343,344] body:(('344 -> '343 -> '343) -> '342) -> '342}
+T* infer proj2 result = (('344 -> '343 -> '343) -> '342) -> '342
+T* infer ((pair 10) ((pair 20) 30))
+T* infer (pair 10)
+T* infer pair
+T* infer Ident pair
+T* infer Ident pair ... type schema is { vars:[330,327,326] body:'326 -> '327 -> ('326 -> '327 -> '330) -> '330}
+T* infer Ident pair ... ts alpha = { vars:[345,346,347] body:'347 -> '346 -> ('347 -> '346 -> '345) -> '345}
+T* infer pair result = '347 -> '346 -> ('347 -> '346 -> '345) -> '345
+T* infer 10
+T* infer 10 result = int
+T* unify '347 -> '346 -> ('347 -> '346 -> '345) -> '345 int -> '348
+T* unify '347 int
+T* unify result '347 ... 
+T* ... int!
+T* unify '346 -> (int! -> '346 -> '345) -> '345 '348
+T* unify result '348 ... 
+T* ... '346 -> (int! -> '346 -> '345) -> '345!
+T* infer (pair 10) result = '346 -> (int! -> '346 -> '345) -> '345!
+T* infer ((pair 20) 30)
+T* infer (pair 20)
+T* infer pair
+T* infer Ident pair
+T* infer Ident pair ... type schema is { vars:[330,327,326] body:'326 -> '327 -> ('326 -> '327 -> '330) -> '330}
+T* infer Ident pair ... ts alpha = { vars:[349,350,351] body:'351 -> '350 -> ('351 -> '350 -> '349) -> '349}
+T* infer pair result = '351 -> '350 -> ('351 -> '350 -> '349) -> '349
+T* infer 20
+T* infer 20 result = int
+T* unify '351 -> '350 -> ('351 -> '350 -> '349) -> '349 int -> '352
+T* unify '351 int
+T* unify result '351 ... 
+T* ... int!
+T* unify '350 -> (int! -> '350 -> '349) -> '349 '352
+T* unify result '352 ... 
+T* ... '350 -> (int! -> '350 -> '349) -> '349!
+T* infer (pair 20) result = '350 -> (int! -> '350 -> '349) -> '349!
+T* infer 30
+T* infer 30 result = int
+T* unify '350 -> (int! -> '350 -> '349) -> '349! int -> '353
+T* unify '350 -> (int! -> '350 -> '349) -> '349 int -> '353
+T* unify '350 int
+T* unify result '350 ... 
+T* ... int!
+T* unify (int! -> int! -> '349) -> '349 '353
+T* unify result '353 ... 
+T* ... (int! -> int! -> '349) -> '349!
+T* infer ((pair 20) 30) result = (int! -> int! -> '349) -> '349!
+T* unify '346 -> (int! -> '346 -> '345) -> '345! ((int! -> int! -> '349) -> '349)! -> '354
+T* unify '346 -> (int! -> '346 -> '345) -> '345 ((int! -> int! -> '349) -> '349)! -> '354
+T* unify '346 (int! -> int! -> '349) -> '349!
+T* unify '346 (int! -> int! -> '349) -> '349
+T* unify result '346 ... 
+T* ... (int! -> int! -> '349) -> '349!
+T* unify (int! -> ((int! -> int! -> '349) -> '349)! -> '345) -> '345 '354
+T* unify result '354 ... 
+T* ... (int! -> ((int! -> int! -> '349) -> '349)! -> '345) -> '345!
+T* infer ((pair 10) ((pair 20) 30)) result = (int! -> ((int! -> int! -> '349) -> '349)! -> '345) -> '345!
+T* unify (('344 -> '343 -> '343) -> '342) -> '342 ((int! -> ((int! -> int! -> '349) -> '349)! -> '345) -> '345)! -> '355
+T* unify ('344 -> '343 -> '343) -> '342 (int! -> ((int! -> int! -> '349) -> '349)! -> '345) -> '345!
+T* unify ('344 -> '343 -> '343) -> '342 (int! -> ((int! -> int! -> '349) -> '349)! -> '345) -> '345
+T* unify '344 -> '343 -> '343 int! -> ((int! -> int! -> '349) -> '349)! -> '345
+T* unify '344 int!
+T* unify '344 int
+T* unify result '344 ... 
+T* ... int!
+T* unify '343 -> '343 ((int! -> int! -> '349) -> '349)! -> '345
+T* unify '343 (int! -> int! -> '349) -> '349!
+T* unify '343 (int! -> int! -> '349) -> '349
+T* unify result '343 ... 
+T* ... (int! -> int! -> '349) -> '349!
+T* unify (int! -> int! -> '349) -> '349! '345
+T* unify (int! -> int! -> '349) -> '349 '345
+T* unify result '345 ... 
+T* ... (int! -> int! -> '349) -> '349!
+T* unify '342 (int! -> int! -> '349) -> '349!
+T* unify '342 (int! -> int! -> '349) -> '349
+T* unify result '342 ... 
+T* ... (int! -> int! -> '349) -> '349!
+T* unify (int! -> int! -> '349) -> '349! '355
+T* unify (int! -> int! -> '349) -> '349 '355
+T* unify result '355 ... 
+T* ... (int! -> int! -> '349) -> '349!
+T* infer (proj2 ((pair 10) ((pair 20) 30))) result = (int! -> int! -> '349) -> '349!
+T* unify (('341 -> '340 -> '341) -> '339) -> '339 ((int! -> int! -> '349) -> '349)! -> '356
+T* unify ('341 -> '340 -> '341) -> '339 (int! -> int! -> '349) -> '349!
+T* unify ('341 -> '340 -> '341) -> '339 (int! -> int! -> '349) -> '349
+T* unify '341 -> '340 -> '341 int! -> int! -> '349
+T* unify '341 int!
+T* unify '341 int
+T* unify result '341 ... 
+T* ... int!
+T* unify '340 -> int! int! -> '349
+T* unify '340 int!
+T* unify '340 int
+T* unify result '340 ... 
+T* ... int!
+T* unify int! '349
+T* unify int '349
+T* unify result '349 ... 
+T* ... int!
+T* unify '339 int!
+T* unify '339 int
+T* unify result '339 ... 
+T* ... int!
+T* unify int! '356
+T* unify int '356
+T* unify result '356 ... 
+T* ... int!
+T* infer (proj1 (proj2 ((pair 10) ((pair 20) 30)))) result = int!
+T* infer {(let pair = (fn x1 -> (fn x2 -> (fn y -> ((y x1) x2))))); (let proj1 = (fn p -> (p (fn x1 -> (fn x2 -> x1))))); (let proj2 = (fn p -> (p (fn x1 -> (fn x2 -> x2))))); (proj1 (proj2 ((pair 10) ((pair 20) 30)))); } result = int!
+infer    > int
+expected > int
+[32m.[0mtext> {let f = fn x -> x; if f true then f 1 else f 2}
+T* infer {(let f = (fn x -> x)); (if (f true) then (f 1) else (f 2)); }
+T* infer (let f = (fn x -> x))
+T* infer let f = (fn x -> x)
+T* infer (fn x -> x)
+T* infer Fn (x, x)
+T* infer x ... arg type = '357
+T* infer x ... arg ts = { vars:[] body:'357}
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'357}
+T* infer Ident x ... ts alpha = { vars:[] body:'357}
+T* infer x result = '357
+T* after infer '357
+T* infer (fn x -> x) result = '357 -> '357
+T* after infer '357 -> '357
+T* poly type = { vars:[357] body:'357 -> '357}
+T* infer (let f = (fn x -> x)) result = unit
+T* unify unit unit
+T* infer (if (f true) then (f 1) else (f 2))
+T* infer If (f true) then (f 1) else (f 2)
+T* infer (f true)
+T* infer f
+T* infer Ident f
+T* infer Ident f ... type schema is { vars:[357] body:'357 -> '357}
+T* infer Ident f ... ts alpha = { vars:[358] body:'358 -> '358}
+T* infer f result = '358 -> '358
+T* infer true
+T* infer true result = bool
+T* unify '358 -> '358 bool -> '359
+T* unify '358 bool
+T* unify result '358 ... 
+T* ... bool!
+T* unify bool! '359
+T* unify bool '359
+T* unify result '359 ... 
+T* ... bool!
+T* infer (f true) result = bool!
+T* unify bool bool!
+T* unify bool bool
+T* infer (f 1)
+T* infer f
+T* infer Ident f
+T* infer Ident f ... type schema is { vars:[357] body:'357 -> '357}
+T* infer Ident f ... ts alpha = { vars:[360] body:'360 -> '360}
+T* infer f result = '360 -> '360
+T* infer 1
+T* infer 1 result = int
+T* unify '360 -> '360 int -> '361
+T* unify '360 int
+T* unify result '360 ... 
+T* ... int!
+T* unify int! '361
+T* unify int '361
+T* unify result '361 ... 
+T* ... int!
+T* infer (f 1) result = int!
+T* infer (f 2)
+T* infer f
+T* infer Ident f
+T* infer Ident f ... type schema is { vars:[357] body:'357 -> '357}
+T* infer Ident f ... ts alpha = { vars:[362] body:'362 -> '362}
+T* infer f result = '362 -> '362
+T* infer 2
+T* infer 2 result = int
+T* unify '362 -> '362 int -> '363
+T* unify '362 int
+T* unify result '362 ... 
+T* ... int!
+T* unify int! '363
+T* unify int '363
+T* unify result '363 ... 
+T* ... int!
+T* infer (f 2) result = int!
+T* unify int! int!
+T* unify int int!
+T* unify int int
+T* infer (if (f true) then (f 1) else (f 2)) result = int!
+T* infer {(let f = (fn x -> x)); (if (f true) then (f 1) else (f 2)); } result = int!
+infer    > int
+expected > int
+[32m.[0mtext> {let f = fn x -> 3; f true + f 4}
+T* infer {(let f = (fn x -> 3)); ((f true) + (f 4)); }
+T* infer (let f = (fn x -> 3))
+T* infer let f = (fn x -> 3)
+T* infer (fn x -> 3)
+T* infer Fn (x, 3)
+T* infer x ... arg type = '364
+T* infer x ... arg ts = { vars:[] body:'364}
+T* infer 3
+T* infer 3 result = int
+T* after infer int
+T* infer (fn x -> 3) result = '364 -> int
+T* after infer '364 -> int
+T* poly type = { vars:[364] body:'364 -> int}
+T* infer (let f = (fn x -> 3)) result = unit
+T* unify unit unit
+T* infer ((f true) + (f 4))
+T* infer (f true)
+T* infer f
+T* infer Ident f
+T* infer Ident f ... type schema is { vars:[364] body:'364 -> int}
+T* infer Ident f ... ts alpha = { vars:[365] body:'365 -> int}
+T* infer f result = '365 -> int
+T* infer true
+T* infer true result = bool
+T* unify '365 -> int bool -> '366
+T* unify '365 bool
+T* unify result '365 ... 
+T* ... bool!
+T* unify int '366
+T* unify result '366 ... 
+T* ... int!
+T* infer (f true) result = int!
+T* infer (f 4)
+T* infer f
+T* infer Ident f
+T* infer Ident f ... type schema is { vars:[364] body:'364 -> int}
+T* infer Ident f ... ts alpha = { vars:[367] body:'367 -> int}
+T* infer f result = '367 -> int
+T* infer 4
+T* infer 4 result = int
+T* unify '367 -> int int -> '368
+T* unify '367 int
+T* unify result '367 ... 
+T* ... int!
+T* unify int '368
+T* unify result '368 ... 
+T* ... int!
+T* infer (f 4) result = int!
+T* infer_binary + int int
+T* unify int! int!
+T* unify int int!
+T* unify int int
+T* after unify int int
+T* infer ((f true) + (f 4)) result = int!
+T* infer {(let f = (fn x -> 3)); ((f true) + (f 4)); } result = int!
+infer    > int
+expected > int
+[32m.[0mtext> fn b -> {let f = fn x -> x; let g = fn y -> y; if b then f g else g f}
+T* infer (fn b -> {(let f = (fn x -> x)); (let g = (fn y -> y)); (if b then (f g) else (g f)); })
+T* infer Fn (b, {(let f = (fn x -> x)); (let g = (fn y -> y)); (if b then (f g) else (g f)); })
+T* infer b ... arg type = '369
+T* infer b ... arg ts = { vars:[] body:'369}
+T* infer {(let f = (fn x -> x)); (let g = (fn y -> y)); (if b then (f g) else (g f)); }
+T* infer (let f = (fn x -> x))
+T* infer let f = (fn x -> x)
+T* infer (fn x -> x)
+T* infer Fn (x, x)
+T* infer x ... arg type = '370
+T* infer x ... arg ts = { vars:[] body:'370}
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'370}
+T* infer Ident x ... ts alpha = { vars:[] body:'370}
+T* infer x result = '370
+T* after infer '370
+T* infer (fn x -> x) result = '370 -> '370
+T* after infer '370 -> '370
+T* poly type = { vars:[370] body:'370 -> '370}
+T* infer (let f = (fn x -> x)) result = unit
+T* unify unit unit
+T* infer (let g = (fn y -> y))
+T* infer let g = (fn y -> y)
+T* infer (fn y -> y)
+T* infer Fn (y, y)
+T* infer y ... arg type = '371
+T* infer y ... arg ts = { vars:[] body:'371}
+T* infer y
+T* infer Ident y
+T* infer Ident y ... type schema is { vars:[] body:'371}
+T* infer Ident y ... ts alpha = { vars:[] body:'371}
+T* infer y result = '371
+T* after infer '371
+T* infer (fn y -> y) result = '371 -> '371
+T* after infer '371 -> '371
+T* poly type = { vars:[371] body:'371 -> '371}
+T* infer (let g = (fn y -> y)) result = unit
+T* unify unit unit
+T* infer (if b then (f g) else (g f))
+T* infer If b then (f g) else (g f)
+T* infer b
+T* infer Ident b
+T* infer Ident b ... type schema is { vars:[] body:'369}
+T* infer Ident b ... ts alpha = { vars:[] body:'369}
+T* infer b result = '369
+T* unify bool '369
+T* unify result '369 ... 
+T* ... bool!
+T* infer (f g)
+T* infer f
+T* infer Ident f
+T* infer Ident f ... type schema is { vars:[370] body:'370 -> '370}
+T* infer Ident f ... ts alpha = { vars:[372] body:'372 -> '372}
+T* infer f result = '372 -> '372
+T* infer g
+T* infer Ident g
+T* infer Ident g ... type schema is { vars:[371] body:'371 -> '371}
+T* infer Ident g ... ts alpha = { vars:[373] body:'373 -> '373}
+T* infer g result = '373 -> '373
+T* unify '372 -> '372 ('373 -> '373) -> '374
+T* unify '372 '373 -> '373
+T* unify result '372 ... 
+T* ... '373 -> '373!
+T* unify '373 -> '373! '374
+T* unify '373 -> '373 '374
+T* unify result '374 ... 
+T* ... '373 -> '373!
+T* infer (f g) result = '373 -> '373!
+T* infer (g f)
+T* infer g
+T* infer Ident g
+T* infer Ident g ... type schema is { vars:[371] body:'371 -> '371}
+T* infer Ident g ... ts alpha = { vars:[375] body:'375 -> '375}
+T* infer g result = '375 -> '375
+T* infer f
+T* infer Ident f
+T* infer Ident f ... type schema is { vars:[370] body:'370 -> '370}
+T* infer Ident f ... ts alpha = { vars:[376] body:'376 -> '376}
+T* infer f result = '376 -> '376
+T* unify '375 -> '375 ('376 -> '376) -> '377
+T* unify '375 '376 -> '376
+T* unify result '375 ... 
+T* ... '376 -> '376!
+T* unify '376 -> '376! '377
+T* unify '376 -> '376 '377
+T* unify result '377 ... 
+T* ... '376 -> '376!
+T* infer (g f) result = '376 -> '376!
+T* unify '373 -> '373! '376 -> '376!
+T* unify '373 -> '373 '376 -> '376!
+T* unify '373 -> '373 '376 -> '376
+T* unify '373 '376
+T* unify result '373 ... 
+T* ... '376!
+T* unify '376! '376
+T* unify '376 '376
+T* infer (if b then (f g) else (g f)) result = '376! -> '376!!
+T* infer {(let f = (fn x -> x)); (let g = (fn y -> y)); (if b then (f g) else (g f)); } result = '376! -> '376!!
+T* after infer '376! -> '376!!
+T* infer (fn b -> {(let f = (fn x -> x)); (let g = (fn y -> y)); (if b then (f g) else (g f)); }) result = bool! -> '376! -> '376!!
+infer    > bool -> 'a -> 'a
+expected > bool -> 'a -> 'a
+[32m.[0mtext> fn x -> match x { [] -> 0 | _ -> 1}
+T* infer (fn x -> (match x { | [] -> 0 | _ -> 1}))
+T* infer Fn (x, (match x { | [] -> 0 | _ -> 1}))
+T* infer x ... arg type = '378
+T* infer x ... arg ts = { vars:[] body:'378}
+T* infer (match x { | [] -> 0 | _ -> 1})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'378}
+T* infer Ident x ... ts alpha = { vars:[] body:'378}
+T* infer x result = '378
+T* after infer 'a
+T* pat_list .. (pat,expr)::rest
+T* unify_pat ([], 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type []
+T* unify ['379] '378
+T* unify result '378 ... 
+T* ... ['379]!
+T* infer 0
+T* infer 0 result = int
+T* unify_pat (_, ['a])
+T* infer 1
+T* infer 1 result = int
+T* unify int int
+T* infer (match x { | [] -> 0 | _ -> 1}) result = int
+T* after infer int
+T* infer (fn x -> (match x { | [] -> 0 | _ -> 1})) result = ['379]! -> int
+infer    > ['a] -> int
+expected > ['a] -> int
+[32m.[0mtext> fn x -> match x { true -> 0 | _ -> 2}
+T* infer (fn x -> (match x { | true -> 0 | _ -> 2}))
+T* infer Fn (x, (match x { | true -> 0 | _ -> 2}))
+T* infer x ... arg type = '380
+T* infer x ... arg ts = { vars:[] body:'380}
+T* infer (match x { | true -> 0 | _ -> 2})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'380}
+T* infer Ident x ... ts alpha = { vars:[] body:'380}
+T* infer x result = '380
+T* after infer 'a
+T* pat_list .. (pat,expr)::rest
+T* unify_pat (true, 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type true
+T* unify bool '380
+T* unify result '380 ... 
+T* ... bool!
+T* infer 0
+T* infer 0 result = int
+T* unify_pat (_, bool)
+T* infer 2
+T* infer 2 result = int
+T* unify int int
+T* infer (match x { | true -> 0 | _ -> 2}) result = int
+T* after infer int
+T* infer (fn x -> (match x { | true -> 0 | _ -> 2})) result = bool! -> int
+infer    > bool -> int
+expected > bool -> int
+[32m.[0mtext> fn x -> match x { 1 -> 0 | _ -> 2}
+T* infer (fn x -> (match x { | 1 -> 0 | _ -> 2}))
+T* infer Fn (x, (match x { | 1 -> 0 | _ -> 2}))
+T* infer x ... arg type = '381
+T* infer x ... arg ts = { vars:[] body:'381}
+T* infer (match x { | 1 -> 0 | _ -> 2})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'381}
+T* infer Ident x ... ts alpha = { vars:[] body:'381}
+T* infer x result = '381
+T* after infer 'a
+T* pat_list .. (pat,expr)::rest
+T* unify_pat (1, 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type 1
+T* unify int '381
+T* unify result '381 ... 
+T* ... int!
+T* infer 0
+T* infer 0 result = int
+T* unify_pat (_, int)
+T* infer 2
+T* infer 2 result = int
+T* unify int int
+T* infer (match x { | 1 -> 0 | _ -> 2}) result = int
+T* after infer int
+T* infer (fn x -> (match x { | 1 -> 0 | _ -> 2})) result = int! -> int
+infer    > int -> int
+expected > int -> int
+[32m.[0mtext> fn x -> match x { 'a' -> 0 | _ -> 2}
+T* infer (fn x -> (match x { | 'a' -> 0 | _ -> 2}))
+T* infer Fn (x, (match x { | 'a' -> 0 | _ -> 2}))
+T* infer x ... arg type = '382
+T* infer x ... arg ts = { vars:[] body:'382}
+T* infer (match x { | 'a' -> 0 | _ -> 2})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'382}
+T* infer Ident x ... ts alpha = { vars:[] body:'382}
+T* infer x result = '382
+T* after infer 'a
+T* pat_list .. (pat,expr)::rest
+T* unify_pat ('a', 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type 'a'
+T* unify char '382
+T* unify result '382 ... 
+T* ... char!
+T* infer 0
+T* infer 0 result = int
+T* unify_pat (_, char)
+T* infer 2
+T* infer 2 result = int
+T* unify int int
+T* infer (match x { | 'a' -> 0 | _ -> 2}) result = int
+T* after infer int
+T* infer (fn x -> (match x { | 'a' -> 0 | _ -> 2})) result = char! -> int
+infer    > char -> int
+expected > char -> int
+[32m.[0mtext> fn x -> match x { "abc" -> 0 | _ -> 2}
+T* infer (fn x -> (match x { | "abc" -> 0 | _ -> 2}))
+T* infer Fn (x, (match x { | "abc" -> 0 | _ -> 2}))
+T* infer x ... arg type = '383
+T* infer x ... arg ts = { vars:[] body:'383}
+T* infer (match x { | "abc" -> 0 | _ -> 2})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'383}
+T* infer Ident x ... ts alpha = { vars:[] body:'383}
+T* infer x result = '383
+T* after infer 'a
+T* pat_list .. (pat,expr)::rest
+T* unify_pat ("abc", 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type "abc"
+T* unify string '383
+T* unify result '383 ... 
+T* ... string!
+T* infer 0
+T* infer 0 result = int
+T* unify_pat (_, string)
+T* infer 2
+T* infer 2 result = int
+T* unify int int
+T* infer (match x { | "abc" -> 0 | _ -> 2}) result = int
+T* after infer int
+T* infer (fn x -> (match x { | "abc" -> 0 | _ -> 2})) result = string! -> int
+infer    > string -> int
+expected > string -> int
+[32m.[0mtext> fn x -> match x { x -> x+1 }
+T* infer (fn x -> (match x { | x -> (x + 1)}))
+T* infer Fn (x, (match x { | x -> (x + 1)}))
+T* infer x ... arg type = '384
+T* infer x ... arg ts = { vars:[] body:'384}
+T* infer (match x { | x -> (x + 1)})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'384}
+T* infer Ident x ... ts alpha = { vars:[] body:'384}
+T* infer x result = '384
+T* after infer 'a
+T* pat_list .. [(pat,expr)]
+T* unify_pat (x, 'a)
+T* infer (x + 1)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'384}
+T* infer Ident x ... ts alpha = { vars:[] body:'384}
+T* infer x result = '384
+T* infer 1
+T* infer 1 result = int
+T* infer_binary + 'a int
+T* unify '384 int
+T* unify result '384 ... 
+T* ... int!
+T* after unify int int
+T* infer (x + 1) result = int!
+T* infer (match x { | x -> (x + 1)}) result = int!
+T* after infer int!
+T* infer (fn x -> (match x { | x -> (x + 1)})) result = int! -> int!
+infer    > int -> int
+expected > int -> int
+[32m.[0mtext> fn x -> match x { x -> x }
+T* infer (fn x -> (match x { | x -> x}))
+T* infer Fn (x, (match x { | x -> x}))
+T* infer x ... arg type = '385
+T* infer x ... arg ts = { vars:[] body:'385}
+T* infer (match x { | x -> x})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'385}
+T* infer Ident x ... ts alpha = { vars:[] body:'385}
+T* infer x result = '385
+T* after infer 'a
+T* pat_list .. [(pat,expr)]
+T* unify_pat (x, 'a)
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'385}
+T* infer Ident x ... ts alpha = { vars:[] body:'385}
+T* infer x result = '385
+T* infer (match x { | x -> x}) result = '385
+T* after infer '385
+T* infer (fn x -> (match x { | x -> x})) result = '385 -> '385
+infer    > 'a -> 'a
+expected > 'a -> 'a
+[32m.[0mtext> fn x -> match x { (a,b) -> a }
+T* infer (fn x -> (match x { | (a, b) -> a}))
+T* infer Fn (x, (match x { | (a, b) -> a}))
+T* infer x ... arg type = '386
+T* infer x ... arg ts = { vars:[] body:'386}
+T* infer (match x { | (a, b) -> a})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'386}
+T* infer Ident x ... ts alpha = { vars:[] body:'386}
+T* infer x result = '386
+T* after infer 'a
+T* pat_list .. [(pat,expr)]
+T* unify_pat ((a, b), 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type (a, b)
+T* pattern_to_type a
+T* pattern_to_type b
+T* unify ('387, '388) '386
+T* unify result '386 ... 
+T* ... ('387, '388)!
+T* infer a
+T* infer Ident a
+T* infer Ident a ... type schema is { vars:[] body:'387}
+T* infer Ident a ... ts alpha = { vars:[] body:'387}
+T* infer a result = '387
+T* infer (match x { | (a, b) -> a}) result = '387
+T* after infer '387
+T* infer (fn x -> (match x { | (a, b) -> a})) result = ('387, '388)! -> '387
+infer    > ('a, 'b) -> 'a
+expected > ('a, 'b) -> 'a
+[32m.[0mtext> fn x -> match x { (a,b) -> b }
+T* infer (fn x -> (match x { | (a, b) -> b}))
+T* infer Fn (x, (match x { | (a, b) -> b}))
+T* infer x ... arg type = '389
+T* infer x ... arg ts = { vars:[] body:'389}
+T* infer (match x { | (a, b) -> b})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'389}
+T* infer Ident x ... ts alpha = { vars:[] body:'389}
+T* infer x result = '389
+T* after infer 'a
+T* pat_list .. [(pat,expr)]
+T* unify_pat ((a, b), 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type (a, b)
+T* pattern_to_type a
+T* pattern_to_type b
+T* unify ('390, '391) '389
+T* unify result '389 ... 
+T* ... ('390, '391)!
+T* infer b
+T* infer Ident b
+T* infer Ident b ... type schema is { vars:[] body:'391}
+T* infer Ident b ... ts alpha = { vars:[] body:'391}
+T* infer b result = '391
+T* infer (match x { | (a, b) -> b}) result = '391
+T* after infer '391
+T* infer (fn x -> (match x { | (a, b) -> b})) result = ('390, '391)! -> '391
+infer    > ('a, 'b) -> 'b
+expected > ('a, 'b) -> 'b
+[32m.[0mtext> fn x -> match x { [1] -> 0 }
+T* infer (fn x -> (match x { | 1::[] -> 0}))
+T* infer Fn (x, (match x { | 1::[] -> 0}))
+T* infer x ... arg type = '392
+T* infer x ... arg ts = { vars:[] body:'392}
+T* infer (match x { | 1::[] -> 0})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'392}
+T* infer Ident x ... ts alpha = { vars:[] body:'392}
+T* infer x result = '392
+T* after infer 'a
+T* pat_list .. [(pat,expr)]
+T* unify_pat (1::[], 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type 1::[]
+T* pattern_to_type 1
+T* pattern_to_type []
+T* unify ['393] [int]
+T* unify '393 int
+T* unify result '393 ... 
+T* ... int!
+T* unify [int!] '392
+T* unify result '392 ... 
+T* ... [int!]!
+T* infer 0
+T* infer 0 result = int
+T* infer (match x { | 1::[] -> 0}) result = int
+T* after infer int
+T* infer (fn x -> (match x { | 1::[] -> 0})) result = [int!]! -> int
+infer    > [int] -> int
+expected > [int] -> int
+[32m.[0mtext> fn x -> match x { [1,2] -> 0 | _ -> 1}
+T* infer (fn x -> (match x { | 1::2 -> 0 | _ -> 1}))
+T* infer Fn (x, (match x { | 1::2 -> 0 | _ -> 1}))
+T* infer x ... arg type = '394
+T* infer x ... arg ts = { vars:[] body:'394}
+T* infer (match x { | 1::2 -> 0 | _ -> 1})
+T* infer_match x
+T* infer x
+T* infer Ident x
+T* infer Ident x ... type schema is { vars:[] body:'394}
+T* infer Ident x ... ts alpha = { vars:[] body:'394}
+T* infer x result = '394
+T* after infer 'a
+T* pat_list .. (pat,expr)::rest
+T* unify_pat (1::2, 'a)
+T* unify_pat (pat, TVar (_, {contents = None}))
+T* pattern_to_type 1::2
+T* pattern_to_type 1
+T* pattern_to_type 2
+T* unify int [int]
+[31m![0mType error: [int] != int
+text> match 1 { a -> a }
+T* infer (match 1 { | a -> a})
+T* infer_match 1
+T* infer 1
+T* infer 1 result = int
+T* after infer int
+T* pat_list .. [(pat,expr)]
+T* unify_pat (a, int)
+T* infer a
+T* infer Ident a
+T* infer Ident a ... type schema is { vars:[] body:int}
+T* infer Ident a ... ts alpha = { vars:[] body:int}
+T* infer a result = int
+T* infer (match 1 { | a -> a}) result = int
+infer    > int
+expected > int
+[32m.[0mtext> match [1] { [a] -> a }
+T* infer (match (1 : []) { | a::[] -> a})
+T* infer_match (1 : [])
+T* infer (1 : [])
+T* infer 1
+T* infer 1 result = int
+T* infer []
+T* infer [] result = ['395]
+T* infer_binary : int ['a]
+T* unify [int] ['395]
+T* unify int '395
+T* unify result '395 ... 
+T* ... int!
+T* infer (1 : []) result = [int]
+T* after infer [int]
+T* pat_list .. [(pat,expr)]
+T* unify_pat (a::[], [int])
+T* unify_pat PatCons (a, [])
+T* unify_pat (a, int)
+T* unify_pat ([], [int])
+T* infer a
+T* infer Ident a
+T* infer Ident a ... type schema is { vars:[] body:int}
+T* infer Ident a ... ts alpha = { vars:[] body:int}
+T* infer a result = int
+T* infer (match (1 : []) { | a::[] -> a}) result = int
+infer    > int
+expected > int
+[32m.[0mtext> match [1,2] { [a,b] -> a }
+T* infer (match (1 : (2 : [])) { | a::b -> a})
+T* infer_match (1 : (2 : []))
+T* infer (1 : (2 : []))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : [])
+T* infer 2
+T* infer 2 result = int
+T* infer []
+T* infer [] result = ['396]
+T* infer_binary : int ['a]
+T* unify [int] ['396]
+T* unify int '396
+T* unify result '396 ... 
+T* ... int!
+T* infer (2 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : [])) result = [int]
+T* after infer [int]
+T* pat_list .. [(pat,expr)]
+T* unify_pat (a::b, [int])
+T* unify_pat PatCons (a, b)
+T* unify_pat (a, int)
+T* unify_pat (b, [int])
+T* infer a
+T* infer Ident a
+T* infer Ident a ... type schema is { vars:[] body:int}
+T* infer Ident a ... ts alpha = { vars:[] body:int}
+T* infer a result = int
+T* infer (match (1 : (2 : [])) { | a::b -> a}) result = int
+infer    > int
+expected > int
+[32m.[0mtext> match [1,2] { [a,b] -> b }
+T* infer (match (1 : (2 : [])) { | a::b -> b})
+T* infer_match (1 : (2 : []))
+T* infer (1 : (2 : []))
+T* infer 1
+T* infer 1 result = int
+T* infer (2 : [])
+T* infer 2
+T* infer 2 result = int
+T* infer []
+T* infer [] result = ['397]
+T* infer_binary : int ['a]
+T* unify [int] ['397]
+T* unify int '397
+T* unify result '397 ... 
+T* ... int!
+T* infer (2 : []) result = [int]
+T* infer_binary : int [int]
+T* unify [int] [int]
+T* unify int int
+T* infer (1 : (2 : [])) result = [int]
+T* after infer [int]
+T* pat_list .. [(pat,expr)]
+T* unify_pat (a::b, [int])
+T* unify_pat PatCons (a, b)
+T* unify_pat (a, int)
+T* unify_pat (b, [int])
+T* infer b
+T* infer Ident b
+T* infer Ident b ... type schema is { vars:[] body:[int]}
+T* infer Ident b ... ts alpha = { vars:[] body:[int]}
+T* infer b result = [int]
+T* infer (match (1 : (2 : [])) { | a::b -> b}) result = [int]
+infer    > [int]
+expected > int
+[31m![0mresult:[int] != int
+
+text> match (1,2) { (a,b) as c -> a }
+T* infer (match (1, 2) { | ((a, b)) as c -> a})
+T* infer_match (1, 2)
+T* infer (1, 2)
+T* infer 1
+T* infer 1 result = int
+T* infer 2
+T* infer 2 result = int
+T* infer (1, 2) result = (int, int)
+T* after infer (int, int)
+T* pat_list .. [(pat,expr)]
+T* unify_pat (((a, b)) as c, (int, int))
+T* unify_pat ((a, b), (int, int))
+T* unify_pat (a, int)
+T* unify_pat (b, int)
+T* infer a
+T* infer Ident a
+T* infer Ident a ... type schema is { vars:[] body:int}
+T* infer Ident a ... ts alpha = { vars:[] body:int}
+T* infer a result = int
+T* infer (match (1, 2) { | ((a, b)) as c -> a}) result = int
+infer    > int
+expected > int
+[32m.[0mtext> match (1,2) { (a,b) as c -> b }
+T* infer (match (1, 2) { | ((a, b)) as c -> b})
+T* infer_match (1, 2)
+T* infer (1, 2)
+T* infer 1
+T* infer 1 result = int
+T* infer 2
+T* infer 2 result = int
+T* infer (1, 2) result = (int, int)
+T* after infer (int, int)
+T* pat_list .. [(pat,expr)]
+T* unify_pat (((a, b)) as c, (int, int))
+T* unify_pat ((a, b), (int, int))
+T* unify_pat (a, int)
+T* unify_pat (b, int)
+T* infer b
+T* infer Ident b
+T* infer Ident b ... type schema is { vars:[] body:int}
+T* infer Ident b ... ts alpha = { vars:[] body:int}
+T* infer b result = int
+T* infer (match (1, 2) { | ((a, b)) as c -> b}) result = int
+infer    > int
+expected > int
+[32m.[0mtext> match (1,2) { (a,b) as c -> c }
+T* infer (match (1, 2) { | ((a, b)) as c -> c})
+T* infer_match (1, 2)
+T* infer (1, 2)
+T* infer 1
+T* infer 1 result = int
+T* infer 2
+T* infer 2 result = int
+T* infer (1, 2) result = (int, int)
+T* after infer (int, int)
+T* pat_list .. [(pat,expr)]
+T* unify_pat (((a, b)) as c, (int, int))
+T* unify_pat ((a, b), (int, int))
+T* unify_pat (a, int)
+T* unify_pat (b, int)
+T* infer c
+T* infer Ident c
+T* infer Ident c ... type schema is { vars:[] body:(int, int)}
+T* infer Ident c ... ts alpha = { vars:[] body:(int, int)}
+T* infer c result = (int, int)
+T* infer (match (1, 2) { | ((a, b)) as c -> c}) result = (int, int)
+infer    > (int, int)
+expected > (int, int)
+[32m.[0mtext> match 1 { 1 | 2 -> 'a' | _ -> 'b' }
+T* infer (match 1 { | 1 | 2 -> 'a' | _ -> 'b'})
+T* infer_match 1
+T* infer 1
+T* infer 1 result = int
+T* after infer int
+T* pat_list .. (pat,expr)::rest
+T* unify_pat (1 | 2, int)
+T* unify_pat (1, int)
+T* unify_pat (2, int)
+T* infer 'a'
+T* infer 'a' result = char
+T* unify_pat (_, int)
+T* infer 'b'
+T* infer 'b' result = char
+T* unify char char
+T* infer (match 1 { | 1 | 2 -> 'a' | _ -> 'b'}) result = char
+infer    > char
+expected > char
+[32m.[0m
+All   : 286
+OK    : [32m278[0m
+Failed: [31m8[0m

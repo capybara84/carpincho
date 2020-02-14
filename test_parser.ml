@@ -134,7 +134,9 @@ let all_exprs = [
                 [(PatAs (PatWildCard, "a"), IntLit 1)]));
     ("match n { [a,b,c] -> 3 }",
         Match (Ident "n",
-                [(PatList [PatIdent "a"; PatIdent "b"; PatIdent "c"], IntLit 3)]));
+                [(PatCons (PatIdent "a",
+                    PatCons (PatIdent "b",
+                        PatCons (PatIdent "c", PatNull)))), IntLit 3]));
     ("match n { (1) -> 2 }",
         Match (Ident "n",
                 [(PatInt 1, IntLit 2)]));

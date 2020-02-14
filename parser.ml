@@ -424,6 +424,21 @@ and parse_fn pars =
 
 and parse_pattern_list pars =
     debug_parse_in "parse_pattern_list";
+    let lhs = parse_pattern pars in
+    let rhs =
+        match peek_token_type pars with
+        | COMMA -> begin
+            next_token pars;
+            skip_newline pars;
+            parse_pattern_list pars
+          end
+        | _ -> PatNull
+    in
+    debug_parse_out "parse_pattern_list";
+    PatCons (lhs, rhs)
+
+and parse_pattern_tuple pars =
+    debug_parse_in "parse_pattern_tuple";
     let rec loop res =
         if peek_token_type pars <> COMMA then
             List.rev res
@@ -436,7 +451,7 @@ and parse_pattern_list pars =
     in
     let e = parse_pattern pars in
     let e = loop [e] in
-    debug_parse_in "parse_pattern_list";
+    debug_parse_in "parse_pattern_tuple";
     e
 
 and parse_a_pattern pars =
@@ -453,7 +468,7 @@ and parse_a_pattern pars =
         | LPAR ->
             next_token pars;
             skip_newline pars;
-            let pl = parse_pattern_list pars in
+            let pl = parse_pattern_tuple pars in
             expect pars RPAR;
             if List.length pl = 1 then
                 List.hd pl
@@ -462,12 +477,10 @@ and parse_a_pattern pars =
         | LBRA ->
             next_token pars;
             skip_newline pars;
-            let pl = parse_pattern_list pars in
+            let e = parse_pattern_list pars in
             expect pars RBRA;
-            if List.length pl == 0 then
-                PatNull
-            else
-                PatList pl
+            (*TODO calc list size, if 0 then PatNull *)
+            e
         | t ->
             next_token pars;
             error pars ("syntax error at '" ^ token_type_to_string t ^ "'")
