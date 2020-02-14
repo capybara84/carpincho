@@ -30,7 +30,6 @@ type pattern =
     | PatBool of bool | PatInt of int | PatChar of char | PatStr of string
     | PatIdent of ident
     | PatTuple of pattern list
-    | PatList of pattern list
     | PatCons of pattern * pattern
     | PatAs of pattern * ident
     | PatOr of pattern * pattern
@@ -278,14 +277,12 @@ and pattern_to_string = function
     | PatIdent id -> id
     | PatTuple pl ->
         "(" ^ pat_list_to_string pl ^ ")"
-    | PatList lst ->
-        "[" ^ pat_list_to_string lst ^ "]"
     | PatCons (p1, p2) ->
-        pattern_to_string p1 ^ " | " ^ pattern_to_string p2
+        pattern_to_string p1 ^ "::" ^ pattern_to_string p2
     | PatAs (pat, id) ->
         "(" ^ pattern_to_string pat ^ ") as " ^ id
     | PatOr (p1, p2) ->
-        pattern_to_string p1 ^ ":" ^ pattern_to_string p2
+        pattern_to_string p1 ^ " | " ^ pattern_to_string p2
 
 and pat_list_to_string = function
     | [] -> ""

@@ -161,10 +161,6 @@ and eval_match env v match_list =
                         (env, false)
             in list_match env (tl, vl)
         | (PatTuple _, _) -> (env, false)
-        | (PatList (x::xs), v) ->
-            match_with env (PatCons (x, PatList xs), v)
-        | (PatList [], VNull) -> (env, true)
-        | (PatList _, _) -> (env, false)
         | (PatCons (p1, p2), VCons (x, xs)) ->
             let (new_env, result) = match_with env (p1, x) in
             if result then

@@ -381,7 +381,6 @@ and infer_match tenv e_var pat_list =
             unify t' (TList t);
             (tenv, t')
         (*
-        | PatList ->
         | PatAs ->
         | PatOr ->
         *)
@@ -410,31 +409,6 @@ and infer_match tenv e_var pat_list =
                     error ("pattern tuple error " ^ pattern_to_string p ^
                             " & " ^ type_to_string t)
             in loop tenv (pl, tl)
-        | (PatList pl, t) ->
-            verbose ("unify_pat (PatList (x::xs), t)");
-            let check_list tenv pl =
-                verbose ("check_list [" ^ pat_list_to_string pl ^ "]");
-                let rec pat_list_to_type_list tenv tl = function
-                    | [] -> (tenv, tl)
-                    | x::xs ->
-                        let (tenv, t) = pattern_to_type tenv x in
-                        pat_list_to_type_list tenv (t::tl) xs
-                in
-                let (tenv, tl) = pat_list_to_type_list tenv [] pl in
-                verbose (" type_list [" ^ type_list_to_string tl ^ "]");
-                let list_same_type = function
-                    | [] -> true
-                    | _::[] -> true
-                    | x::xs -> List.for_all (fun y -> pat_equal x y) xs
-                in
-                if not (list_same_type tl) then
-                    error "pattern list type error"
-                else ();
-                (tenv, tl)
-            in
-            let (tenv, tl) = check_list tenv pl in
-            List.iter (fun x -> unify t (TList x)) tl;
-            tenv
         | (PatCons (p1, p2), TList t) ->
             verbose ("unify_pat PatCons (" ^ pattern_to_string p1 ^
                                             ", " ^ pattern_to_string p2 ^ ")");
