@@ -1,6 +1,8 @@
 
 exception Error of string
 
+let g_verbose = ref false
+
 type token_type
     = EOF | NEWLINE | ID of string | BOOL_LIT of bool | INT_LIT of int
     | CHAR_LIT of char | STRING_LIT of string
@@ -59,6 +61,10 @@ and typ =
     | TList of typ
     | TFun of typ * typ
     | TVar of int * typ option ref
+and type_schema = {
+    vars : int list;
+    body : typ;
+}
 
 type value =
     | VUnit | VNull
@@ -73,6 +79,7 @@ type value =
 
 type symtab = {
     mutable env : value ref Env.t;
+    mutable tenv : type_schema ref Env.t;
 }
 
 let token_type_to_string = function
@@ -102,6 +109,8 @@ let int_to_alpha x =
         string_of_int x
 
 let rec type_to_string ty =
+    let counter = ref 0 in
+    let dic = ref [] in
     let rec to_s n ty =
         let rec tuple_string = function
             | [] -> ""
@@ -112,28 +121,88 @@ let rec type_to_string ty =
         in
         let (m, str) =
             match ty with
-            | TUnit -> (100, "unit")
-            | TBool -> (100, "bool")
-            | TInt -> (100, "int")
-            | TChar -> (100, "char")
-            | TFloat -> (100, "float")
-            | TString -> (100, "string")
-            | TIdent id -> (100, id)
-            | TParamId (t, id) -> (100, to_s 0 t ^ " " ^ id)
+            | TUnit -> (3, "unit")
+            | TBool -> (3, "bool")
+            | TInt -> (3, "int")
+            | TChar -> (3, "char")
+            | TFloat -> (3, "float")
+            | TString -> (3, "string")
+            | TIdent id -> (3, id)
+            | TParamId (t, id) -> (3, to_s 0 t ^ " " ^ id)
             | TTuple tl -> (2, "(" ^ tuple_string tl ^ ")")
-            | TList t -> (100, "[" ^ to_s 0 t ^ "]")
+            | TList t -> (3, "[" ^ to_s 0 t ^ "]")
             | TFun (t1, t2) ->
                 let s1 = to_s 1 t1 in
                 let s2 = to_s 0 t2 in
                 (1, s1 ^ " -> " ^ s2)
             | TVar (x, {contents = None}) ->
-                (100, "'" ^ int_to_alpha x)
+                let y =
+                    try List.assoc x !dic
+                    with Not_found ->
+                        dic := (x, !counter) :: !dic;
+                        let n = !counter in
+                        incr counter;
+                        n
+                in
+                (3, "'" ^ int_to_alpha y)
             | TVar (_, {contents = Some t}) ->
-                (n+1, to_s n t)
+                (3, to_s n t)
         in
         if m > n then str
         else "(" ^ str ^ ")"
     in to_s (-1) ty
+
+let rec type_list_to_string = function
+    | [] -> ""
+    | x::[] -> type_to_string x
+    | x::xs ->
+        type_to_string x ^ ", " ^ type_list_to_string xs
+
+
+let rec type_to_string_raw ty =
+    let rec to_s n ty =
+        let rec tuple_string = function
+            | [] -> ""
+            | x::[] -> to_s 0 x
+            | x::xs ->
+                let s = to_s 0 x in
+                s ^ ", " ^ tuple_string xs
+        in
+        let (m, str) =
+            match ty with
+            | TUnit -> (3, "unit")
+            | TBool -> (3, "bool")
+            | TInt -> (3, "int")
+            | TChar -> (3, "char")
+            | TFloat -> (3, "float")
+            | TString -> (3, "string")
+            | TIdent id -> (3, id)
+            | TParamId (t, id) -> (3, to_s 0 t ^ " " ^ id)
+            | TTuple tl -> (2, "(" ^ tuple_string tl ^ ")")
+            | TList t -> (3, "[" ^ to_s 0 t ^ "]")
+            | TFun (t1, t2) ->
+                let s1 = to_s 1 t1 in
+                let s2 = to_s 0 t2 in
+                (1, s1 ^ " -> " ^ s2)
+            | TVar (x, {contents = None}) ->
+                (3, "'" ^ string_of_int x)
+            | TVar (_, {contents = Some t}) ->
+                (3, (to_s n t) ^ "!")
+        in
+        if m > n then str
+        else "(" ^ str ^ ")"
+    in to_s (-1) ty
+
+let type_schema_to_string ts =
+    let rec list_to_string = function
+        | [] -> ""
+        | x::[] ->
+            string_of_int x
+        | x::xs ->
+            string_of_int x ^ "," ^ list_to_string xs
+
+    in
+    "{ vars:[" ^ list_to_string ts.vars ^ "] body:" ^ type_to_string_raw ts.body ^ "}"
 
 let string_of_binop = function
     | BinAdd -> "+" | BinSub -> "-" | BinMul -> "*"
@@ -208,15 +277,21 @@ and pattern_to_string = function
     | PatStr s -> "\"" ^ s ^ "\""
     | PatIdent id -> id
     | PatTuple pl ->
-        List.fold_left (fun a b -> a ^ " " ^ pattern_to_string b) "" pl
+        "(" ^ pat_list_to_string pl ^ ")"
     | PatList lst ->
-        List.fold_left (fun a b -> a ^ " " ^ pattern_to_string b) "" lst
+        "[" ^ pat_list_to_string lst ^ "]"
     | PatCons (p1, p2) ->
         pattern_to_string p1 ^ " | " ^ pattern_to_string p2
     | PatAs (pat, id) ->
         "(" ^ pattern_to_string pat ^ ") as " ^ id
     | PatOr (p1, p2) ->
         pattern_to_string p1 ^ ":" ^ pattern_to_string p2
+
+and pat_list_to_string = function
+    | [] -> ""
+    | x::[] -> pattern_to_string x
+    | x::xs ->
+        pattern_to_string x ^ ", " ^ pat_list_to_string xs
 
 let rec value_to_string = function
     | VUnit -> "()"

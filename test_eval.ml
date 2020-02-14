@@ -81,6 +81,7 @@ let all_exprs = [
     ("(fn n -> match n { 0 | 1 | 2 -> 'a' | 3 -> 'b' }) 1", VChar 'a');
     ("(fn n -> match n { 0 | 1 | 2 -> 'a' | 3 -> 'b' }) 2", VChar 'a');
     ("(fn n -> match n { 0 | 1 | 2 -> 'a' | 3 -> 'b' }) 3", VChar 'b');
+    ("match [1,2,3] { [a,b,c] -> a }", VInt 1);
     ("match [1,2,3] { [a,b,c] as d -> a }", VInt 1);
     ("match [1,2,3] { [a,b,c] as d -> b }", VInt 2);
     ("match [1,2,3] { [a,b,c] as d -> c }", VInt 3);
@@ -97,9 +98,10 @@ let eval_test verbose =
             if verbose then
                 print_endline ("text> " ^ text)
             else ();
-            let v = Eval.eval_line verbose text in
+            let (v, t) = Eval.eval_line text in
             if verbose then begin
-                print_endline ("evaluated> " ^ value_to_string v);
+                print_endline ("evaluated> " ^ value_to_string v ^ " : "
+                                    ^ type_to_string t);
                 print_endline ("expected > " ^ value_to_string expected)
             end else ();
             Test.equal v expected
