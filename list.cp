@@ -1,6 +1,6 @@
 module List
 
-fun length x = match x { | [] -> 0 | _:xs -> 1 + length xs }
+fun length x = match x { [] -> 0 | _:xs -> 1 + length xs }
 fun map f x = match x {
     | [] -> []
     | x:xs -> f x : map f xs

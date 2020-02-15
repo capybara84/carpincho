@@ -89,8 +89,8 @@ let is_apply e t =
     | Fn _ | Apply _ | Ident _ | IdentMod _ ->
         begin
             match t with
-            | EMPTY | NULL | ID _ | BOOL_LIT _ | INT_LIT _ | CHAR_LIT _
-            | STRING_LIT _ | LPAR | LBRA -> true
+            | EMPTY | NULL | ID _ | C_ID _ | BOOL_LIT _ | INT_LIT _
+            | CHAR_LIT _ | STRING_LIT _ | LPAR | LBRA -> true
             | _ -> false
         end
     | _ -> false
@@ -128,6 +128,12 @@ let rec expect_id pars =
     | NEWLINE -> next_token pars; expect_id pars
     | t -> error pars ("missing identifier at '" ^ token_type_to_string t ^ "'")
 
+let rec expect_c_id pars =
+    match peek_token_type pars with
+    | C_ID id -> next_token pars; id
+    | NEWLINE -> next_token pars; expect_c_id pars
+    | t -> error pars ("missing Capitalized Identifier at '" ^ token_type_to_string t ^ "'")
+
 let rec skip_newline pars =
     match peek_token_type pars with
     | NEWLINE ->
@@ -160,14 +166,14 @@ and parse_simple pars =
         | NULL ->
             next_token pars;
             Null
+        | C_ID cid ->
+            next_token pars;
+            expect pars DOT;
+            let id = expect_id pars in
+            IdentMod (cid, id)
         | ID id ->
             next_token pars;
-            if peek_token_type pars = DOT then begin
-                next_token pars;
-                let id2 = expect_id pars in
-                IdentMod (id, id2)
-            end else
-                Ident id
+            Ident id
         | BOOL_LIT b ->
             next_token pars;
             BoolLit b
@@ -636,10 +642,10 @@ and parse_decl pars =
 let parse_import pars =
     debug_parse_in "parse_import";
     next_token pars;
-    let id = expect_id pars in
+    let id = expect_c_id pars in
     let rename =
         if peek_token_type pars = AS then
-            (next_token pars; Some (expect_id pars))
+            (next_token pars; Some (expect_c_id pars))
         else
             None
     in
@@ -649,7 +655,7 @@ let parse_import pars =
 let parse_module pars =
     debug_parse_in "parse_module";
     next_token pars;
-    let id = expect_id pars in
+    let id = expect_c_id pars in
     debug_parse_out "parse_module";
     Module id
 
@@ -663,7 +669,7 @@ let rec parse_type pars =
         | CHAR -> next_token pars; TChar
         | FLOAT -> next_token pars; TFloat
         | STRING -> next_token pars; TString
-        | ID id -> next_token pars; TIdent id
+        | C_ID id -> next_token pars; TIdent id
         | LBRA ->
             next_token pars;
             let t = parse_type pars in
@@ -714,7 +720,7 @@ and parse_type_def pars =
     debug_parse_in "parse_type_def";
     next_token pars;
     skip_newline pars;
-    let id = expect_id pars in
+    let id = expect_c_id pars in
     skip_newline pars;
     expect pars EQ;
     skip_newline pars;

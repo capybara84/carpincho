@@ -2,7 +2,7 @@
 open Syntax
 
 let test_text = "
-identifier 12345
+identifier Ident 12345
 'a' '\\t' \"abc\\n\"
 module import as
 type unit bool int char float string
@@ -15,7 +15,7 @@ _ , [] : ;
 "
 
 let test_tokens = [
-    NEWLINE; ID "identifier"; INT_LIT 12345; NEWLINE;
+    NEWLINE; ID "identifier"; C_ID "Ident"; INT_LIT 12345; NEWLINE;
     CHAR_LIT 'a'; CHAR_LIT '\t'; STRING_LIT "abc\n"; NEWLINE;
     MODULE; IMPORT; AS; NEWLINE;
     TYPE; UNIT; BOOL; INT; CHAR; FLOAT; STRING; NEWLINE;

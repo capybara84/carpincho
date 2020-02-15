@@ -4,7 +4,7 @@ exception Error of string
 let g_verbose = ref false
 
 type token_type
-    = EOF | NEWLINE | ID of string | BOOL_LIT of bool | INT_LIT of int
+    = EOF | NEWLINE | ID of string | C_ID of string | BOOL_LIT of bool | INT_LIT of int
     | CHAR_LIT of char | STRING_LIT of string
     | MODULE | IMPORT | AS | TYPE | UNIT | BOOL | INT | CHAR | FLOAT | STRING
     | LET | FN | FUN | IF | THEN | ELSE | MATCH
@@ -83,7 +83,7 @@ type symtab = {
 
 let token_type_to_string = function
     | EOF -> "<EOF>" | NEWLINE -> "<NEWLINE>"
-    | ID id -> id | BOOL_LIT true -> "true" | BOOL_LIT false -> "false"
+    | ID id -> id | C_ID id -> id | BOOL_LIT true -> "true" | BOOL_LIT false -> "false"
     | INT_LIT n -> string_of_int n | CHAR_LIT c -> "'" ^ String.make 1 c ^ "'"
     | STRING_LIT s -> "\"" ^ s ^ "\""
     | MODULE -> "module" | IMPORT -> "import" | AS -> "as"
