@@ -288,7 +288,12 @@ let rec infer tenv e =
         r := create_poly_type t_val;
         verbose ("infer poly type = " ^ type_schema_to_string !r);
         (tenv, TUnit)
-    | TypeDef (id, typ) ->
+    | TypeDef (None, id, typ) ->
+        let ts = create_poly_type typ in
+        let tenv = Env.extend id (ref ts) tenv in
+        (tenv, TUnit)
+    | TypeDef (Some n, id, typ) ->
+        (*TODO*)
         let ts = create_poly_type typ in
         let tenv = Env.extend id (ref ts) tenv in
         (tenv, TUnit)

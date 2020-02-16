@@ -723,7 +723,7 @@ and parse_type_def pars =
     skip_newline pars;
     let tvar =
         (match peek_token_type pars with
-        | TVAR id -> next_token pars; Some id
+        | TVAR n -> next_token pars; Some n
         | _ -> None)
     in
     let id = expect_c_id pars in
@@ -732,10 +732,7 @@ and parse_type_def pars =
     skip_newline pars;
     let t = parse_type pars in
     debug_parse_out "parse_type_def";
-    TypeDef (id, t)
-    (*
     TypeDef (tvar, id, t)
-    *)
 
 let rec parse_top_level pars =
     debug_parse_in "parse_top_level";

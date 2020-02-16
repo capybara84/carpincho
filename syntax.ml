@@ -49,7 +49,7 @@ type expr =
     | If of expr * expr * expr
     | Match of expr * (pattern * expr) list
     | Comp of expr list
-    | TypeDef of ident * typ
+    | TypeDef of int option * ident * typ
     | Module of ident
     | Import of ident * ident option
 
@@ -248,7 +248,9 @@ let rec expr_to_string = function
         "(match " ^ expr_to_string e ^ " {" ^ match_list_to_string lst ^ "})"
     | Comp el ->
         "{" ^ comp_to_string el ^ "}"
-    | TypeDef (id, ty) -> "type " ^ id ^ " = " ^ type_to_string ty
+    | TypeDef (None, id, ty) -> "type " ^ id ^ " = " ^ type_to_string ty
+    | TypeDef (Some n, id, ty) -> "type '" ^ int_to_alpha n ^ " " ^  id ^
+                                    " = " ^ type_to_string ty
     | Module name ->
         "module " ^ name
     | Import (name, Some rename) ->

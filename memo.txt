@@ -42,3 +42,5 @@ t.contents
 t := 5
 t.contents <- 5
 
+type 'a option = Some 'a | None
+
