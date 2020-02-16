@@ -55,12 +55,22 @@ let fn_show_type _ =
 let show_sym (id,v) = print_endline (" " ^ id ^ " = " ^ value_to_string !v)
 let show_symt (id,t) = print_endline (" " ^ id ^ " = " ^ type_schema_to_string !t)
 
-let fn_modules _ =
+let fn_modules_debug _ =
     let show_env (id,symtab) =
         print_endline ("module " ^ id);
         List.iter show_sym symtab.env;
         print_endline ("module " ^ id ^ " type");
         List.iter show_symt symtab.tenv
+    in
+    List.iter show_env @@ Symbol.get_all_modules ();
+    VUnit
+
+let fn_modules _ =
+    let show_env (id,symtab) =
+        print_endline ("module " ^ id);
+        List.iter (fun (id, t) ->
+                    print_endline (" " ^ id ^ " : " ^ type_to_string !t.body))
+                   symtab.tenv
     in
     List.iter show_env @@ Symbol.get_all_modules ();
     VUnit
@@ -86,8 +96,9 @@ let builtin_list =
         ("tl", TFun (TList tail_type, TList tail_type), fn_tail);
         ("fst", TFun (TTuple [fst_type; fst'_type], fst_type), fn_first);
         ("snd", TFun (TTuple [snd'_type; snd_type], snd_type), fn_second);
-        ("desc", TFun (desc_type, TUnit), fn_describe);
-        ("showt", TFun (TUnit, TUnit), fn_show_type);
+        ("_desc", TFun (desc_type, TUnit), fn_describe);
+        ("_showt", TFun (TUnit, TUnit), fn_show_type);
+        ("_mods", TFun (TUnit, TUnit), fn_modules_debug);
         ("mods", TFun (TUnit, TUnit), fn_modules);
         ("env", TFun (TUnit, TUnit), fn_env);
     ]

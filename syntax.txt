@@ -7,7 +7,7 @@ top_level
     | type_def
     | decl
 type_def
-    = TYPE C_ID '=' type
+    = TYPE [TVAR] C_ID '=' type
 type
     = UNIT | BOOL | INT | CHAR | FLOAT | STRING
     | C_ID
@@ -16,6 +16,10 @@ type
     | '(' type {',' type} ')'
     | '[' type ']'
     | type '->' type
+    | type C_ID
+    | '{' {struct_element} '}'
+struct_element
+    = [MUTABLE] ID {','ID} ':' type ';'
 
 decl
     = LET ID '=' expr
@@ -46,6 +50,7 @@ a_pattern
     | BOOL_LIT | INT_LIT | CHAR_LIT | STRING_LIT 
     | '(' pattern_list ')'
     | '[' pattern_list ']'
+    | C_ID '{' [ pattern {',' pattern}] '}'
 pattern_list
     = pattern
     | pattern ',' pattern_list
@@ -66,6 +71,9 @@ unary_expr
     = [unary_op] simple_expr
 simple_expr
     = [C_ID '.'] ID
+    | ID {'.' ID} ['<-' expr]
+    | C_ID expr
+    | C_ID '{' [expr {',' expr}] '}'
     | BOOL_LIT | INT_LIT | CHAR_LIT | STRING_LIT 
     | '()' | '(' expr {',' expr} ')'
     | '[' [expr {',' expr}] ']'
@@ -75,16 +83,8 @@ add_op = '+' | '-'
 mul_op = '*' | '/' | '%'
 unary_op = '!' | '-'
 
-
 -----
 
-program
-    = {top_level}
-top_level
-    = MODULE C_ID
-    | IMPORT C_ID [AS C_ID]
-    | type_def
-    | decl
 type_def
     = TYPE [ TVAR | '(' TVAR {',' TVAR} ')' ] C_ID '=' type
 type
@@ -104,28 +104,6 @@ struct_element
 variant
     = C_ID [type] {'|' variant}
 
-decl
-    = LET ID '=' expr
-    | FUN ID param '=' expr
-    | expr
-expr
-    = FN param_list '->' expr
-    | IF expr THEN expr ELSE expr
-    | MATCH expr '{' match_list '}'
-    | '{' {decl} '}'
-    | logical_expr
-param_list
-    = '()' | param {param}
-param
-    = '_' | ID
-match_list
-    = ['|'] pattern '->' expr {'|' pattern '->' expr}
-pattern
-    | or_pattern [AS ID]
-or_pattern
-    = cons_pattern {'|' cons_pattern}
-cons_pattern
-    = a_pattern {':' a_pattern}
 a_pattern
     | '[]'
     | '_'
@@ -134,24 +112,7 @@ a_pattern
     | BOOL_LIT | INT_LIT | CHAR_LIT | STRING_LIT 
     | '(' pattern_list ')'
     | '[' pattern_list ']'
-pattern_list
-    = pattern
-    | pattern ',' pattern_list
 
-logical_expr
-    = equal_expr {logical_op equal_expr}
-equal_expr
-    = cons_expr [equal_op cons_expr]
-cons_expr
-    = add_expr {':' add_expr}
-add_expr
-    = mul_expr {add_op mul_expr}
-mul_expr
-    = apply_expr {mul_op apply_expr}
-apply_expr
-    = unary_expr {simple_expr}
-unary_expr
-    = [unary_op] simple_expr
 simple_expr
     = C_ID '.' ID
     | C_ID [expr]
@@ -160,9 +121,4 @@ simple_expr
     | BOOL_LIT | INT_LIT | CHAR_LIT | STRING_LIT 
     | '()' | '(' expr {',' expr} ')'
     | '[' [expr {',' expr}] ']'
-logical_op = '||' | '&&'
-equal_op = '==' | '!=' | '<' | '<=' | '>' | '>='
-add_op = '+' | '-'
-mul_op = '*' | '/' | '%'
-unary_op = '!' | '-'
 

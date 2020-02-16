@@ -3,11 +3,11 @@ open Syntax
 
 let test_text = "
 identifier Ident 12345
-'a' '\\t' \"abc\\n\"
-module import as
+'a 'a' '\\t' \"abc\\n\"
+module import as mutable
 type unit bool int char float string
 let fn if then else match
-= == != < <= > >=
+<- = == != < <= > >=
 - + / * %
 ! () | || &&
 -> ( ) [ ] { }
@@ -16,11 +16,11 @@ _ , [] : ;
 
 let test_tokens = [
     NEWLINE; ID "identifier"; C_ID "Ident"; INT_LIT 12345; NEWLINE;
-    CHAR_LIT 'a'; CHAR_LIT '\t'; STRING_LIT "abc\n"; NEWLINE;
-    MODULE; IMPORT; AS; NEWLINE;
+    TVAR 0; CHAR_LIT 'a'; CHAR_LIT '\t'; STRING_LIT "abc\n"; NEWLINE;
+    MODULE; IMPORT; AS; MUTABLE; NEWLINE;
     TYPE; UNIT; BOOL; INT; CHAR; FLOAT; STRING; NEWLINE;
     LET; FN; IF; THEN; ELSE; MATCH; NEWLINE;
-    EQ; EQL; NEQ; LT; LE; GT; GE; NEWLINE;
+    ASSIGN; EQ; EQL; NEQ; LT; LE; GT; GE; NEWLINE;
     MINUS; PLUS; SLASH; STAR; PERCENT; NEWLINE;
     NOT; EMPTY; OR; LOR; LAND; NEWLINE;
     ARROW; LPAR; RPAR; LBRA; RBRA; BEGIN; END; NEWLINE;

@@ -32,4 +32,13 @@ int*(int*int)
 ((a,b),c)
 (a,(b,c))
 
+type 'a ref = {
+    mutable contents : 'a
+}
+
+let t = ref 0
+*t
+t.contents
+t := 5
+t.contents <- 5
 

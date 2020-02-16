@@ -670,6 +670,7 @@ let rec parse_type pars =
         | FLOAT -> next_token pars; TFloat
         | STRING -> next_token pars; TString
         | C_ID id -> next_token pars; TIdent id
+        | TVAR n -> next_token pars; TVar (n, ref None)
         | LBRA ->
             next_token pars;
             let t = parse_type pars in
@@ -708,7 +709,7 @@ let rec parse_type pars =
     in
     let t3 =
         match peek_token_type pars with
-        | ID id ->
+        | C_ID id ->
             next_token pars;
             TParamId (t2, id)
         | _ -> t2
@@ -720,6 +721,11 @@ and parse_type_def pars =
     debug_parse_in "parse_type_def";
     next_token pars;
     skip_newline pars;
+    let tvar =
+        (match peek_token_type pars with
+        | TVAR id -> next_token pars; Some id
+        | _ -> None)
+    in
     let id = expect_c_id pars in
     skip_newline pars;
     expect pars EQ;
@@ -727,6 +733,9 @@ and parse_type_def pars =
     let t = parse_type pars in
     debug_parse_out "parse_type_def";
     TypeDef (id, t)
+    (*
+    TypeDef (tvar, id, t)
+    *)
 
 let rec parse_top_level pars =
     debug_parse_in "parse_top_level";

@@ -2,12 +2,13 @@
 exception Error of string
 
 let g_verbose = ref false
+let g_verbose_type = ref false
 
 type token_type
     = EOF | NEWLINE | ID of string | C_ID of string | BOOL_LIT of bool | INT_LIT of int
-    | CHAR_LIT of char | STRING_LIT of string
+    | CHAR_LIT of char | STRING_LIT of string | TVAR of int
     | MODULE | IMPORT | AS | TYPE | UNIT | BOOL | INT | CHAR | FLOAT | STRING
-    | LET | FN | FUN | IF | THEN | ELSE | MATCH
+    | MUTABLE | LET | FN | FUN | IF | THEN | ELSE | MATCH | ASSIGN
     | EQ | EQL | NEQ | LT | LE | GT | GE | MINUS | PLUS | SLASH | STAR | PERCENT
     | NOT | EMPTY | OR | LOR | LAND | ARROW | LPAR | RPAR | LBRA | RBRA | BEGIN | END
     | WILDCARD | COMMA | DOT | NULL | COLON | SEMI
@@ -81,16 +82,22 @@ type symtab = {
     mutable tenv : type_schema ref Env.t;
 }
 
+let int_to_alpha x =
+    if x < Char.code 'z' - Char.code 'a' then
+        String.make 1 (Char.chr ((Char.code 'a') + x))
+    else
+        string_of_int x
+
 let token_type_to_string = function
     | EOF -> "<EOF>" | NEWLINE -> "<NEWLINE>"
     | ID id -> id | C_ID id -> id | BOOL_LIT true -> "true" | BOOL_LIT false -> "false"
     | INT_LIT n -> string_of_int n | CHAR_LIT c -> "'" ^ String.make 1 c ^ "'"
-    | STRING_LIT s -> "\"" ^ s ^ "\""
+    | STRING_LIT s -> "\"" ^ s ^ "\"" | TVAR i -> "\'" ^ int_to_alpha i
     | MODULE -> "module" | IMPORT -> "import" | AS -> "as"
     | TYPE -> "type" | UNIT -> "unit" | BOOL -> "bool" | INT -> "int"
-    | CHAR -> "char" | FLOAT -> "float" | STRING -> "string"
+    | CHAR -> "char" | FLOAT -> "float" | STRING -> "string" | MUTABLE -> "mutable"
     | LET -> "let" | FN -> "fn" | FUN -> "fun" | IF -> "if" | THEN -> "then"
-    | ELSE -> "else" | MATCH -> "match"
+    | ELSE -> "else" | MATCH -> "match" | ASSIGN -> "<-"
     | EQ -> "=" | EQL -> "==" | NEQ -> "!=" | LT -> "<"
     | LE -> "<=" | GT -> ">" | GE -> ">=" | MINUS -> "-" | PLUS -> "+"
     | SLASH -> "/" | STAR -> "*" | PERCENT -> "%"
@@ -100,12 +107,6 @@ let token_type_to_string = function
     | NULL -> "[]" | COLON -> ":" | SEMI -> ";"
 
 let token_to_string t = token_type_to_string t.token_type
-
-let int_to_alpha x =
-    if x <= Char.code 'z' - Char.code 'a' then
-        String.make 1 (Char.chr ((Char.code 'a') + x))
-    else
-        string_of_int x
 
 let rec type_to_string ty =
     let counter = ref 0 in

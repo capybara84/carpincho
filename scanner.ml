@@ -66,6 +66,7 @@ let scan_ident scan =
     | "char" -> CHAR
     | "float" -> FLOAT
     | "string" -> STRING
+    | "mutable" -> MUTABLE
     | "let" -> LET
     | "fn" -> FN
     | "fun" -> FUN
@@ -93,15 +94,23 @@ let get_char scan =
     | None -> raise (Error "unexpected EoF")
 
 let scan_char scan =
+    let is_alpha = function 'a'..'z' -> true | _ -> false in
+    let char_to_int c = Char.code c - Char.code 'a' in
     next_char scan;
     let c = get_char scan in
-    let res = CHAR_LIT c in
     next_char scan;
-    match peek scan with
-    | Some '\'' ->
-        (next_char scan; res)
-    | Some _ -> raise (Error "missing single-quote")
-    | None -> raise (Error "Unexpected EOF")
+    if is_alpha c then
+        if peek scan = Some '\'' then
+            (next_char scan; CHAR_LIT c)
+        else
+            TVAR (char_to_int c)
+    else
+        match peek scan with
+        | Some '\'' ->
+            next_char scan;
+            CHAR_LIT c
+        | Some _ -> raise (Error "missing single-quote")
+        | None -> raise (Error "Unexpected EOF")
 
 let scan_string scan =
     next_char scan;
@@ -188,12 +197,22 @@ let rec scan_token scan =
     | Some ';' -> next_char scan; SEMI
     | Some '=' -> scan_token2 '=' EQL EQ
     | Some '!' -> scan_token2 '=' NEQ NOT
-    | Some '<' -> scan_token2 '=' LE LT
     | Some '>' -> scan_token2 '=' GE GT
     | Some '-' -> scan_token2 '>' ARROW MINUS
     | Some '(' -> scan_token2 ')' EMPTY LPAR
     | Some '[' -> scan_token2 ']' NULL LBRA
     | Some '|' -> scan_token2 '|' LOR OR
+    | Some '<' -> begin
+            next_char scan;
+            match peek scan with
+            | Some '=' ->
+                next_char scan;
+                LE
+            | Some '-' ->
+                next_char scan;
+                ASSIGN
+            | _ -> LT
+        end
     | Some '/' ->
         next_char scan;
         if peek scan = Some '*' then begin

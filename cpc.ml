@@ -36,7 +36,8 @@ let main () =
     Builtins.init ();
 
     Arg.parse [("-d", Arg.Int (fun n -> Parser.debug := n),
-                        "N  set debug level N");
+                        "N  set parser debug level N");
+               ("-vt", Arg.Unit (fun () -> g_verbose_type := true), "  verbose (type)");
                ("-v", Arg.Unit (fun () -> g_verbose := true), "  verbose");
                ("-t", Arg.Unit (fun () -> test := true), "  test mode");
                ("-i", Arg.Unit (fun () -> interactive := true),
@@ -47,7 +48,7 @@ let main () =
 
     if !test then
         do_test ()
-    else if !interactive then
+    else if !interactive || (List.length !filenames) = 0 then
         top_level ()
     else ()
 

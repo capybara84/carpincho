@@ -4,7 +4,7 @@ open Syntax
 let error msg = raise (Error ("Type error: " ^ msg))
 
 let verbose msg =
-    if !g_verbose then
+    if !g_verbose_type then
         print_endline ("T* " ^ msg)
     else
         ()
